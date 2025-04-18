@@ -38,7 +38,7 @@ closedSign.addEventListener("pointerdown", () => {
     }
 });
 lightSwitch.addEventListener("pointerdown", () => {
-    display("This string has seen better days.");
+    display("* This string has seen better days.");
 });
 function ali() {
     display("Hello!");

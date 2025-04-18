@@ -17,6 +17,6 @@ export class Animator {
     }
     setFrames(frames) {
         this.FRAMES_PER_ROW = frames;
-        this.ROW_LENGTH = this.FRAMES_PER_ROW * this.FRAME_WIDTH
+        this.ROW_LENGTH = this.FRAMES_PER_ROW * this.FRAME_WIDTH;
     }
 }
