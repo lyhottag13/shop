@@ -10,7 +10,7 @@ body {
 .interactable {
     position: absolute;
     cursor: url("resources/images/CursorWow.png") 16 16, auto;
-    opacity: 0.2;
+    opacity: 0;
 }
 #game {
     display: flex;
