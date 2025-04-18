@@ -3,22 +3,38 @@ body {
     background-color: rgb(10, 10, 10);
     cursor: url("resources/images/Cursor.png") 16 16, auto;
 }
-
-#shop {
+.interactable {
+    position: absolute;
+    cursor: url("resources/images/CursorWow.png") 16 16, auto;
+    opacity: 0;
+}
+#game {
+    position: relative;
+}
+#switch {
     width: fit-content;
     position: relative;
+    text-align: center;
     margin: 0 auto;
-    margin-bottom: -53px;
 }
+#switch button {
+    top: 0%;
+    left: 89%;
+    width: 2%;
+    height: 55%;
+}
+#counter {
+    width: fit-content;
+    position: relative;
+    text-align: center;
+    margin: 0 auto;
 
-#shop button {
-    position: absolute;
+}
+#counter button {
     top: 57%;
     left: 32%;
     width: 36%;
     height: 9%;
-    cursor: url("resources/images/CursorWow.png") 16 16, auto;
-    opacity: 0;
 }
 #textDiv {
     border: solid rgb(255, 255, 255);
@@ -34,7 +50,14 @@ body {
 }
 
 @media (min-width: 601px) {
-    #shop img {
+    #switch {
+        margin-bottom: -300px;
+    }
+    #switch img {
+        height: 400px;
+        padding-left: 300px;
+    }
+    #counter img {
         margin-top: 40px;
         height: 500px;
     }
@@ -45,5 +68,8 @@ body {
 
     #text {
         font-size: 50px;
+    }
+    #counter {
+        margin-bottom: -53px;
     }
 }

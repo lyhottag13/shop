@@ -1,6 +1,6 @@
 import { SoundManager } from "./SoundManager.js";
 const textBox = document.getElementById("text");
-const button = document.getElementById("closedSign");
+const closedSign = document.getElementById("closedSign");
 const player = new SoundManager();
 let isTyping = true;
 
@@ -15,9 +15,11 @@ window.onload = async () => {
     isTyping = false;
     displayText("There's nobody here...");
 };
-button.addEventListener("pointerdown", () => {
+closedSign.addEventListener("pointerdown", () => {
     displayText("The sign appears to be hastily painted on with a sharpie.");
 });
+
+
 async function displayText(text) {
     if (!isTyping) {
         textBox.textContent = "* "; 
