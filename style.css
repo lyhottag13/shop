@@ -1,6 +1,7 @@
 body {
     overflow: hidden;
     background-color: rgb(10, 10, 10);
+    cursor: url("resources/images/Cursor.png") 16 16, auto;
 }
 
 #shop {
@@ -16,7 +17,7 @@ body {
     left: 32%;
     width: 36%;
     height: 9%;
-    cursor: grab;
+    cursor: url("resources/images/CursorWow.png") 16 16, auto;
     opacity: 0;
 }
 #textDiv {
