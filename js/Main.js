@@ -4,7 +4,8 @@ const textBox = document.getElementById("text");
 const closedSign = document.getElementById("closedSign");
 const lightSwitch = document.getElementById("lightSwitch");
 const player = new SoundManager();
-const animator = new Animator();
+const FRAME_WIDTH = (document.width <= 600) ? 500 : 300;
+const animator = new Animator(FRAME_WIDTH);
 let isTyping = true;
 
 const AUDIO = ["wind", "generic1", "generic2"];
@@ -29,7 +30,7 @@ window.onload = async () => {
 let signClicks = {number: 0};
 closedSign.addEventListener("pointerdown", () => {
     if (signClicks.number === 3) {
-        display("* You observe that this sign has nothing left to observe.");
+        // display("* You observe that this sign has nothing left to observe.");
         changeAnimation("Idle", 17);
         closedSign.remove();
         createButton("ali", "40%", "30%", "40%", "30%", ali);
@@ -64,7 +65,7 @@ async function display(text, counter) {
     }
 }
 function changeAnimation(fileName, frames) {
-    document.getElementById("animation").style.backgroundSize = `${frames * 500}px 500px`;
+    document.getElementById("animation").style.backgroundSize = `${frames * FRAME_WIDTH}px ${FRAME_WIDTH}px`;
     document.getElementById("animation").style.backgroundImage = `url("resources/images/${fileName}.png")`;
     animator.setFrames(17);
 }

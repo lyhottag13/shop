@@ -1,8 +1,8 @@
 export class Animator {
-    constructor() {
+    constructor(width) {
         this.FRAMERATE = 12;
         this.FRAMES_PER_ROW = 1;
-        this.FRAME_WIDTH = 500;
+        this.FRAME_WIDTH = width;
         this.ROW_LENGTH = this.FRAMES_PER_ROW * this.FRAME_WIDTH;
         this.viewX = 0
         this.x = 0;
