@@ -1,0 +1,48 @@
+body {
+    overflow: hidden;
+    background-color: rgb(10, 10, 10);
+}
+
+#shop {
+    width: fit-content;
+    position: relative;
+    margin: 0 auto;
+    margin-bottom: -53px;
+}
+
+#shop button {
+    position: absolute;
+    top: 57%;
+    left: 32%;
+    width: 36%;
+    height: 9%;
+    cursor: grab;
+    opacity: 0;
+}
+#textDiv {
+    border: solid rgb(255, 255, 255);
+    border-radius: 30px;
+    background-color: black;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#text {
+    padding: 20px;
+    margin-top: 0px;
+}
+
+@media (min-width: 601px) {
+    #shop img {
+        margin-top: 40px;
+        height: 500px;
+    }
+
+    #textDiv {
+        margin: 50px;
+    }
+
+    #text {
+        font-size: 50px;
+    }
+}
