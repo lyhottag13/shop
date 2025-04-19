@@ -4,7 +4,8 @@ const textBox = document.getElementById("text");
 const closedSign = document.getElementById("closedSign");
 const lightSwitch = document.getElementById("lightSwitch");
 const player = new SoundManager();
-const animator = new Animator(1848);
+const FRAME_WIDTH = (window.innerWidth <= 600) ? 300 : 500;
+const animator = new Animator(FRAME_WIDTH);
 let isTyping = true;
 
 const AUDIO = ["wind", "generic1", "generic2"];
@@ -17,66 +18,59 @@ IMAGES.forEach((name) => {
     image.src = `resources/images/${name}.webp`;
     images[name] = image;
 });
+const image = new Image();
+image.src = `resources/images/Idle (1).png`;
+images["Idle (1)"] = image;
 AUDIO.forEach((name) => {
     player.load(name);
 });
 
-window.onload = () => {
+window.onload = async () => {
     initialize();
+    animator.animate();
 };
 
 let signClicks = { number: 0 };
 closedSign.addEventListener("pointerdown", () => {
     if (signClicks.number === 3) {
-        displayText("* You observe that this sign has nothing left to observe.");
-        changeAnimation("Idle", 4, 17);
+        display("* You observe that this sign has nothing left to observe.");
+        changeAnimation("Idle (1)", 17);
         closedSign.remove();
         createButton("ali", "40%", "30%", "40%", "30%", ali);
     } else {
-        displayText("* The sign appears to be hastily painted on with a sharpie.", signClicks);
+        display("* The sign appears to be hastily painted on with a sharpie.", signClicks);
     }
 });
 lightSwitch.addEventListener("pointerdown", () => {
-    displayText("* This string has seen better days.");
+    display("* This string has seen better days.");
 });
-async function ali() {
-    await displayText("Hello!| Welcome to my shop!# It's a little bare, but feel free to look around!");
+function ali() {
+    display("Hello!");
 }
 async function initialize() {
-    animator.setFrames(1, 1);
-    animator.setAnimation(images["Closed"]);
-    animator.animate();
     await sleep(2000);
     isTyping = false;
-    displayText("* There's nobody here...");
+    display("* There's nobody here...");
 }
-async function displayText(text, counter) {
+async function display(text, counter) {
     if (!isTyping) {
-        textBox.innerHTML = "";
+        textBox.textContent = "";
         isTyping = true;
         for (let i = 0; i < text.length; i++) {
-            if (text.charAt(i) === "|") {
-                textBox.innerHTML += "<br>";
-                await sleep(1000);
-            } else if (text.charAt(i) === "#") {
-                await sleep(2000);
-                textBox.innerHTML = "";
-            } else {
-                textBox.innerHTML += text.charAt(i);
-                player.play("generic2");
-                await sleep(35);
-            }
+            textBox.textContent += text.charAt(i);
+            player.play("generic2");
+            await sleep(35);
         }
         isTyping = false;
         if (counter !== undefined) {
             counter.number++;
         }
     }
-    return;
 }
-function changeAnimation(fileName, framesPerRow, totalFrames) {
-    animator.setFrames(framesPerRow, totalFrames);
-    animator.setAnimation(images[fileName]);
+function changeAnimation(fileName, frames) {
+    document.getElementById("animation").style.backgroundSize = `${frames * FRAME_WIDTH}px ${FRAME_WIDTH}px`;
+    document.getElementById("animation").style.backgroundImage = `url("resources/images/${fileName}.png")`;
+    animator.setFrames(frames);
 }
 function createButton(id, top, left, width, height, functionName) {
     const button = document.createElement("button");

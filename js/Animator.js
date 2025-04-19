@@ -1,43 +1,22 @@
 export class Animator {
     constructor(width) {
-        this.canvas = document.getElementById("animation");
-        this.ctx = this.canvas.getContext("2d");
-        this.index = 1;
-        this.viewX = 0;
-        this.viewY = 0;
-        this.framesPerRow = 1;
-        this.totalFrames = 1;
-        this.frameWidth = width;
-        this.frameHeight = width;
         this.FRAMERATE = 12;
-        this.animationSource = null;
-        this.ctx.imageSmoothingEnabled = false;
-        this.start;
-    }
-    animate1 = (timestamp) => {
-        if (this.start === undefined) {
-            this.start = timestamp;
-        } else if (timestamp - this.start > 1000 / this.FRAMERATE) {
-            this.start = timestamp;
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.ctx.drawImage(this.animationSource, this.viewX, this.viewY, this.frameWidth, this.frameHeight, 0, 0, 500, 500);
-            this.index = (this.index + 1) % (this.totalFrames);
-            this.viewX = (this.index % this.framesPerRow) * this.frameWidth;
-            this.viewY = Math.floor(this.index / (this.framesPerRow)) * this.frameHeight;
-        }
-        requestAnimationFrame(this.animate1);
+        this.FRAMES_PER_ROW = 1;
+        this.FRAME_WIDTH = width;
+        this.ROW_LENGTH = this.FRAMES_PER_ROW * this.FRAME_WIDTH;
+        this.viewX = 0
+        this.x = 0;
+        this.animation = document.getElementById("animation");
     }
     animate() {
-        requestAnimationFrame(this.animate1);
+        setInterval(() => {
+            this.animation.style.backgroundPosition = `-${this.viewX}px 0`;
+            this.x += this.FRAME_WIDTH;
+            this.viewX = this.x % this.ROW_LENGTH;
+        }, 1000 / this.FRAMERATE);
     }
-    setFrames(framesPerRow, totalFrames) {
-        this.framesPerRow = framesPerRow;
-        this.totalFrames = totalFrames;
-    }
-    stop() {
-        this.animationSource = null;
-    }
-    setAnimation(animationSource) {
-        this.animationSource = animationSource;
+    setFrames(frames) {
+        this.FRAMES_PER_ROW = frames;
+        this.ROW_LENGTH = this.FRAMES_PER_ROW * this.FRAME_WIDTH;
     }
 }
