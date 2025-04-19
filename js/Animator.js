@@ -11,6 +11,7 @@ export class Animator {
         this.frameHeight = width;
         this.FRAMERATE = 12;
         this.animationSource = null;
+        this.ctx.imageSmoothingEnabled = false;
     }
     animate() {
         setInterval(() => {
