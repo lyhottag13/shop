@@ -6,11 +6,13 @@ export class Animator {
         this.ROW_LENGTH = this.frames * this.FRAME_WIDTH;
         this.animation = document.getElementById("animation");
     }
-    setAnimation(imageSource, frames, framerate, end) {
+    setAnimation(imageSource, frames, framerate, end, frameWidth) {
         document.documentElement.style.setProperty("--animation-image", `url(${imageSource.src})`);
-        document.documentElement.style.setProperty("--background-width", imageSource.naturalWidth);
-        document.documentElement.style.setProperty("--frames", frames);
+        document.documentElement.style.setProperty("--background-width", this.FRAME_WIDTH * frames);
+        document.documentElement.style.setProperty("--background-size", `${this.FRAME_WIDTH * frames}px, ${this.FRAME_WIDTH}px`);
+        document.documentElement.style.setProperty("--frames", (frames - 1));
         document.documentElement.style.setProperty("--animation-length", `${frames / framerate}s`);
         this.animation.style.animation = `anim var(--animation-length) steps(var(--frames)) ${end}`;
+        console.log()
     }
 }

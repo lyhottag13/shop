@@ -30,7 +30,7 @@ let signClicks = { number: 0 };
 closedSign.addEventListener("pointerdown", () => {
     if (signClicks.number === 1) {
         displayText("* You observe that this sign has nothing left to observe.");
-        animator.setAnimation(images["OpeningBusiness"], 20, 17, "forwards");
+        animator.setAnimation(images["OpeningBusiness"], 21, 17, "forwards");
         closedSign.remove();
         createButton("ali", "40%", "30%", "40%", "30%", ali);
     } else {
@@ -44,7 +44,7 @@ function ali() {
     displayText("* The sign has disappeared.");
 }
 async function initialize() {
-    animator.setAnimation(images["ClosedLights"], 0, 1, "forwards");
+    animator.setAnimation(images["ClosedLights"], 1, 1, "forwards");
     await sleep(2000);
     isTyping = false;
     displayText("* There's nobody here...");
