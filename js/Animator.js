@@ -12,15 +12,23 @@ export class Animator {
         this.FRAMERATE = 12;
         this.animationSource = null;
         this.ctx.imageSmoothingEnabled = false;
+        this.start;
     }
-    animate() {
-        setInterval(() => {
+    animate1 = (timestamp) => {
+        if (this.start === undefined) {
+            this.start = timestamp;
+        } else if (timestamp - this.start > 1000 / this.FRAMERATE) {
+            this.start = timestamp;
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.ctx.drawImage(this.animationSource, this.viewX, this.viewY, this.frameWidth, this.frameHeight, 0, 0, 500, 500);
             this.index = (this.index + 1) % (this.totalFrames);
             this.viewX = (this.index % this.framesPerRow) * this.frameWidth;
             this.viewY = Math.floor(this.index / (this.framesPerRow)) * this.frameHeight;
-        }, 1000 / this.FRAMERATE);
+        }
+        requestAnimationFrame(this.animate1);
+    }
+    animate() {
+        requestAnimationFrame(this.animate1);
     }
     setFrames(framesPerRow, totalFrames) {
         this.framesPerRow = framesPerRow;
