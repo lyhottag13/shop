@@ -1,3 +1,12 @@
+:root {
+    --background-width: ;
+    --animation-image: ;
+    --animation-length: ;
+    --frames: ;
+    --background-size: ;
+    --background-position: ;
+}
+
 @font-face {
     font-family: fa;
     src: url("resources/misc/8bitoperator_jve_regular/8bitoperator_jve.woff2") format("woff2");
@@ -22,11 +31,20 @@ body {
 #animation {
     height: 500px;
     width: 500px;
-    background-image: url("resources/images/Closed.webp");
-    background-position: 0 0;
-    background-repeat: no-repeat;
-    background-size: 500px 500px;
+    background-image: var(--animation-image);
+    background-position-x : 0;
+    background-size: var(--background-size);
+    animation: anim var(--animation-length) steps(var(--frames)) infinite;
     padding-bottom: 3px;
+}
+
+@keyframes anim {
+    0% {
+        background-position-x: 0;
+    }
+    100% {
+        background-position-x: 100%;
+    }
 }
 #switch {
     height: 300px;

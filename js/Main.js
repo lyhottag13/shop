@@ -9,7 +9,7 @@ const animator = new Animator(FRAME_WIDTH);
 let isTyping = true;
 
 const AUDIO = ["wind", "generic1", "generic2"];
-const IMAGES = ["Closed"];
+const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness"];
 
 const images = {};
 
@@ -18,41 +18,38 @@ IMAGES.forEach((name) => {
     image.src = `resources/images/${name}.webp`;
     images[name] = image;
 });
-const image = new Image();
-image.src = `resources/images/Idle.png`;
-images["Idle"] = image;
 AUDIO.forEach((name) => {
     player.load(name);
 });
 
 window.onload = async () => {
     initialize();
-    animator.animate();
 };
 
 let signClicks = { number: 0 };
 closedSign.addEventListener("pointerdown", () => {
-    if (signClicks.number === 3) {
-        display("* You observe that this sign has nothing left to observe.");
-        changeAnimation("Idle", 17);
+    if (signClicks.number === 1) {
+        displayText("* You observe that this sign has nothing left to observe.");
+        animator.setAnimation(images["OpeningBusiness"], 20, 17, "forwards");
         closedSign.remove();
         createButton("ali", "40%", "30%", "40%", "30%", ali);
     } else {
-        display("* The sign appears to be hastily painted on with a sharpie.", signClicks);
+        displayText("* The sign appears to be hastily painted on with a sharpie.", signClicks);
     }
 });
 lightSwitch.addEventListener("pointerdown", () => {
-    display("* This string has seen better days.");
+    displayText("* This string has seen better days.");
 });
 function ali() {
-    display("Hello!");
+    displayText("Hello!");
 }
 async function initialize() {
+    animator.setAnimation(images["ClosedLights"], 0, 1, "forwards");
     await sleep(2000);
     isTyping = false;
-    display("* There's nobody here...");
+    displayText("* There's nobody here...");
 }
-async function display(text, counter) {
+async function displayText(text, counter) {
     if (!isTyping) {
         textBox.textContent = "";
         isTyping = true;
@@ -66,11 +63,6 @@ async function display(text, counter) {
             counter.number++;
         }
     }
-}
-function changeAnimation(fileName, frames) {
-    document.getElementById("animation").style.backgroundSize = `${frames * FRAME_WIDTH}px ${FRAME_WIDTH}px`;
-    document.getElementById("animation").style.backgroundImage = `url("${images[fileName].src}")`;
-    animator.setFrames(frames);
 }
 function createButton(id, top, left, width, height, functionName) {
     const button = document.createElement("button");
