@@ -1,15 +1,17 @@
 @font-face {
     font-family: fa;
-    src: url("resources/misc/8bitoperator_jve_regular/8bitoperator_jve.woff");
+    src: url("resources/misc/8bitoperator_jve_regular/8bitoperator_jve.woff2") format("woff2");
+    src: url("resources/misc/8bitoperator_jve_regular/8bitoperator_jve.woff") format("woff");
+    
 }
 body {
     overflow: hidden;
     background-color: rgb(10, 10, 10);
-    cursor: url("resources/images/Cursor.png") 16 16, auto;
+    cursor: url("resources/images/Cursor.webp") 16 16, auto;
 }
 .interactable {
     position: absolute;
-    cursor: url("resources/images/CursorWow.png") 16 16, auto;
+    cursor: url("resources/images/CursorWow.webp") 16 16, auto;
     opacity: 0;
 }
 #game {
@@ -20,7 +22,7 @@ body {
 #animation {
     height: 500px;
     width: 500px;
-    background-image: url("resources/images/Closed.png");
+    background-image: url("resources/images/Closed.webp");
     background-position: 0 0;
     background-repeat: no-repeat;
     background-size: 500px 500px;

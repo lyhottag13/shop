@@ -9,7 +9,7 @@ const animator = new Animator(FRAME_WIDTH);
 let isTyping = true;
 
 const AUDIO = ["wind", "generic1", "generic2"];
-const IMAGES = ["Idle", "Closed"];
+const IMAGES = ["Closed"];
 
 const images = {};
 
@@ -19,8 +19,8 @@ IMAGES.forEach((name) => {
     images[name] = image;
 });
 const image = new Image();
-image.src = `resources/images/Idle (1).png`;
-images["Idle (1)"] = image;
+image.src = `resources/images/Idle.png`;
+images["Idle"] = image;
 AUDIO.forEach((name) => {
     player.load(name);
 });
@@ -34,7 +34,7 @@ let signClicks = { number: 0 };
 closedSign.addEventListener("pointerdown", () => {
     if (signClicks.number === 3) {
         display("* You observe that this sign has nothing left to observe.");
-        changeAnimation("Idle (1)", 17);
+        changeAnimation("Idle", 17);
         closedSign.remove();
         createButton("ali", "40%", "30%", "40%", "30%", ali);
     } else {
@@ -69,7 +69,7 @@ async function display(text, counter) {
 }
 function changeAnimation(fileName, frames) {
     document.getElementById("animation").style.backgroundSize = `${frames * FRAME_WIDTH}px ${FRAME_WIDTH}px`;
-    document.getElementById("animation").style.backgroundImage = `url("resources/images/${fileName}.png")`;
+    document.getElementById("animation").style.backgroundImage = `url("${images[fileName].src}")`;
     animator.setFrames(frames);
 }
 function createButton(id, top, left, width, height, functionName) {
