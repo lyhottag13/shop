@@ -4,7 +4,6 @@ const textBox = document.getElementById("text");
 const closedSign = document.getElementById("closedSign");
 const lightSwitch = document.getElementById("lightSwitch");
 const player = new SoundManager();
-const FRAME_WIDTH = (window.innerWidth <= 600) ? 300 : 500;
 const animator = new Animator(1848);
 let isTyping = true;
 
