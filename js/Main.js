@@ -41,7 +41,7 @@ lightSwitch.addEventListener("pointerdown", () => {
     displayText("* This string has seen better days.");
 });
 function ali() {
-    displayText("Hello!| I'm Ali!# My shop's a little bare, but feel free to look around!");
+    displayText("* The sign has disappeared.");
 }
 async function initialize() {
     animator.setAnimation(images["ClosedLights"], 0, 1, "forwards");
