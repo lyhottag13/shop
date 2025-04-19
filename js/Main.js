@@ -41,7 +41,7 @@ lightSwitch.addEventListener("pointerdown", () => {
     displayText("* This string has seen better days.");
 });
 function ali() {
-    displayText("Hello!");
+    displayText("Hello!| I'm Ali!# My shop's a little bare, but feel free to look around!");
 }
 async function initialize() {
     animator.setAnimation(images["ClosedLights"], 0, 1, "forwards");
@@ -51,18 +51,27 @@ async function initialize() {
 }
 async function displayText(text, counter) {
     if (!isTyping) {
-        textBox.textContent = "";
+        textBox.innerHTML = "";
         isTyping = true;
         for (let i = 0; i < text.length; i++) {
-            textBox.textContent += text.charAt(i);
-            player.play("generic2");
-            await sleep(35);
+            if (text.charAt(i) === "|") {
+                textBox.innerHTML += "<br>";
+                await sleep(1000);
+            } else if (text.charAt(i) === "#") {
+                await sleep(2000);
+                textBox.innerHTML = "";
+            } else {
+                textBox.innerHTML += text.charAt(i);
+                player.play("generic2");
+                await sleep(35);
+            }
         }
         isTyping = false;
         if (counter !== undefined) {
             counter.number++;
         }
     }
+    return;
 }
 function createButton(id, top, left, width, height, functionName) {
     const button = document.createElement("button");
