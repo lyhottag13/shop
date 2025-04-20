@@ -62,7 +62,7 @@ async function switchLightsEvent() {
     if (!isTyping) {
         if (!isLightOn) {
             displayText("* ?");
-            const totalFrames = 24;
+            const totalFrames = 28;
             const fps = 20;
             animator2.setAnimation(images["SwitchPull"], totalFrames, fps, "forwards");
             await sleep(13 / fps * 1000);
@@ -84,9 +84,10 @@ async function ali() {
     displayText("Hello!|Welcome to my shop!#It's a little bare, but feel free to look around!");
 }
 async function initialize() {
-    animator2.setAnimation(images["Switch"], 1, 1, "infinite");
+    animator2.setAnimation(images["Switch"], 1, 1, "forwards");
     animator.setAnimation(images["ClosedLights"], 1, 1, "forwards");
     await sleep(2000);
+    player.play("wind");
     isTyping = false;
     await displayText("* There's nobody here...");
 }
@@ -94,17 +95,19 @@ async function displayText(text, counter) {
     if (!isTyping) {
         textBox.innerHTML = "";
         isTyping = true;
+        let charAt;
         for (let i = 0; i < text.length; i++) {
-            if (text.charAt(i) === "|") {
+            charAt = text.charAt(i);
+            if (charAt === "|") {
                 textBox.innerHTML += "<br>";
                 await sleep(1000);
-            } else if (text.charAt(i) === "#") {
+            } else if (charAt === "#") {
                 await sleep(2000);
                 textBox.innerHTML = "";
-            } else if (text.charAt(i) === " ") {
+            } else if (charAt === " ") {
                 textBox.innerHTML += " ";
             } else {
-                textBox.innerHTML += text.charAt(i);
+                textBox.innerHTML += charAt;
                 player.play("generic2");
                 await sleep(35);
             }
