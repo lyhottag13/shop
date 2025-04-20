@@ -1,10 +1,5 @@
 :root {
-    --background-width: ;
-    --animation-image: ;
-    --animation-length: ;
-    --frames: ;
-    --background-size: ;
-    --background-position: ;
+
 }
 
 @font-face {
@@ -21,7 +16,7 @@ body {
 .interactable {
     position: absolute;
     cursor: url("resources/images/CursorWow.webp") 16 16, auto;
-    opacity: 0;
+    opacity: 0.2;
 }
 #game {
     display: flex;
@@ -29,6 +24,12 @@ body {
     align-items: center;
 }
 #animation {
+    --background-width: ;
+    --animation-image: ;
+    --animation-length: ;
+    --frames: ;
+    --background-size: ;
+    --background-position: ;
     height: 500px;
     width: 500px;
     background-image: var(--animation-image);
@@ -36,6 +37,7 @@ body {
     background-size: var(--background-size);
     animation: anim var(--animation-length) steps(var(--frames)) infinite;
     padding-bottom: 3px;
+    z-index: 0;
 }
 
 @keyframes anim {
@@ -46,18 +48,35 @@ body {
         background-position-x: 100%;
     }
 }
+#switchAnimation {
+    --background-width: ;
+    --animation-image: ;
+    --animation-length: ;
+    --frames: ;
+    --background-size: ;
+    --background-position: ;
+    height: 500px;
+    width: 500px;
+    background-image: url("resources/images/SwitchPull.webp");
+    background-position-x : 0;
+    background-size: 12000px 500px;
+    animation: anim 0.8s steps(23) forwards;
+    padding-bottom: 3px;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
 #switch {
     height: 300px;
     position: fixed;
     margin: 0 auto;
     top: -30px;
-    right: 20px;
+    right: 0px;
 }
 #switch button {
     top: 0;
-    left: 240px;
-    height: 180px;
-    width: 20px;
+    left: 400px;
+    height: 280px;
+    width: 30px;
 }
 #counter {
     width: fit-content;
@@ -95,15 +114,16 @@ body {
     #switch {
         margin-bottom: -300px;
     }
-    #switch img {
-        height: 260px;
-
-    }
+    #switchAnimation {
+        height: 300px;
+        width: 300px;
+        background-size: 8000px 300px;
+        }
     #switch button {
         top: 0;
-        left: 206px;
-        height: 140px;
-        width: 20px;
+        left: 230px;
+        height: 170px;
+        width: 30px;
     }
     #animation {
         margin-top: 100px;
