@@ -1,7 +1,3 @@
-:root {
-
-}
-
 @font-face {
     font-family: fa;
     src: url("resources/misc/8bitoperator_jve_regular/8bitoperator_jve.woff2") format("woff2");
@@ -17,6 +13,11 @@ body {
     position: absolute;
     cursor: url("resources/images/CursorWow.webp") 16 16, auto;
     opacity: 0.2;
+    z-index: 100;
+}
+.animation {
+    z-index: 0;
+    background-repeat: no-repeat;
 }
 #game {
     display: flex;
@@ -37,17 +38,8 @@ body {
     background-size: var(--background-size);
     animation: anim var(--animation-length) steps(var(--frames)) infinite;
     padding-bottom: 3px;
-    z-index: 0;
 }
 
-@keyframes anim {
-    0% {
-        background-position-x: 0;
-    }
-    100% {
-        background-position-x: 100%;
-    }
-}
 #switchAnimation {
     --background-width: ;
     --animation-image: ;
@@ -57,13 +49,19 @@ body {
     --background-position: ;
     height: 500px;
     width: 500px;
-    background-image: url("resources/images/SwitchPull.webp");
+    background-image: var(--animation-image);
     background-position-x : 0;
-    background-size: 12000px 500px;
-    animation: anim 0.8s steps(23) forwards;
+    background-size: var(--background-size);
+    animation: anim var(--animation-length) steps(var(--frames)) infinite;
     padding-bottom: 3px;
-    background-repeat: no-repeat;
-    z-index: 1;
+}
+@keyframes anim {
+    0% {
+        background-position-x: 0;
+    }
+    100% {
+        background-position-x: 100%;
+    }
 }
 #switch {
     height: 300px;
