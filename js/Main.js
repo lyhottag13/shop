@@ -31,7 +31,7 @@ let signClicks = { number: 0 };
 closedSign.addEventListener("pointerdown", () => {
     if (signClicks.number === 1) {
         displayText("* You observe that this sign has nothing left to observe.");
-        animator.setAnimation(images["OpeningBusiness"], 21, 17, "forwards");
+        animator.setAnimation(images["OpeningBusiness"], 21, 23, "forwards");
         closedSign.remove();
         createButton("ali", "40%", "30%", "40%", "30%", ali);
     } else {
