@@ -22,8 +22,9 @@ export class SoundManager {
         this.backgroundSource.buffer = this.buffers[name];
         this.backgroundSource.connect(this.audioContext.destination);
         this.backgroundSource.start(0);
+        this.backgroundSource.loop = true;
     }
-    stop() {
+    stopBackgroundMusic() {
         this.backgroundSource.stop();
     }
 }

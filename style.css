@@ -5,6 +5,7 @@
     
 }
 body {
+    touch-action: manipulation;
     overflow: hidden;
     background-color: rgb(10, 10, 10);
     cursor: url("resources/images/Cursor.webp") 16 16, auto;
@@ -31,6 +32,7 @@ body {
     --frames: ;
     --background-size: ;
     --background-position: ;
+    margin-top: 100px;
     height: 500px;
     width: 500px;
     background-image: var(--animation-image);
@@ -69,18 +71,15 @@ body {
     margin: 0 auto;
     top: -30px;
     right: 0px;
-}
-#switch button {
-    top: 0;
-    left: 400px;
-    height: 280px;
-    width: 30px;
+    opacity: 0;
+    transition: all 1s ease;
 }
 #counter {
     width: fit-content;
     position: relative;
     text-align: center;
     margin: 0 auto;
+    margin-bottom: -53px;
 }
 #closedSign {
     top: 61%;
@@ -89,13 +88,14 @@ body {
     height: 9%;
 }
 /* #test {
-    top: 40%;
-    left: 30%;
-    width: 40%;
-    height: 30%;
-
+    position: absolute;
+    top: 0%;
+    left: 80%;
+    width: 7%;
+    height: 94%;
 } */
 #textDiv {
+    margin: 50px;
     border: solid rgb(255, 255, 255);
     border-width: 10px;
     border-radius: 0px;
@@ -104,6 +104,7 @@ body {
 }
 
 #text {
+    font-size: 80px;
     padding: 20px;
     margin-top: 0px;
     font-family: fa;
@@ -115,13 +116,9 @@ body {
     #switchAnimation {
         height: 300px;
         width: 300px;
-        background-size: 8000px 300px;
         }
     #switch button {
-        top: 0;
-        left: 230px;
-        height: 170px;
-        width: 30px;
+        height: 40%;
     }
     #animation {
         margin-top: 100px;
@@ -134,33 +131,14 @@ body {
         width: 36%;
         height: 9%;
     }
+    #textDiv {
+        margin: 0px;
+        border-width: 7px;
+    }
     #text {
         font-size: 40px;
     }
     #counter {
         margin-bottom: -2px;
-    }
-}
-@media (min-width: 601px) {
-    #switch {
-        margin-bottom: -300px;
-    }
-    #switch img {
-        height: 300px;
-    }
-    #animation {
-        margin-top: 100px;
-        /* height: 500px; */
-    }
-
-    #textDiv {
-        margin: 50px;
-    }
-
-    #text {
-        font-size: 80px;
-    }
-    #counter {
-        margin-bottom: -53px;
     }
 }
