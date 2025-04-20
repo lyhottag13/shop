@@ -59,12 +59,12 @@ async function switchLightsEvent() {
             const totalFrames = 28;
             const fps = 20;
             switchAnimator.setAnimation(images["SwitchPull"], totalFrames, fps, "forwards");
-            counterAnimator.setAnimation(images["ClosedLights"], 1, 1, "forwards")
             await sleep(13 / fps * 1000);
+            counterAnimator.setAnimation(images["ClosedLights"], 1, 1, "forwards")
+            body.style.backgroundImage = "url('resources/images/Background.webp')";
             isLightOn = true;
             player.stopBackgroundMusic();
-            body.style.backgroundImage = "url('resources/images/Background.webp')";
-            await sleep(2000);
+            await sleep(1000);
         }
         displayText("* The switch is now on.");
     }
@@ -75,7 +75,7 @@ async function closedSignEvent() {
         displayText("* ?");
         counterAnimator.setAnimation(images["OpeningBusiness"], 21, 23, "forwards");
         closedSign.remove();
-        await sleep(21 / 23 * 1000 + 2000);
+        await sleep(21 / 23 * 1000 + 1000);
         createButton("signGone", "40%", "30%", "40%", "30%", () => callEvent("signGoneEvent"), "counter");
         await displayText("* The sign has mysteriously vanished.");
     } else if (signClicks.number > 1) {
@@ -99,7 +99,7 @@ async function signGoneEvent() {
     return;
 }
 async function aliEvent() {
-    await displayText("Howdy!|Welcome to my shop!#I'm still setting up, but feel free to look around!");
+    await displayText("Howdy, I'm Ali!|Welcome to my shop!#I'm still setting up, but feel free to look around!");
 }
 async function initialize() {
     player.playBackgroundMusic("wind");
