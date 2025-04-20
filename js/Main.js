@@ -3,7 +3,6 @@ import { Animator } from "./Animator.js";
 const textBox = document.getElementById("text");
 const body = document.body;
 const closedSign = document.getElementById("closedSign");
-const lightSwitch = document.getElementById("lightSwitch");
 const MOBILE = (window.innerWidth <= 600) ? true : false;
 const FRAME_WIDTH = (window.innerWidth <= 600) ? 300 : 500;
 const player = new SoundManager();
@@ -35,16 +34,12 @@ AUDIO.forEach((name) => {
 window.onload = () => {
     switchAnimator.setAnimation(images["Switch"], 1, 1, "forwards");
     counterAnimator.setAnimation(images["Closed"], 1, 1, "forwards");
-
+    window.addEventListener("click", () => {
+        initialize();
+    }, { once: true });
 };
-window.addEventListener("click", () => {
-    initialize();
-}, { once: true });
 
 let signClicks = { number: 0 };
-closedSign.addEventListener("pointerdown", () => {
-    callEvent("closedSignEvent");
-});
 async function callEvent(eventName) {
     if (isInteractionAllowed) {
         isInteractionAllowed = false;
@@ -57,16 +52,17 @@ async function switchLightsEvent() {
         if (!isLightOn) {
             displayText("* ?");
             const totalFrames = 28;
-            const fps = 20;
+            const fps = 25;
             switchAnimator.setAnimation(images["SwitchPull"], totalFrames, fps, "forwards");
             await sleep(13 / fps * 1000);
             counterAnimator.setAnimation(images["ClosedLights"], 1, 1, "forwards")
             body.style.backgroundImage = "url('resources/images/Background.webp')";
+            body.style.backgroundColor = "rgb(179, 115, 10)";
             isLightOn = true;
             player.stopBackgroundMusic();
-            await sleep(1000);
+            await sleep(1500);
         }
-        displayText("* The switch is now on.");
+        await displayText("* The switch is now on.");
     }
     return;
 }
@@ -74,7 +70,7 @@ async function closedSignEvent() {
     if (signClicks.number > 1 && isLightOn === true) {
         displayText("* ?");
         counterAnimator.setAnimation(images["OpeningBusiness"], 21, 23, "forwards");
-        closedSign.remove();
+        document.getElementById("closedSign").remove();
         await sleep(21 / 23 * 1000 + 1000);
         createButton("signGone", "40%", "30%", "40%", "30%", () => callEvent("signGoneEvent"), "counter");
         await displayText("* The sign has mysteriously vanished.");
@@ -91,7 +87,7 @@ async function closedSignEvent() {
 }
 async function signGoneEvent() {
     await displayText("* You peer over the counter...");
-    await sleep(2000);
+    await sleep(1800);
     player.playBackgroundMusic("shop");
     counterAnimator.setAnimation(images["Idle"], 17, 12, "infinite");
     document.getElementById("signGone").remove();
@@ -100,11 +96,13 @@ async function signGoneEvent() {
 }
 async function aliEvent() {
     await displayText("Howdy, I'm Ali!|Welcome to my shop!#I'm still setting up, but feel free to look around!");
+    return;
 }
 async function initialize() {
     player.playBackgroundMusic("wind");
     isTyping = false;
     await displayText("* There's nobody here...");
+    createButton("closedSign", (MOBILE) ? "65%" : "62%", "32%", "36%", "9%", () => callEvent("closedSignEvent"), "counter");
 }
 async function displayText(text, counter) {
     if (!isTyping) {
@@ -142,7 +140,6 @@ function createButton(id, top, left, width, height, functionName, div) {
     button.style.left = left;
     button.style.width = width;
     button.style.height = height;
-    button.style.zIndex = 100;
     document.getElementById(div).appendChild(button);
     button.addEventListener("pointerdown", functionName);
 }

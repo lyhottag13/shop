@@ -5,6 +5,9 @@
     
 }
 body {
+    background-repeat: no-repeat;
+    /* background-image: url("resources/images/Background.webp"); */
+    image-rendering: pixelated;
     touch-action: manipulation;
     overflow: hidden;
     background-position: 0px -70px;
@@ -112,6 +115,13 @@ body {
     font-family: fa;
 }
 @media (max-width: 600px) {
+    body {
+        background-size: 300%;
+        background-origin: 0 0;
+        background-position: -300px -0px;
+        background-color: rgb(10, 10, 10);
+        cursor: url("resources/images/Cursor.webp") 16 16, auto;
+    }
     #switch {
         margin-bottom: -300px;
     }
@@ -119,20 +129,12 @@ body {
         height: 300px;
         width: 300px;
         }
-    #switch button {
-        height: 40%;
-    }
     #animation {
         margin-top: 100px;
         height: 300px;
         width: 300px;
     }
-    #closedSign {
-        top: 65%;
-        left: 32%;
-        width: 36%;
-        height: 9%;
-    }
+
     #textDiv {
         margin: 0px;
         border-width: 7px;
