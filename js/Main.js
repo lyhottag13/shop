@@ -82,7 +82,7 @@ async function signGoneEvent() {
     createButton("ali", "40%", "30%", "40%", "30%", ali);
 }
 async function ali() {
-    displayText("Hello!|Welcome to my shop!#It's a little bare, but feel free to look around!");
+    displayText("Howdy!|Welcome to my shop!#I'm still setting up, but feel free to look around!");
 }
 async function initialize() {
     animator2.setAnimation(images["Switch"], 1, 1, "forwards");
