@@ -12,7 +12,7 @@ body {
 .interactable {
     position: absolute;
     cursor: url("resources/images/CursorWow.webp") 16 16, auto;
-    opacity: 0.2;
+    opacity: 0;
     z-index: 100;
 }
 .animation {

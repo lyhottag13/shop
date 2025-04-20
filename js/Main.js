@@ -48,7 +48,7 @@ async function closedSignEvent() {
         if (signClicks.number === 1 && isLightOn === true) {
             displayText("* ?");
             animator.setAnimation(images["OpeningBusiness"], 21, 23, "forwards");
-            closedSign.remove();
+            closedSign.remove();    
             await sleep(21 / 23 * 1000);
             createButton("signGone", "40%", "30%", "40%", "30%", signGoneEvent);
         } else if (signClicks.number === 1) {
