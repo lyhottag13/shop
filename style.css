@@ -7,6 +7,8 @@
 body {
     touch-action: manipulation;
     overflow: hidden;
+    /* background-size: 120%; */
+    background-position: -100px -100px;
     background-color: rgb(10, 10, 10);
     cursor: url("resources/images/Cursor.webp") 16 16, auto;
 }
@@ -19,6 +21,7 @@ body {
 .animation {
     z-index: 0;
     background-repeat: no-repeat;
+    image-rendering: pixelated;
 }
 #game {
     display: flex;

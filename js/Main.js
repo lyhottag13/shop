@@ -1,6 +1,7 @@
 import { SoundManager } from "./SoundManager.js";
 import { Animator } from "./Animator.js";
 const textBox = document.getElementById("text");
+const body = document.body;
 const closedSign = document.getElementById("closedSign");
 const lightSwitch = document.getElementById("lightSwitch");
 const MOBILE = (window.innerWidth <= 600) ? true : false;
@@ -33,7 +34,7 @@ AUDIO.forEach((name) => {
 
 window.onload = () => {
     switchAnimator.setAnimation(images["Switch"], 1, 1, "forwards");
-    counterAnimator.setAnimation(images["ClosedLights"], 1, 1, "forwards");
+    counterAnimator.setAnimation(images["Closed"], 1, 1, "forwards");
 
 };
 window.addEventListener("click", () => {
@@ -58,10 +59,11 @@ async function switchLightsEvent() {
             const totalFrames = 28;
             const fps = 20;
             switchAnimator.setAnimation(images["SwitchPull"], totalFrames, fps, "forwards");
+            counterAnimator.setAnimation(images["ClosedLights"], 1, 1, "forwards")
             await sleep(13 / fps * 1000);
             isLightOn = true;
             player.stopBackgroundMusic();
-            document.body.style.backgroundColor = "rgb(226, 182, 117)";
+            body.style.backgroundImage = "url('resources/images/Background.webp')";
             await sleep(2000);
         }
         displayText("* The switch is now on.");
