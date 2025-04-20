@@ -5,11 +5,12 @@ const closedSign = document.getElementById("closedSign");
 const lightSwitch = document.getElementById("lightSwitch");
 const player = new SoundManager();
 const FRAME_WIDTH = (window.innerWidth <= 600) ? 300 : 500;
-const animator = new Animator(FRAME_WIDTH);
+const animator = new Animator(FRAME_WIDTH, "animation");
+const animator2 = new Animator(FRAME_WIDTH, "switch");
 let isTyping = true;
 
 const AUDIO = ["wind", "generic1", "generic2"];
-const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness"];
+const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "SwitchPull"];
 
 const images = {};
 
@@ -22,7 +23,7 @@ AUDIO.forEach((name) => {
     player.load(name);
 });
 
-window.onload = async () => {
+window.onload = () => {
     initialize();
 };
 
@@ -81,6 +82,7 @@ function createButton(id, top, left, width, height, functionName) {
     button.style.left = left;
     button.style.width = width;
     button.style.height = height;
+    button.style.zIndex = 100;
     document.getElementById("counter").appendChild(button);
     button.addEventListener("pointerdown", functionName);
 }
