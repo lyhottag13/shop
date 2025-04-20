@@ -5,14 +5,13 @@ const closedSign = document.getElementById("closedSign");
 const lightSwitch = document.getElementById("lightSwitch");
 const player = new SoundManager();
 const FRAME_WIDTH = (window.innerWidth <= 600) ? 300 : 500;
-const animator = new Animator(FRAME_WIDTH, "animation");
-const animator2 = new Animator(FRAME_WIDTH, "switchAnimation");
+const counterAnimator = new Animator(FRAME_WIDTH, "animation");
+const switchAnimator = new Animator(FRAME_WIDTH, "switchAnimation");
 let isTyping = true;
 let isLightOn = false;
 
 const AUDIO = ["wind", "generic1", "generic2"];
 const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "Switch", "SwitchPull"];
-const EVENTS = ["closedSign", "switchLights"];
 
 const images = {};
 const eventHandlers = {
@@ -47,7 +46,7 @@ async function closedSignEvent() {
     if (!isTyping) {
         if (signClicks.number === 1 && isLightOn === true) {
             displayText("* ?");
-            animator.setAnimation(images["OpeningBusiness"], 21, 23, "forwards");
+            counterAnimator.setAnimation(images["OpeningBusiness"], 21, 23, "forwards");
             closedSign.remove();    
             await sleep(21 / 23 * 1000);
             createButton("signGone", "40%", "30%", "40%", "30%", signGoneEvent);
@@ -64,7 +63,7 @@ async function switchLightsEvent() {
             displayText("* ?");
             const totalFrames = 28;
             const fps = 20;
-            animator2.setAnimation(images["SwitchPull"], totalFrames, fps, "forwards");
+            switchAnimator.setAnimation(images["SwitchPull"], totalFrames, fps, "forwards");
             await sleep(13 / fps * 1000);
             isLightOn = true;
             player.stop();
@@ -77,7 +76,7 @@ async function switchLightsEvent() {
 async function signGoneEvent() {
     displayText("* The sign has mysteriously disappeared.");
     await sleep(2000);
-    animator.setAnimation(images["Idle"], 17, 12, "infinite");
+    counterAnimator.setAnimation(images["Idle"], 17, 12, "infinite");
     document.getElementById("signGone").remove();
     createButton("ali", "40%", "30%", "40%", "30%", ali);
 }
@@ -85,8 +84,8 @@ async function ali() {
     displayText("Howdy!|Welcome to my shop!#I'm still setting up, but feel free to look around!");
 }
 async function initialize() {
-    animator2.setAnimation(images["Switch"], 1, 1, "forwards");
-    animator.setAnimation(images["ClosedLights"], 1, 1, "forwards");
+    switchAnimator.setAnimation(images["Switch"], 1, 1, "forwards");
+    counterAnimator.setAnimation(images["ClosedLights"], 1, 1, "forwards");
     await sleep(2000);
     player.playBackgroundMusic("wind");
     isTyping = false;
