@@ -2,6 +2,8 @@ export class SoundManager {
     constructor() {
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this.buffers = {};
+        this.source = null;
+        this.backgroundSource = null;
     }
     async load(name) {
         const response = await fetch("resources/audio/" + name + ".mp3");
@@ -10,9 +12,18 @@ export class SoundManager {
         this.buffers[name] = buffer;
     }
     play(name) {
-        const source = this.audioContext.createBufferSource();
-        source.buffer = this.buffers[name];
-        source.connect(this.audioContext.destination);
-        source.start(0);
+        this.source = this.audioContext.createBufferSource();
+        this.source.buffer = this.buffers[name];
+        this.source.connect(this.audioContext.destination);
+        this.source.start(0);
+    }
+    playBackgroundMusic(name) {
+        this.backgroundSource = this.audioContext.createBufferSource();
+        this.backgroundSource.buffer = this.buffers[name];
+        this.backgroundSource.connect(this.audioContext.destination);
+        this.backgroundSource.start(0);
+    }
+    stop() {
+        this.backgroundSource.stop();
     }
 }

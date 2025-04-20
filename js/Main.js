@@ -67,6 +67,7 @@ async function switchLightsEvent() {
             animator2.setAnimation(images["SwitchPull"], totalFrames, fps, "forwards");
             await sleep(13 / fps * 1000);
             isLightOn = true;
+            player.stop();
             document.body.style.backgroundColor = "rgb(226, 182, 117)";
         } else {
             displayText("* The switch is now on.");
@@ -87,7 +88,7 @@ async function initialize() {
     animator2.setAnimation(images["Switch"], 1, 1, "forwards");
     animator.setAnimation(images["ClosedLights"], 1, 1, "forwards");
     await sleep(2000);
-    player.play("wind");
+    player.playBackgroundMusic("wind");
     isTyping = false;
     await displayText("* There's nobody here...");
 }
