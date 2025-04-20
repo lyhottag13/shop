@@ -1,10 +1,7 @@
 export class Animator {
     constructor(width, source) {
-        this.framerate = 20;
-        this.frames = 17;
-        this.FRAME_WIDTH = width;
-        this.ROW_LENGTH = this.frames * this.FRAME_WIDTH;
         this.animation = document.getElementById(source);
+        this.FRAME_WIDTH = width;
     }
     setAnimation(imageSource, frames, framerate, end) {
         this.animation.style.setProperty("--animation-image", `url(${imageSource.src})`);
