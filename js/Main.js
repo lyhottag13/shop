@@ -2,7 +2,6 @@ import { SoundManager } from "./SoundManager.js";
 import { Animator } from "./Animator.js";
 const textBox = document.getElementById("text");
 const body = document.body;
-const closedSign = document.getElementById("closedSign");
 const MOBILE = (window.innerWidth <= 600) ? true : false;
 const FRAME_WIDTH = (window.innerWidth <= 600) ? 300 : 500;
 const player = new SoundManager();
