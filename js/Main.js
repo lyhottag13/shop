@@ -34,12 +34,7 @@ AUDIO.forEach((name) => {
 window.onload = () => {
     switchAnimator.setAnimation(images["Switch"], 1, 1, "forwards");
     counterAnimator.setAnimation(images["Closed"], 1, 1, "forwards");
-    document.body.addEventListener("click", () => {
-        document.body.style.backgroundColor = "white";
-        initialize();
-    }, { once: true });
-    document.body.addEventListener("touchstart", () => {
-        document.body.style.backgroundColor = "white";
+    document.body.addEventListener("pointerdown", () => {
         initialize();
     }, { once: true });
 };
