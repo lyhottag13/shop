@@ -73,6 +73,7 @@ async function switchLightsEvent() {
         if (!isLightOn) {
             await displayText("* The switch is too high to reach.");
             await sleep(1400);
+            document.getElementById("lightSwitch").remove();
             displayText("* ?");
             switchAnimator.setAnimation(images["SwitchPull1"], 14, 25, "forwards");
             document.getElementById("switchAnimation").addEventListener("animationend", () => {
