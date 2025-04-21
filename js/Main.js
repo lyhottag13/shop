@@ -12,7 +12,7 @@ let isLightOn = false;
 let isInteractionAllowed = true;
 
 const AUDIO = ["wind", "shop", "generic1", "generic2", "lightclick", "lightappear"];
-const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "Switch", "SwitchPull", "Background"];
+const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "Switch", "SwitchPull", "Background", "SwitchPull1", "SwitchPull2"];
 
 const images = {};
 const eventHandlers = {
@@ -50,14 +50,35 @@ async function callEvent(eventName) {
         isInteractionAllowed = true;
     }
 }
+async function closedSignEvent() {
+    if (signClicks.number > 2) {
+        await displayText("* You observe that this sign has nothing left to observe.");
+    } else if (signClicks.number === 2) {
+        // Show lightswitch.
+        await displayText("* You observe that this sign has nothing left to observe.", signClicks);
+        await sleep(1000);
+        player.play("lightappear");
+        createButton("lightSwitch", "0", "80%", "7%", (MOBILE) ? "60%" : "94%", () => callEvent("switchLightsEvent"), "switch");
+        document.getElementById("switch").style.opacity = 1;
+        await sleep(1500);
+    } else if (signClicks.number === 1) {
+        await displayText("* The sign's penmanship is impeccable.", signClicks);
+    } else {
+        await displayText("* The sign appears to be hastily drawn on with a sharpie.", signClicks);
+    }
+    return;
+}
 async function switchLightsEvent() {
     if (!isTyping) {
         if (!isLightOn) {
-            const lightFrame = 13;
-            const fps = 25;
+            await displayText("* The switch is too high to reach.");
+            await sleep(1400);
             displayText("* ?");
-            switchAnimator.setAnimation(images["SwitchPull"], 28, fps, "forwards");
-            await sleep(lightFrame / fps * 1000);
+            switchAnimator.setAnimation(images["SwitchPull1"], 14, 25, "forwards");
+            document.getElementById("switchAnimation").addEventListener("animationend", () => {
+                switchAnimator.setAnimation(images["SwitchPull2"], 24, 25, "forwards");
+            }, { once: true });
+            await sleep(13 / 25 * 1000);
             // Lights activate here.
             player.play("lightclick");
             player.stopBackgroundMusic();
@@ -68,12 +89,12 @@ async function switchLightsEvent() {
             document.getElementById("closedSign").remove();
             await sleep(1500);
             await displayText("* The switch is now on.");
-            await sleep(2000);
+            await sleep(1500);
             await displayText("* You hear shuffling behind the counter.");
             await sleep(2000);
             counterAnimator.setAnimation(images["OpeningBusiness"], 21, 23, "forwards");
             await sleep(21 / 23 * 1000 + 1500);
-            await displayText("* You are filled with CURIOSITY.#* You decide to peek over the counter...");
+            await displayText("* You are filled with CURIOSITY.#* You decide to take a peek...");
             await sleep(1800);
             player.playBackgroundMusic("shop");
             counterAnimator.setAnimation(images["Idle"], 17, 12, "infinite");
@@ -84,22 +105,7 @@ async function switchLightsEvent() {
     }
     return;
 }
-async function closedSignEvent() {
-    if (signClicks.number > 2) {
-        await displayText("* You observe that this sign has nothing left to observe.");
-    } else if (signClicks.number === 2) {
-        await displayText("* You observe that this sign has nothing left to observe.", signClicks);
-        await sleep(1000);
-        player.play("lightappear");
-        createButton("lightSwitch", "0", "80%", "7%", (MOBILE) ? "60%" : "94%", () => callEvent("switchLightsEvent"), "switch");
-        document.getElementById("switch").style.opacity = 1;
-    } else if (signClicks.number === 1) {
-        await displayText("* The sign's penmanship is impeccable.", signClicks);
-    } else {
-        await displayText("* The sign appears to be hastily drawn on with a sharpie.", signClicks);
-    }
-    return;
-}
+
 async function aliEvent() {
     await displayText("Howdy, I'm Ali!|Welcome to my shop!#I'm still setting up, but feel free to stick around!");
     return;
@@ -119,6 +125,9 @@ async function displayText(text, counter) {
                 textBox.innerHTML = "";
             } else if (charAt === " ") {
                 textBox.innerHTML += " ";
+            } else if (charAt === ",") {
+                textBox.innerHTML += ",";
+                await sleep(500);
             } else {
                 textBox.innerHTML += charAt;
                 player.play("generic2");
