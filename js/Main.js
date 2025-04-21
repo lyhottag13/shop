@@ -55,7 +55,7 @@ async function switchLightsEvent() {
             const fps = 25;
             switchAnimator.setAnimation(images["SwitchPull"], totalFrames, fps, "forwards");
             await sleep(13 / fps * 1000);
-            counterAnimator.setAnimation(images["ClosedLights"], 1, 1, "forwards")
+            counterAnimator.setAnimation(images["ClosedLights"], 1, 1, "forwards");
             body.style.backgroundImage = "url('resources/images/Background.webp')";
             body.style.backgroundColor = "rgb(179, 115, 10)";
             isLightOn = true;
