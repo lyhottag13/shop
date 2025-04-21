@@ -38,6 +38,10 @@ window.onload = () => {
         document.body.style.backgroundColor = "white";
         initialize();
     }, { once: true });
+    document.body.addEventListener("touchstart", () => {
+        document.body.style.backgroundColor = "white";
+        initialize();
+    }, { once: true });
 };
 
 let signClicks = { number: 0 };
