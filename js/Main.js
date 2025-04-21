@@ -34,7 +34,7 @@ AUDIO.forEach((name) => {
 window.onload = () => {
     switchAnimator.setAnimation(images["Switch"], 1, 1, "forwards");
     counterAnimator.setAnimation(images["Closed"], 1, 1, "forwards");
-    window.addEventListener("click", () => {
+    document.body.addEventListener("click", () => {
         initialize();
     }, { once: true });
 };
