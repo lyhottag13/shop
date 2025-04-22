@@ -27,6 +27,9 @@ export class SoundManager {
         this.gain.gain.value = 1;
     }
     stopBackgroundMusic(delayParam) {
+        if (this.backgroundSource === null) {
+            return;
+        }
         const now = this.audioContext.currentTime;
         this.gain.gain.setValueAtTime(this.gain.gain.value, now);
         const delay = delayParam;

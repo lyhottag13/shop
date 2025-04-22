@@ -12,7 +12,7 @@ let isTyping = true;
 let isLightOn = false;
 let isInteractionAllowed = true;
 let currentScreen = 1;
-
+let audioInitialized = false;
 const AUDIO = ["wind", "shop", "generic1", "generic2", "lightclick", "lightappear"];
 const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "Switch", "SwitchPull", "Background", "SwitchPull1", "SwitchPull2", "Face", "Door"];
 
@@ -36,20 +36,32 @@ AUDIO.forEach((name) => {
 
 window.onload = () => {
     doorAnimator.setAnimation(images["Door"], 17, 0, "forwards");
-    switchAnimator.setAnimation(images["Switch"], 1, 1, "forwards");
-    counterAnimator.setAnimation(images["Closed"], 1, 1, "forwards");
+    switchAnimator.setAnimation(images["Switch"], 1, 0, "forwards");
+    counterAnimator.setAnimation(images["Closed"], 1, 0, "forwards");
     document.getElementById("screen1").style.display = "flex";
-    document.addEventListener("pointerdown", () => {
+    document.addEventListener("click", () => {
+        if (player.audioContext.state === "suspended") {
+            player.audioContext.resume();
+        }
+        audioInitialized = true;
         initialize();
     }, { once: true });
+    document.addEventListener("touchend", () => {
+        if (player.audioContext.state === "suspended") {
+            player.audioContext.resume();
+        }
+        audioInitialized = true;
+    }, { once: true });
 };
+// Starts the game, sets the screen, and plays the background audio.
 async function initialize() {
     setScreen(1, 0);
     player.playBackgroundMusic("wind");
     await sleep(1000);
-    createButton("doorButton", "23%", "22%", "57%", "77%", () => callEvent("doorEvent"), "door");
+    createButton("doorButton", (MOBILE) ? "10%" : "23%", (MOBILE) ? "30%" : "22%", (MOBILE) ? "40%" : "57%", (MOBILE) ? "50%" : "77%", () => callEvent("doorEvent"), "door");
 }
 let signClicks = { number: 0 };
+// Calls events so that we don't have overlap of events.
 async function callEvent(eventName) {
     if (isInteractionAllowed) {
         isInteractionAllowed = false;
@@ -57,6 +69,7 @@ async function callEvent(eventName) {
         isInteractionAllowed = true;
     }
 }
+// Activates when door is clicked, the door opens and expands, then the screens are swapped.
 async function doorEvent() {
     doorAnimator.setAnimation(images["Door"], 17, 24, "forwards");
     isTyping = false;
@@ -96,14 +109,15 @@ async function switchLightsEvent() {
             await sleep(1400);
             document.getElementById("lightSwitch").remove();
             displayText("* ?");
+            // Now you see the hand.
             switchAnimator.setAnimation(images["SwitchPull1"], 14, 25, "forwards");
             document.getElementById("switchAnimation").addEventListener("animationend", () => {
                 switchAnimator.setAnimation(images["SwitchPull2"], 24, 25, "forwards");
             }, { once: true });
             await sleep(13 / 25 * 1000);
-            // Lights activate here.
+            // The lights activate here.
             player.play("lightclick");
-            counterAnimator.setAnimation(images["ClosedLights"], 1, 1, "forwards");
+            counterAnimator.setAnimation(images["ClosedLights"], 1, 0, "forwards");
             body.style.backgroundImage = `url("${images["Background"].src}")`;
             body.style.backgroundColor = "rgb(179, 115, 10)";
             isLightOn = true;
@@ -172,7 +186,7 @@ function createButton(id, top, left, width, height, functionName, div) {
     document.getElementById(div).appendChild(button);
     button.addEventListener("pointerdown", functionName);
 }
-//
+// Sets a screen so that I can use this between any two screens.
 async function setScreen(screenNumber, transitionTime) {
     player.stopBackgroundMusic(3);
     document.getElementById(`screen${currentScreen}`).style.opacity = 0;

@@ -38,6 +38,9 @@ body {
     opacity: 0;
 }
 #door {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
     height: 500px;
     width: 500px;
@@ -147,6 +150,14 @@ body {
     }
     #switch {
         margin-bottom: -300px;
+    }
+    #door {
+        margin-top: 50%;
+    }
+    #doorAnimation {
+        height: 300px;
+        width: 300px;
+
     }
     #switchAnimation {
         height: 300px;
