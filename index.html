@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" href="style.css">
-        <link rel="icon" type="image/ico" href="resources/images/Logo.ico">
-        <link rel="preload" href="resources/misc/8bitoperator_jve.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-        <meta name="description" content="Meet mysterious fellows in mysterious locations through mysterious circumstances.">
-        <meta name="keywords" content="Shop, lyhottag13, github, shopping, shopper, cartoon, creature, mystery, fellow">
-        <meta name="author" content="Lyhottag13">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-        <meta charset="UTF-8">
-        <title>Shop!</title>
-    </head>
-    <body id="body">
-        <div id="game">
+
+<head>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/ico" href="resources/images/Logo.ico">
+    <link rel="preload" href="resources/misc/8bitoperator_jve.woff2" as="font" type="font/woff2"
+        crossorigin="anonymous">
+    <meta name="description"
+        content="Meet mysterious fellows in mysterious locations through mysterious circumstances.">
+    <meta name="keywords" content="Shop, lyhottag13, github, shopping, shopper, cartoon, creature, mystery, fellow">
+    <meta name="author" content="Lyhottag13">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>Shop!</title>
+</head>
+
+<body id="body">
+    <div id="game">
+        <div id="screen1" class="screen">
+            
+        </div>
+        <div id="screen2" class="screen">
             <div id="counter">
                 <div id="animation" class="animation"></div>
                 <!-- <button id="closedSign" class="interactable"></button> -->
@@ -21,10 +29,12 @@
             <div id="switch">
                 <div id="switchAnimation" class="animation"></div>
             </div>
+            <div id="textDiv">
+                <p id="text">* </p>
+            </div>
         </div>
-        <div id="textDiv">
-            <p id="text">* </p>
-        </div>
-        <script type="module" src="./js/Main.js"></script>
-    </body>
+    </div>
+    <script type="module" src="./js/Main.js"></script>
+</body>
+
 </html>

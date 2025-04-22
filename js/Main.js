@@ -12,7 +12,7 @@ let isLightOn = false;
 let isInteractionAllowed = true;
 
 const AUDIO = ["wind", "shop", "generic1", "generic2", "lightclick", "lightappear"];
-const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "Switch", "SwitchPull", "Background", "SwitchPull1", "SwitchPull2"];
+const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "Switch", "SwitchPull", "Background", "SwitchPull1", "SwitchPull2", "Face"];
 
 const images = {};
 const eventHandlers = {

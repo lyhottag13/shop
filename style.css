@@ -6,7 +6,8 @@
 }
 body {
     background-repeat: no-repeat;
-    /* background-image: url("resources/images/Background.webp"); */
+    background-image: url("resources/images/Background.webp");
+    background-size: 100%;
     image-rendering: pixelated;
     touch-action: manipulation;
     overflow: hidden;
@@ -17,7 +18,7 @@ body {
 .interactable {
     position: absolute;
     cursor: url("resources/images/CursorHighlight.webp") 16 16, auto;
-    opacity: 0;
+    opacity: 0.2;
     z-index: 100;
 }
 .animation {
@@ -25,7 +26,7 @@ body {
     background-repeat: no-repeat;
     image-rendering: pixelated;
 }
-#game {
+.screen {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -44,7 +45,6 @@ body {
     background-position-x : 0;
     background-size: var(--background-size);
     animation: anim var(--animation-length) steps(var(--frames)) infinite;
-    padding-bottom: 3px;
 }
 
 #switchAnimation {
@@ -80,11 +80,9 @@ body {
     transition: all 2s ease;
 }
 #counter {
-    width: fit-content;
     position: relative;
     text-align: center;
     margin: 0 auto;
-    margin-bottom: -53px;
 }
 #closedSign {
     top: 61%;
@@ -100,14 +98,15 @@ body {
     height: 60%;
 }
 #textDiv {
-    margin: 50px;
+    width: 95%;
+    /* top: 50px; */
+    /* margin-top: ; */
     border: solid rgb(255, 255, 255);
     border-width: 10px;
     border-radius: 0px;
     background-color: black;
     color: white;
 }
-
 #text {
     font-size: 80px;
     padding: 20px;
@@ -141,8 +140,5 @@ body {
     }
     #text {
         font-size: 40px;
-    }
-    #counter {
-        margin-bottom: -2px;
     }
 }
