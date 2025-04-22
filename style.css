@@ -4,21 +4,24 @@
     font-display: swap;
     
 }
+html {
+    cursor: url("resources/images/Cursor.webp") 16 16, auto;
+}
 body {
     background-repeat: no-repeat;
-    background-image: url("resources/images/Background.webp");
+    /* background-image: url("resources/images/Background.webp"); */
     background-size: 100%;
     image-rendering: pixelated;
     touch-action: manipulation;
     overflow: hidden;
     background-position: 0px -70px;
     background-color: rgb(10, 10, 10);
-    cursor: url("resources/images/Cursor.webp") 16 16, auto;
+
 }
 .interactable {
     position: absolute;
     cursor: url("resources/images/CursorHighlight.webp") 16 16, auto;
-    opacity: 0.2;
+    opacity: 0;
     z-index: 100;
 }
 .animation {
@@ -27,9 +30,31 @@ body {
     image-rendering: pixelated;
 }
 .screen {
-    display: flex;
+    --transition-time: 2s;
+    display: none;
     flex-direction: column;
     align-items: center;
+    transition: opacity var(--transition-time) ease, transform var(--transition-time) ease;
+    opacity: 0;
+}
+#door {
+    position: relative;
+    height: 500px;
+    width: 500px;
+}
+#doorAnimation {
+    --background-width: ;
+    --animation-image: ;
+    --animation-length: ;
+    --frames: ;
+    --background-size: ;
+    --background-position: ;
+    height: 500px;
+    width: 500px;
+    background-image: var(--animation-image);
+    background-position-x : 0;
+    background-size: var(--background-size);
+    animation: anim var(--animation-length) steps(var(--frames)) infinite;
 }
 #animation {
     --background-width: ;
@@ -90,13 +115,12 @@ body {
     width: 36%;
     height: 9%;
 }
-#test {
-    position: absolute;
-    top: 40%;
-    left: 10%;
-    width: 80%;
-    height: 60%;
-}
+/* #test {
+    top: 23%;
+    left: 22%;
+    width: 57%;
+    height: 77%;
+} */
 #textDiv {
     width: 95%;
     /* top: 50px; */

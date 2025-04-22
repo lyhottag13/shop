@@ -4,6 +4,7 @@ export class SoundManager {
         this.buffers = {};
         this.source = null;
         this.backgroundSource = null;
+        this.gain = this.audioContext.createGain();
     }
     async load(name) {
         const response = await fetch("resources/audio/" + name + ".mp3");
@@ -20,11 +21,17 @@ export class SoundManager {
     playBackgroundMusic(name) {
         this.backgroundSource = this.audioContext.createBufferSource();
         this.backgroundSource.buffer = this.buffers[name];
-        this.backgroundSource.connect(this.audioContext.destination);
+        this.backgroundSource.connect(this.gain).connect(this.audioContext.destination);
         this.backgroundSource.start(0);
         this.backgroundSource.loop = true;
+        this.gain.gain.value = 1;
     }
-    stopBackgroundMusic() {
-        this.backgroundSource.stop();
+    stopBackgroundMusic(delayParam) {
+        const now = this.audioContext.currentTime;
+        this.gain.gain.setValueAtTime(this.gain.gain.value, now);
+        const delay = delayParam;
+        this.gain.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + delay);
+        this.backgroundSource.stop(this.audioContext.currentTime + delay);
+        this.gain.gain.value = 1;
     }
 }
