@@ -11,12 +11,10 @@ const player = new SoundManager();
 let isTyping = true;
 let isLightOn = false;
 let isInteractionAllowed = true;
+let isInitialized = false;
 let currentScreen = 1;
-let audioInitialized = false;
-const AUDIO = ["wind", "shop", "generic1", "generic2", "lightclick", "lightappear"];
+const AUDIO = ["wind", "shop", "generic1", "generic2", "lightclick", "lightappear", "doorcreak"];
 const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "Switch", "SwitchPull", "Background", "SwitchPull1", "SwitchPull2", "Face", "Door"];
-
-const screens = document.getElementsByClassName("screen");
 
 const images = {};
 const eventHandlers = {
@@ -30,28 +28,52 @@ IMAGES.forEach((name) => {
     image.src = `resources/images/${name}.webp`;
     images[name] = image;
 });
-AUDIO.forEach((name) => {
-    player.load(name);
-});
 
-window.onload = () => {
+
+window.onload = async () => {
     doorAnimator.setAnimation(images["Door"], 17, 0, "forwards");
     switchAnimator.setAnimation(images["Switch"], 1, 0, "forwards");
     counterAnimator.setAnimation(images["Closed"], 1, 0, "forwards");
     document.getElementById("screen1").style.display = "flex";
-    document.addEventListener("click", () => {
-        if (player.audioContext.state === "suspended") {
-            player.audioContext.resume();
+    document.addEventListener("click", async () => {
+        if (!isInitialized) {
+            isInitialized = true;
+            player.construct();
+            if (player.audioContext.state === "suspended") {
+                player.audioContext.resume();
+            }
+            await Promise.all(AUDIO.map(name => {
+                player.load(name);
+            }));
+            await new Promise((resolve) => {
+                if (player.audioContext.state === "running") return resolve();
+                player.audioContext.onstatechange = () => {
+                    if (player.audioContext.state === "running") {
+                        resolve();
+                    }
+                };
+                player.audioContext.resume(); // just in case
+            });
+            
+            initialize();
         }
-        audioInitialized = true;
-        initialize();
     }, { once: true });
-    document.addEventListener("touchend", () => {
-        if (player.audioContext.state === "suspended") {
-            player.audioContext.resume();
-        }
-        audioInitialized = true;
-    }, { once: true });
+    // document.addEventListener("touchend", async () => {
+    //     if (!isInitialized) {
+    //         isInitialized = true;
+    //         player.construct();
+    //         await Promise.all(AUDIO.map(name => {
+    //             player.load(name);
+    //         }));
+    //         if (player.audioContext.state === "suspended") {
+    //             player.audioContext.resume();
+    //         }
+    //         while (player.audioContext.state !== "running") {
+    //             await sleep(50);
+    //         }
+    //         initialize();
+    //     }
+    // }, { once: true });
 };
 // Starts the game, sets the screen, and plays the background audio.
 async function initialize() {
@@ -69,17 +91,18 @@ async function callEvent(eventName) {
         isInteractionAllowed = true;
     }
 }
-// Activates when door is clicked, the door opens and expands, then the screens are swapped.
 async function doorEvent() {
-    doorAnimator.setAnimation(images["Door"], 17, 24, "forwards");
+    // The door is clicked.
     isTyping = false;
-
-    await sleep(2000);
-
+    player.play("doorcreak");
+    await sleep(1500);
+    doorAnimator.setAnimation(images["Door"], 17, 13, "forwards");
+    await sleep(2500);
+    // The door will zoom in here.
     document.getElementById("screen1").style.transform = "scale(2)";
-
-    player.stopBackgroundMusic(3);
+    // The website swaps to the other screen now.
     setScreen(2, 4000);
+    player.setBackgroundVolume(-1, 0.3, 4);
     createButton("closedSign", (MOBILE) ? "65%" : "62%", "5%", "90%", "20%", () => callEvent("closedSignEvent"), "counter");
     document.getElementById("doorButton").remove();
 
@@ -116,12 +139,14 @@ async function switchLightsEvent() {
             }, { once: true });
             await sleep(13 / 25 * 1000);
             // The lights activate here.
+            player.stopBackgroundMusic(1);
             player.play("lightclick");
             counterAnimator.setAnimation(images["ClosedLights"], 1, 0, "forwards");
             body.style.backgroundImage = `url("${images["Background"].src}")`;
             body.style.backgroundColor = "rgb(179, 115, 10)";
             isLightOn = true;
             document.getElementById("closedSign").remove();
+            document.getElementById("switchAnimation").style.filter = "none";
             await sleep(1500);
             await displayText("* The switch is now on.");
             await sleep(1500);
@@ -132,6 +157,7 @@ async function switchLightsEvent() {
             await displayText("* The sign is now gone.#* You decide to take a peek...");
             await sleep(1800);
             player.playBackgroundMusic("shop");
+            player.setBackgroundVolume(0, 1, 0.5);
             counterAnimator.setAnimation(images["Idle"], 17, 12, "infinite");
             createButton("ali", "40%", "10%", "80%", "60%", () => callEvent("aliEvent"), "counter");
         } else {
@@ -188,7 +214,6 @@ function createButton(id, top, left, width, height, functionName, div) {
 }
 // Sets a screen so that I can use this between any two screens.
 async function setScreen(screenNumber, transitionTime) {
-    player.stopBackgroundMusic(3);
     document.getElementById(`screen${currentScreen}`).style.opacity = 0;
     await sleep(transitionTime);
     document.getElementById(`screen${currentScreen}`).style.transform = "";

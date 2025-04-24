@@ -82,6 +82,9 @@ body {
     --frames: ;
     --background-size: ;
     --background-position: ;
+    filter: drop-shadow(0 0 13px rgb(255, 255, 255))
+    drop-shadow(0 0 13px rgb(255, 255, 255))
+    drop-shadow(0 0 13px rgb(255, 255, 255));
     height: 500px;
     width: 500px;
     background-image: var(--animation-image);
