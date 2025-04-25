@@ -33,12 +33,13 @@ body {
     image-rendering: pixelated;
 }
 .screen {
+    transform-origin: 50% 25%;
     height: 100%;
     --transition-time: 2s;
     display: none;
     flex-direction: column;
     align-items: center;
-    transition: opacity var(--transition-time) ease, transform var(--transition-time) ease;
+    transition: all var(--transition-time) ease;
     opacity: 0;
 }
 .text {

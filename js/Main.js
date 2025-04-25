@@ -21,6 +21,7 @@ const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "Switch", "
 let skip = false;
 
 
+
 const images = {};
 const eventHandlers = {
     switchLightsEvent,
@@ -39,10 +40,15 @@ IMAGES.forEach((name) => {
     images[name] = image;
 });
 
+const openDialogues = new Map();
+
+let response;
+let dialogue;
+
 let isShowingInitialText;
 window.onload = async () => {
-    const response = await fetch("js/Dialogue.json");
-    const dialogue = await response.json();
+    response = await fetch("js/Dialogue.json");
+    dialogue = await response.json();
     setScreen(0, 0);
     document.addEventListener("click", async () => {
         if (!isInitialized) {
@@ -63,6 +69,7 @@ window.onload = async () => {
 // This starts the game.
 async function initialize() {
 
+
     isInitialized = true;
     if (player.audioContext.state === "suspended") {
         player.audioContext.resume();
@@ -77,12 +84,11 @@ async function initialize() {
     document.addEventListener("keydown", event => keyHandler(event));
 
     // If the screen is currently showing the initial text, then it'll wait a little longer.
-    setScreen(1, (isShowingInitialText) ? 1500 : 0, (isShowingInitialText) ? "1.5s" : "0s", "3s");
+    setScreen(1, isShowingInitialText ? 1500 : 0, isShowingInitialText ? "1.5s" : "0s", "3s");
     player.playBackgroundMusic("wind");
     await sleep(2000);
     createButton("doorButton", MOBILE ? "10%" : "23%", MOBILE ? "30%" : "22%", MOBILE ? "40%" : "57%", MOBILE ? "50%" : "77%", () => callEvent("doorEvent"), "door");
 }
-let signClicks = { number: 0 };
 // Calls events so that we don't have overlap of events.
 async function callEvent(eventName) {
     if (isInteractionAllowed) {
@@ -92,6 +98,7 @@ async function callEvent(eventName) {
     }
 }
 async function doorEvent() {
+    document.getElementById("doorButton").remove();
     // The door is clicked.
     isTyping = false;
     player.play("doorcreak");
@@ -103,27 +110,20 @@ async function doorEvent() {
     // The website swaps to the other screen now.
     setScreen(2, 3000);
     player.setBackgroundVolume(-1, 0.3, 4);
-    createButton("closedSign", (MOBILE) ? "65%" : "62%", "5%", "90%", "20%", () => callEvent("closedSignEvent"), "counter");
-    document.getElementById("doorButton").remove();
+    await sleep(5000);
+    createButton("closedSign", MOBILE ? "65%" : "62%", "5%", "90%", "20%", () => callEvent("closedSignEvent"), "counter");
+
 }
 async function closedSignEvent() {
-    if (signClicks.number > 2) {
-        await displayText("* You observe that this sign has nothing left to observe.");
-    } else if (signClicks.number === 2) {
+    await newText("closedSign");
+    console.log(openDialogues.get("closedSign").clicks);
+    if (openDialogues.get("closedSign").clicks === 2) {
         // Show lightswitch.
-        await displayText("* You observe that this sign has nothing left to observe.");
-        signClicks.number++
         await sleep(1000);
         player.play("lightappear");
         createButton("lightSwitch", "0", "80%", "7%", (MOBILE) ? "60%" : "94%", () => callEvent("switchLightsEvent"), "switch");
         document.getElementById("switch").style.opacity = 1;
         await sleep(1500);
-    } else if (signClicks.number === 1) {
-        await displayText("* The sign's penmanship is impeccable.");
-        signClicks.number++;
-    } else {
-        await displayText("* The sign appears to be hastily drawn on with a sharpie.");
-        signClicks.number++;
     }
     return;
 }
@@ -208,6 +208,19 @@ async function displayText(text, speed, location, playSound) {
         }
         isTyping = false;
     }
+    return;
+}
+async function newText(dialogueName, speed, location, playSound) {
+    if (openDialogues.has(dialogueName)) {
+        openDialogues.get(dialogueName).clicks++;
+    } else {
+        openDialogues.set(dialogueName, { clicks: 0 });
+    }
+    // If the clicks is higher than the number of dialogues, then we just loop the last one.
+    const currentIndex = openDialogues.get(dialogueName).clicks;
+    const numberOfDialogues = dialogue[dialogueName].length;
+    const textToDisplay = dialogue[dialogueName][currentIndex >= numberOfDialogues ? numberOfDialogues - 1 : currentIndex];
+    await displayText(textToDisplay, speed, location, playSound);
     return;
 }
 function createButton(id, top, left, width, height, functionName, div) {
