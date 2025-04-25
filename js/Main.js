@@ -15,10 +15,11 @@ let isInitialized = false;
 let currentScreenNumber = 0;
 let isMenuShowing = false;
 const AUDIO = ["wind", "shop", "generic1", "generic2", "lightclick", "lightappear", "doorcreak", "explosion"];
-const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "Switch", "SwitchPull", "Background", "SwitchPull1", "SwitchPull2", "Face", "Door", "trol"];
+const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "Switch", "SwitchPull", "Background", "SwitchPull1", "SwitchPull2", "Face", "Door"];
 
 // This allows me to skip through all the events to quickly debug stuff.
 let skip = false;
+
 
 const images = {};
 const eventHandlers = {
@@ -40,6 +41,8 @@ IMAGES.forEach((name) => {
 
 let isShowingInitialText;
 window.onload = async () => {
+    const response = await fetch("js/Dialogue.json");
+    const dialogue = await response.json();
     setScreen(0, 0);
     document.addEventListener("click", async () => {
         if (!isInitialized) {
@@ -54,7 +57,7 @@ window.onload = async () => {
     await sleep(3000);
     if (!isInitialized) {
         isShowingInitialText = true;
-        displayText((MOBILE) ? "TAP YOUR SCREEN" : "CLICK YOUR SCREEN", 10, "textStart", false);
+        displayText(dialogue["startText"][MOBILE ? 1 : 0], 10, "textStart", false);
     }
 };
 // This starts the game.
@@ -69,13 +72,15 @@ async function initialize() {
     switchAnimator.setAnimation(images["Switch"], 1, 0, "forwards");
     counterAnimator.setAnimation(images["Closed"], 1, 0, "forwards");
     document.getElementById("screen1").style.display = "flex";
+
     // This will listen for key presses, if I press c, I initiate "skip" mode.
     document.addEventListener("keydown", event => keyHandler(event));
+
     // If the screen is currently showing the initial text, then it'll wait a little longer.
     setScreen(1, (isShowingInitialText) ? 1500 : 0, (isShowingInitialText) ? "1.5s" : "0s", "3s");
     player.playBackgroundMusic("wind");
     await sleep(2000);
-    createButton("doorButton", (MOBILE) ? "10%" : "23%", (MOBILE) ? "30%" : "22%", (MOBILE) ? "40%" : "57%", (MOBILE) ? "50%" : "77%", () => callEvent("doorEvent"), "door");
+    createButton("doorButton", MOBILE ? "10%" : "23%", MOBILE ? "30%" : "22%", MOBILE ? "40%" : "57%", MOBILE ? "50%" : "77%", () => callEvent("doorEvent"), "door");
 }
 let signClicks = { number: 0 };
 // Calls events so that we don't have overlap of events.
@@ -165,7 +170,7 @@ async function switchLightsEvent() {
     return;
 }
 async function aliEvent() {
-    await displayText("Howdy, I'm Ali!|Welcome to my shop!#I'm still setting up, but feel free to stick around!#Oh, and check out my new-fangled shop too!");
+    await displayText("Howdy, I'm Ali!|Welcome to my shop!#I'm still setting up, but feel free to stick around!#Oh, and check out my new-fangled shop!");
     document.getElementById("shopTab").addEventListener("pointerdown", toggleMenu);
     document.getElementById("shopContainer").style.visibility = "visible";
     document.getElementById("shopContainer").style.opacity = 1;
@@ -262,7 +267,7 @@ function toggleMenu() {
         }
         isMenuShowing = false;
     }
-    
+
 }
 function keyHandler(event) {
     switch (event.key) {
