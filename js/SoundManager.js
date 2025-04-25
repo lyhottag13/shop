@@ -5,6 +5,7 @@ export class SoundManager {
         this.source = null;
         this.backgroundSource = null;
         this.gain = null;
+        this.isSpamming = false;
     }
     construct() {
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -24,6 +25,18 @@ export class SoundManager {
         this.source.buffer = this.buffers[name];
         this.source.connect(this.audioContext.destination);
         this.source.start(0);
+    }
+    playSpammableSFX(name) {
+        if (!this.isSpamming) {
+            this.isSpamming = true;
+            this.source = this.audioContext.createBufferSource();
+            this.source.buffer = this.buffers[name];
+            this.source.connect(this.audioContext.destination);
+            this.source.start(0);
+            this.source.onended = () => {
+                this.isSpamming = false;
+            }
+        }
     }
     /**
      * This method will begin playing the background music. It connects a gain to the background music

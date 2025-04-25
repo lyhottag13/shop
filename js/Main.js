@@ -13,8 +13,11 @@ let isLightOn = false;
 let isInteractionAllowed = true;
 let isInitialized = false;
 let currentScreenNumber = 0;
-const AUDIO = ["wind", "shop", "generic1", "generic2", "lightclick", "lightappear", "doorcreak"];
+const AUDIO = ["wind", "shop", "generic1", "generic2", "lightclick", "lightappear", "doorcreak", "explosion"];
 const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "Switch", "SwitchPull", "Background", "SwitchPull1", "SwitchPull2", "Face", "Door"];
+
+// This allows me to skip through all the events to quickly debug stuff.
+let skip = false;
 
 const images = {};
 const eventHandlers = {
@@ -53,17 +56,19 @@ window.onload = async () => {
         displayText((MOBILE) ? "TAP YOUR SCREEN" : "CLICK YOUR SCREEN", 10, "textStart", false);
     }
 };
-// Starts the game, sets the screen, and plays the background audio.
+// This starts the game.
 async function initialize() {
     isInitialized = true;
     if (player.audioContext.state === "suspended") {
         player.audioContext.resume();
     }
-    // Shows the door.
+    // These lines show the door, the switch, and the closed sign for later.
     doorAnimator.setAnimation(images["Door"], 17, 0, "forwards");
     switchAnimator.setAnimation(images["Switch"], 1, 0, "forwards");
     counterAnimator.setAnimation(images["Closed"], 1, 0, "forwards");
     document.getElementById("screen1").style.display = "flex";
+    // This will listen for key presses, if I press c, I initiate "skip" mode.
+    document.addEventListener("keydown", event => keyHandler(event));
     // If the screen is currently showing the initial text, then it'll wait a little longer.
     setScreen(1, (isShowingInitialText) ? 1500 : 0, (isShowingInitialText) ? "1.5s" : "0s", "3s");
     player.playBackgroundMusic("wind");
@@ -224,6 +229,16 @@ async function setScreen(screenNumber, transitionTime, fadeOut, fadeIn) {
     nextScreen.style.opacity = 1;
     currentScreenNumber = screenNumber;
 }
+function keyHandler(event) {
+    switch (event.key) {
+        case "c":
+            skip = !skip;
+            break;
+        case "e":
+            player.playSpammableSFX("explosion");
+    }
+}
 function sleep(ms) {
+    ms = (skip) ? 10 : ms;
     return new Promise(resolve => setTimeout(resolve, ms));
 }
