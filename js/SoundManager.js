@@ -1,8 +1,5 @@
 export class SoundManager {
     constructor() {
-        /**
-         * @type {audioContext|null}
-         */
         this.audioContext = null;
         this.buffers = {};
         this.source = null;
@@ -33,7 +30,7 @@ export class SoundManager {
      * so that the stopBackgroundMusic method will be able to gradually stop the music or 
      * setBackgroundVolume can gradually volumize the music.
      * 
-     * @param {string} name 
+     * @param {string} name -  Cool!
      */
     playBackgroundMusic(name) {
         this.backgroundSource = this.audioContext.createBufferSource();

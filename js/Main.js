@@ -23,6 +23,11 @@ const eventHandlers = {
     aliEvent,
     doorEvent,
 };
+player.construct();
+AUDIO.forEach(name => {
+    player.load(name);
+});
+
 IMAGES.forEach((name) => {
     const image = new Image();
     image.src = `resources/images/${name}.webp`;
@@ -38,48 +43,28 @@ window.onload = async () => {
     document.addEventListener("click", async () => {
         if (!isInitialized) {
             isInitialized = true;
-            player.construct();
             if (player.audioContext.state === "suspended") {
                 player.audioContext.resume();
             }
-            await Promise.all(AUDIO.map(name => {
-                player.load(name);
-            }));
-            await new Promise((resolve) => {
-                if (player.audioContext.state === "running") return resolve();
-                player.audioContext.onstatechange = () => {
-                    if (player.audioContext.state === "running") {
-                        resolve();
-                    }
-                };
-                player.audioContext.resume(); // just in case
-            });
-            
             initialize();
         }
     }, { once: true });
-    // document.addEventListener("touchend", async () => {
-    //     if (!isInitialized) {
-    //         isInitialized = true;
-    //         player.construct();
-    //         await Promise.all(AUDIO.map(name => {
-    //             player.load(name);
-    //         }));
-    //         if (player.audioContext.state === "suspended") {
-    //             player.audioContext.resume();
-    //         }
-    //         while (player.audioContext.state !== "running") {
-    //             await sleep(50);
-    //         }
-    //         initialize();
-    //     }
-    // }, { once: true });
+    document.addEventListener("touchend", async () => {
+        if (!isInitialized) {
+            isInitialized = true;
+
+            if (player.audioContext.state === "suspended") {
+                player.audioContext.resume();
+            }
+            initialize();
+        }
+    }, { once: true });
 };
 // Starts the game, sets the screen, and plays the background audio.
 async function initialize() {
     setScreen(1, 0);
+    // await sleep(300);
     player.playBackgroundMusic("wind");
-    await sleep(1000);
     createButton("doorButton", (MOBILE) ? "10%" : "23%", (MOBILE) ? "30%" : "22%", (MOBILE) ? "40%" : "57%", (MOBILE) ? "50%" : "77%", () => callEvent("doorEvent"), "door");
 }
 let signClicks = { number: 0 };
