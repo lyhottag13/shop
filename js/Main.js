@@ -100,9 +100,6 @@ async function doorEvent() {
     player.setBackgroundVolume(-1, 0.3, 4);
     createButton("closedSign", (MOBILE) ? "65%" : "62%", "5%", "90%", "20%", () => callEvent("closedSignEvent"), "counter");
     document.getElementById("doorButton").remove();
-    document.getElementById("shopTab").addEventListener("pointerdown", showMenu);
-    document.getElementById("shopContainer").style.visibility = "visible";
-    document.getElementById("shopContainer").style.opacity = 1;
 }
 async function closedSignEvent() {
     if (signClicks.number > 2) {
