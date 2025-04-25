@@ -165,7 +165,7 @@ async function switchLightsEvent() {
     return;
 }
 async function aliEvent() {
-    await displayText("Howdy, I'm Ali!|Welcome to my shop!#I'm still setting up, but feel free to stick around!#Oh, and check out my new-fangled shop, too!");
+    await displayText("Howdy, I'm Ali!|Welcome to my shop!#I'm still setting up, but feel free to stick around!#Oh, and check out my new-fangled shop too!");
     document.getElementById("shopTab").addEventListener("pointerdown", toggleMenu);
     document.getElementById("shopContainer").style.visibility = "visible";
     document.getElementById("shopContainer").style.opacity = 1;
