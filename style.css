@@ -18,6 +18,7 @@ body {
     overflow: hidden;
     background-position: 0px -70px;
     background-color: rgb(10, 10, 10);
+    transition: background-position 1s ease;
 
 }
 .interactable {
@@ -32,6 +33,7 @@ body {
     image-rendering: pixelated;
 }
 .screen {
+    height: 100%;
     --transition-time: 2s;
     display: none;
     flex-direction: column;
@@ -42,6 +44,9 @@ body {
 .text {
     font-family: fa;
     color: white;
+}
+#game {
+    height: 100%;
 }
 #door {
     display: flex;
@@ -120,12 +125,57 @@ body {
     position: relative;
     text-align: center;
     margin: 0 auto;
+    transition: all 1s ease;
 }
-#closedSign {
-    top: 61%;
-    left: 32%;
-    width: 36%;
-    height: 9%;
+#shopContainer {
+    --height: 500px;
+    --width: 1000px;
+    position: fixed;
+    visibility: hidden;
+    top: 100px;
+    right: -900px;
+    height: var(--height);
+    width: var(--width);
+    color: white;
+    transition: all 0.5s ease;
+    opacity: 0;
+}
+#shopMenu {
+    position: absolute;
+    right: -130px;
+    height: var(--height);
+    width: var(--width);
+    border: solid rgb(255, 255, 255);
+    border-width: 10px;
+    border-radius: 0px;
+    background-color: black;
+
+}
+#shopTab {
+    position: absolute;
+    top: 300px;
+    height: 100px;
+    width: 100px;
+    border: solid rgb(255, 255, 255);
+    border-width: 10px;
+    border-radius: 0px;
+    background-color: black;
+    font-size: 40px;
+    transform: rotate(-90deg);
+    text-align: center;
+    z-index: 0;
+}
+#shopTab:hover {
+    color: yellow;
+}
+#borderCover {
+    position: absolute;
+    height: 100px;
+    width: 10px;
+    background-color: rgb(0, 0, 0);
+    top: 310px;
+    left: 110px;
+    z-index: 100;
 }
 /* #test {
     top: 23%;
@@ -135,8 +185,6 @@ body {
 } */
 #textDiv {
     width: 95%;
-    /* top: 50px; */
-    /* margin-top: ; */
     border: solid rgb(255, 255, 255);
     border-width: 10px;
     border-radius: 0px;
@@ -183,10 +231,57 @@ body {
         height: 300px;
         width: 300px;
     }
-
+    #shopContainer {
+        position: absolute;
+        align-items: center;
+        flex-direction: column;
+        display: flex;
+        --height: 300px;
+        --width: 300px;
+        visibility: hidden;
+        top: auto;
+        left: 50%;
+        bottom: -100px;
+        height: var(--height);
+        width: var(--width);
+        transform: translate(-50%);
+    }
+    #shopContainer img {
+        height: 100px;
+    }
+    #shopMenu {
+        position: relative;
+        top: -10px;
+        right: 0px;
+        bottom: 0px;
+        height: var(--height);
+        width: var(--width);
+    
+    }
+    #shopTab {
+        position: relative;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        height: auto;
+        width: 210px;
+        font-size: 40px;
+        transform: rotate(0);
+        /* margin-bottom: -30px; */
+    }
+    #borderCover {
+        position: absolute;
+        height: 19px;
+        width: 210px;
+        background-color: rgb(0, 0, 0);
+        top: 47px;
+        left: 45px;
+        z-index: 100;
+    }
     #textDiv {
         margin: 0px;
         border-width: 7px;
+        transition: all 1s ease;
     }
     #text {
         font-size: 40px;

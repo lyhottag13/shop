@@ -13,8 +13,9 @@ let isLightOn = false;
 let isInteractionAllowed = true;
 let isInitialized = false;
 let currentScreenNumber = 0;
+let isMenuShowing = false;
 const AUDIO = ["wind", "shop", "generic1", "generic2", "lightclick", "lightappear", "doorcreak", "explosion"];
-const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "Switch", "SwitchPull", "Background", "SwitchPull1", "SwitchPull2", "Face", "Door"];
+const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "Switch", "SwitchPull", "Background", "SwitchPull1", "SwitchPull2", "Face", "Door", "trol"];
 
 // This allows me to skip through all the events to quickly debug stuff.
 let skip = false;
@@ -58,6 +59,7 @@ window.onload = async () => {
 };
 // This starts the game.
 async function initialize() {
+
     isInitialized = true;
     if (player.audioContext.state === "suspended") {
         player.audioContext.resume();
@@ -98,7 +100,9 @@ async function doorEvent() {
     player.setBackgroundVolume(-1, 0.3, 4);
     createButton("closedSign", (MOBILE) ? "65%" : "62%", "5%", "90%", "20%", () => callEvent("closedSignEvent"), "counter");
     document.getElementById("doorButton").remove();
-
+    document.getElementById("shopTab").addEventListener("pointerdown", showMenu);
+    document.getElementById("shopContainer").style.visibility = "visible";
+    document.getElementById("shopContainer").style.opacity = 1;
 }
 async function closedSignEvent() {
     if (signClicks.number > 2) {
@@ -156,6 +160,7 @@ async function switchLightsEvent() {
             player.setBackgroundVolume(0, 1, 0.5);
             counterAnimator.setAnimation(images["Idle"], 17, 12, "infinite");
             createButton("ali", "40%", "10%", "80%", "60%", () => callEvent("aliEvent"), "counter");
+
         } else {
             await displayText("* The switch is now on.");
         }
@@ -163,7 +168,10 @@ async function switchLightsEvent() {
     return;
 }
 async function aliEvent() {
-    await displayText("Howdy, I'm Ali!|Welcome to my shop!#I'm still setting up, but feel free to stick around!");
+    await displayText("Howdy, I'm Ali!|Welcome to my shop!#I'm still setting up, but feel free to stick around!#Oh, and check out my new-fangled shop, too!");
+    document.getElementById("shopTab").addEventListener("pointerdown", showMenu);
+    document.getElementById("shopContainer").style.visibility = "visible";
+    document.getElementById("shopContainer").style.opacity = 1;
     return;
 }
 async function displayText(text, speed, location, playSound) {
@@ -228,6 +236,36 @@ async function setScreen(screenNumber, transitionTime, fadeOut, fadeIn) {
     nextScreen.offsetHeight;
     nextScreen.style.opacity = 1;
     currentScreenNumber = screenNumber;
+}
+function showMenu() {
+    if (!isMenuShowing) {
+        if (!MOBILE) {
+            document.getElementById("shopContainer").style.right = "100px";
+            document.getElementById("shopTabLabel").textContent = "CLOSE SHOP";
+            document.getElementById("counter").style.transform = "translateX(-500px)";
+        } else {
+            document.getElementById("shopContainer").style.bottom = "150px";
+            document.getElementById("shopTabLabel").textContent = "CLOSE SHOP";
+            document.getElementById("counter").style.transform = "translateY(-100px)";
+            document.getElementById("textDiv").style.transform = "translateY(-100px)";
+            document.body.style.backgroundPositionY = "-190px";
+        }
+        isMenuShowing = true;
+    } else {
+        if (!MOBILE) {
+            document.getElementById("shopContainer").style.right = "-900px";
+            document.getElementById("shopTabLabel").textContent = "OPEN SHOP";
+            document.getElementById("counter").style.transform = "translateX(0)";
+        } else {
+            document.getElementById("shopContainer").style.bottom = "-100px";
+            document.getElementById("shopTabLabel").textContent = "OPEN SHOP";
+            document.getElementById("counter").style.transform = "translateY(0)";
+            document.getElementById("textDiv").style.transform = "translateY(0)";
+            document.body.style.backgroundPositionY = "0";
+        }
+        isMenuShowing = false;
+    }
+    
 }
 function keyHandler(event) {
     switch (event.key) {
