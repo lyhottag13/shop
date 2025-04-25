@@ -4,8 +4,10 @@
     font-display: swap;
     
 }
-html {
+html, body {
     cursor: url("resources/images/Cursor.webp") 16 16, auto;
+    height: 100%;
+    margin: 0;
 }
 body {
     background-repeat: no-repeat;
@@ -36,6 +38,10 @@ body {
     align-items: center;
     transition: opacity var(--transition-time) ease, transform var(--transition-time) ease;
     opacity: 0;
+}
+.text {
+    font-family: fa;
+    color: white;
 }
 #door {
     display: flex;
@@ -141,7 +147,13 @@ body {
     font-size: 80px;
     padding: 20px;
     margin-top: 0px;
-    font-family: fa;
+}
+#textStart {
+    position: relative;
+    font-size: 80px;
+    margin-top: 30vh;
+    padding: 20px;
+    text-align: center;
 }
 @media (max-width: 600px) {
     body {

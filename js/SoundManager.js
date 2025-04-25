@@ -30,7 +30,7 @@ export class SoundManager {
      * so that the stopBackgroundMusic method will be able to gradually stop the music or 
      * setBackgroundVolume can gradually volumize the music.
      * 
-     * @param {string} name -  Cool!
+     * @param {string} name -  The file name of the background music to be played.
      */
     playBackgroundMusic(name) {
         this.backgroundSource = this.audioContext.createBufferSource();
