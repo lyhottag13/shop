@@ -241,7 +241,7 @@ body {
         visibility: hidden;
         top: auto;
         left: 50%;
-        bottom: -100px;
+        bottom: -250px;
         height: var(--height);
         width: var(--width);
         transform: translate(-50%);

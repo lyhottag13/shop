@@ -166,7 +166,7 @@ async function switchLightsEvent() {
 }
 async function aliEvent() {
     await displayText("Howdy, I'm Ali!|Welcome to my shop!#I'm still setting up, but feel free to stick around!#Oh, and check out my new-fangled shop, too!");
-    document.getElementById("shopTab").addEventListener("pointerdown", showMenu);
+    document.getElementById("shopTab").addEventListener("pointerdown", toggleMenu);
     document.getElementById("shopContainer").style.visibility = "visible";
     document.getElementById("shopContainer").style.opacity = 1;
     return;
@@ -234,14 +234,14 @@ async function setScreen(screenNumber, transitionTime, fadeOut, fadeIn) {
     nextScreen.style.opacity = 1;
     currentScreenNumber = screenNumber;
 }
-function showMenu() {
+function toggleMenu() {
     if (!isMenuShowing) {
         if (!MOBILE) {
             document.getElementById("shopContainer").style.right = "100px";
             document.getElementById("shopTabLabel").textContent = "CLOSE SHOP";
             document.getElementById("counter").style.transform = "translateX(-500px)";
         } else {
-            document.getElementById("shopContainer").style.bottom = "150px";
+            document.getElementById("shopContainer").style.bottom = "30px";
             document.getElementById("shopTabLabel").textContent = "CLOSE SHOP";
             document.getElementById("counter").style.transform = "translateY(-100px)";
             document.getElementById("textDiv").style.transform = "translateY(-100px)";
@@ -254,7 +254,7 @@ function showMenu() {
             document.getElementById("shopTabLabel").textContent = "OPEN SHOP";
             document.getElementById("counter").style.transform = "translateX(0)";
         } else {
-            document.getElementById("shopContainer").style.bottom = "-100px";
+            document.getElementById("shopContainer").style.bottom = "-250px";
             document.getElementById("shopTabLabel").textContent = "OPEN SHOP";
             document.getElementById("counter").style.transform = "translateY(0)";
             document.getElementById("textDiv").style.transform = "translateY(0)";
