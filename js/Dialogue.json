@@ -9,6 +9,10 @@
         "* You observe that this sign has nothing left to observe."
     ],
     "switchLights": [
-
+        "* The switch is too high to reach.",
+        "* ?",
+        "* The switch is now on.",
+        "* You hear shuffling behind the counter.",
+        "* The sign is now gone.#* You decide to take a peek..."
     ]
 }

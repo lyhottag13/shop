@@ -68,8 +68,6 @@ window.onload = async () => {
 };
 // This starts the game.
 async function initialize() {
-
-
     isInitialized = true;
     if (player.audioContext.state === "suspended") {
         player.audioContext.resume();
@@ -129,43 +127,41 @@ async function closedSignEvent() {
 }
 async function switchLightsEvent() {
     if (!isTyping) {
-        if (!isLightOn) {
-            await displayText("* The switch is too high to reach.");
-            await sleep(1400);
-            document.getElementById("lightSwitch").remove();
-            displayText("* ?");
-            // Now you see the hand.
-            switchAnimator.setAnimation(images["SwitchPull1"], 14, 25, "forwards");
-            document.getElementById("switchAnimation").addEventListener("animationend", () => {
-                switchAnimator.setAnimation(images["SwitchPull2"], 24, 25, "forwards");
-            }, { once: true });
-            await sleep(13 / 25 * 1000);
-            // The lights activate here.
-            player.stopBackgroundMusic(1);
-            player.play("lightclick");
-            counterAnimator.setAnimation(images["ClosedLights"], 1, 0, "forwards");
-            body.style.backgroundImage = `url("${images["Background"].src}")`;
-            body.style.backgroundColor = "rgb(179, 115, 10)";
-            isLightOn = true;
-            document.getElementById("closedSign").remove();
-            document.getElementById("switchAnimation").style.filter = "none";
-            await sleep(1500);
-            await displayText("* The switch is now on.");
-            await sleep(1500);
-            await displayText("* You hear shuffling behind the counter.");
-            await sleep(2000);
-            counterAnimator.setAnimation(images["OpeningBusiness"], 21, 23, "forwards");
-            await sleep(21 / 23 * 1000 + 1500);
-            await displayText("* The sign is now gone.#* You decide to take a peek...");
-            await sleep(1800);
-            player.playBackgroundMusic("shop");
-            player.setBackgroundVolume(0, 1, 0.5);
-            counterAnimator.setAnimation(images["Idle"], 17, 12, "infinite");
-            createButton("ali", "40%", "10%", "80%", "60%", () => callEvent("aliEvent"), "counter");
-
-        } else {
-            await displayText("* The switch is now on.");
-        }
+        await newText("switchLights");
+        await sleep(1400);
+        document.getElementById("lightSwitch").remove();
+        newText("switchLights");
+        // Now you see the hand.
+        switchAnimator.setAnimation(images["SwitchPull1"], 14, 25, "forwards");
+        document.getElementById("switchAnimation").addEventListener("animationend", () => {
+            switchAnimator.setAnimation(images["SwitchPull2"], 24, 25, "forwards");
+        }, { once: true });
+        await sleep(13 / 25 * 1000);
+        // The lights activate here.
+        player.stopBackgroundMusic(1);
+        player.play("lightclick");
+        counterAnimator.setAnimation(images["ClosedLights"], 1, 0, "forwards");
+        body.style.backgroundImage = `url("${images["Background"].src}")`;
+        body.style.backgroundColor = "rgb(179, 115, 10)";
+        isLightOn = true;
+        document.getElementById("closedSign").remove();
+        document.getElementById("switchAnimation").style.filter = "none";
+        // Now we're displaying dialogue.
+        await sleep(1500);
+        await newText("switchLights");
+        await sleep(1500);
+        await newText("switchLights");
+        await sleep(2000);
+        // Now Ali takes the sign.
+        counterAnimator.setAnimation(images["OpeningBusiness"], 21, 23, "forwards");
+        await sleep(21 / 23 * 1000 + 1500);
+        await newText("switchLights");
+        await sleep(1800);
+        // Now Ali pops up.
+        player.playBackgroundMusic("shop");
+        player.setBackgroundVolume(0, 1, 0.5);
+        counterAnimator.setAnimation(images["Idle"], 17, 12, "infinite");
+        createButton("ali", "40%", "10%", "80%", "60%", () => callEvent("aliEvent"), "counter");
     }
     return;
 }
@@ -176,11 +172,8 @@ async function aliEvent() {
     document.getElementById("shopContainer").style.opacity = 1;
     return;
 }
-async function displayText(text, speed, location, playSound) {
+async function displayText(text, speed = 1, location = "text", playSound = true) {
     if (!isTyping) {
-        speed = speed ?? 1;
-        location = location ?? "text";
-        playSound = playSound ?? true;
         const textBox = document.getElementById(location);
         textBox.innerHTML = "";
         isTyping = true;
@@ -210,16 +203,26 @@ async function displayText(text, speed, location, playSound) {
     }
     return;
 }
+/**
+ * Keeps track of how many times an item has been clicked and displays updating text to match.
+ * @param {string} dialogueName - The name of the dialogue event to display.
+ * @param {number} speed - The speed of the text, inversely proportional to the number.
+ * @param {string} location - The div location where the text will be displayed.
+ * @param {boolean} playSound - Indicates whether or not this should play a sound.
+ * @returns Null, just gives more control over when to continue with certain actions in cutscenes.
+ */
 async function newText(dialogueName, speed, location, playSound) {
-    if (openDialogues.has(dialogueName)) {
-        openDialogues.get(dialogueName).clicks++;
+    let openedDialogue = openDialogues.get(dialogueName);
+    if (openedDialogue) {
+        openedDialogue.clicks++;
     } else {
-        openDialogues.set(dialogueName, { clicks: 0 });
+        openedDialogue = { clicks: 0 };
+        openDialogues.set(dialogueName, openedDialogue);
     }
     // If the clicks is higher than the number of dialogues, then we just loop the last one.
-    const currentIndex = openDialogues.get(dialogueName).clicks;
     const numberOfDialogues = dialogue[dialogueName].length;
-    const textToDisplay = dialogue[dialogueName][currentIndex >= numberOfDialogues ? numberOfDialogues - 1 : currentIndex];
+    const currentIndex = Math.min(numberOfDialogues - 1, openedDialogue.clicks);
+    const textToDisplay = dialogue[dialogueName][currentIndex];
     await displayText(textToDisplay, speed, location, playSound);
     return;
 }
