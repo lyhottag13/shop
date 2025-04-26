@@ -176,7 +176,7 @@ async function aliEvent() {
                 toggleMenu();
                 document.getElementById("shopContainer").style.opacity = 0;
                 document.getElementById("shopTab").removeEventListener("pointerdown", toggleMenu);
-                await newText({dialogueName: "shopItems", index: index > 2 ? MOBILE ? 1 : 0 : index + 2});
+                await newText({dialogueName: "shopItems", index: index > 3 ? MOBILE ? 1 : 0 : index + 2});
                 document.getElementById("shopContainer").style.opacity = 1;
                 document.getElementById("shopTab").addEventListener("pointerdown", toggleMenu);
             });
@@ -246,21 +246,6 @@ async function displayText(text, speed = 1, location = "text", playSound = true)
  * @param {boolean} playSound - Indicates whether or not this should play a sound.
  * @returns Null, just gives more control over when to continue with certain actions in cutscenes.
  */
-// async function newText(dialogueName, speed, location, playSound, starting) {
-//     let openedDialogue = openDialogues.get(dialogueName);
-//     if (openedDialogue) {
-//         openedDialogue.clicks++;
-//     } else {
-//         openedDialogue = { clicks: 0 };
-//         openDialogues.set(dialogueName, openedDialogue);
-//     }
-//     // If the clicks is higher than the number of dialogues, then we just loop the last one.
-//     const numberOfDialogues = dialogue[dialogueName].length;
-//     const currentIndex = Math.min(numberOfDialogues - 1, openedDialogue.clicks);
-//     const textToDisplay = dialogue[dialogueName][starting ? Math.floor(Math.random() * (numberOfDialogues - 1)) + starting : currentIndex];
-//     await displayText(textToDisplay, speed, location, playSound);
-//     return;
-// }
 async function newText({dialogueName, speed, location, playSound, starting, index}) {
     let openedDialogue = openDialogues.get(dialogueName);
     if (openedDialogue) {

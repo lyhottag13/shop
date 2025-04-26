@@ -48,6 +48,12 @@ body {
     font-family: fa;
     color: white;
 }
+.shopItem {
+    text-align: center;
+    justify-items: center;
+    height: 100%;
+    width: 100%;
+}
 #game {
     height: 100%;
 }
@@ -145,6 +151,8 @@ body {
 }
 #shopMenu {
     display: grid;
+    align-items: center;
+    justify-items: center;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     position: absolute;
@@ -262,25 +270,25 @@ body {
         bottom: 0px;
         height: var(--height);
         width: var(--width);
-    
+        border-width: 7px;
     }
     #shopTab {
         position: relative;
         top: 0;
         left: 0;
         bottom: 0;
-        height: auto;
+        height: 40px;
         width: 210px;
         font-size: 40px;
         transform: rotate(0);
-        /* margin-bottom: -30px; */
+        border-width: 7px;
     }
     #borderCover {
         position: absolute;
-        height: 19px;
+        height: 7px;
         width: 210px;
         background-color: rgb(0, 0, 0);
-        top: 47px;
+        top: 44px;
         left: 45px;
         z-index: 100;
     }
