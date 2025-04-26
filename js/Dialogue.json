@@ -14,5 +14,15 @@
         "* The switch is now on.",
         "* You hear shuffling behind the counter.",
         "* The sign is now gone.#* You decide to take a peek..."
+    ],
+    "ali": [
+        "Howdy, I'm Ali!|Welcome to my shop!#I'm still setting up, but feel free to stick around!#Oh, and check out my new-fangled shop!",
+        "How ya doin'?",
+        "Stuff around here's been a bit volatile recently.#Just a couple of weeks ago, this shop didn't exist!",
+        "What's up?",
+        "I heard once that if you check behind the bushes around the old house you'll find...|Nevermind.",
+        "Hey!",
+        "Nobody really comes down here anymore, not after the GREAT BLANK.",
+        "Legends tell of three heroes that'll come and clear out the GREAT BLANK!#Ha! I'd like to see them try!"
     ]
 }

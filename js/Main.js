@@ -166,10 +166,12 @@ async function switchLightsEvent() {
     return;
 }
 async function aliEvent() {
-    await displayText("Howdy, I'm Ali!|Welcome to my shop!#I'm still setting up, but feel free to stick around!#Oh, and check out my new-fangled shop!");
-    document.getElementById("shopTab").addEventListener("pointerdown", toggleMenu);
-    document.getElementById("shopContainer").style.visibility = "visible";
-    document.getElementById("shopContainer").style.opacity = 1;
+    await newText("ali");
+    if (openDialogues.get("ali").clicks === 0) {
+        document.getElementById("shopTab").addEventListener("pointerdown", toggleMenu);
+        document.getElementById("shopContainer").style.visibility = "visible";
+        document.getElementById("shopContainer").style.opacity = 1;
+    }
     return;
 }
 async function displayText(text, speed = 1, location = "text", playSound = true) {
@@ -180,23 +182,34 @@ async function displayText(text, speed = 1, location = "text", playSound = true)
         let charAt;
         for (let i = 0; i < text.length; i++) {
             charAt = text.charAt(i);
-            if (charAt === "|") {
-                textBox.innerHTML += "<br>";
-                await sleep(1000 * speed);
-            } else if (charAt === "#") {
-                await sleep(2000 * speed);
-                textBox.innerHTML = "";
-            } else if (charAt === " ") {
-                textBox.innerHTML += " ";
-            } else if (charAt === ",") {
-                textBox.innerHTML += ",";
-                await sleep(500 * speed);
-            } else {
-                textBox.innerHTML += charAt;
-                if (playSound) {
-                    player.play("generic2");
-                }
-                await sleep(35 * speed);
+            switch (charAt) {
+                case "|":
+                    textBox.innerHTML += "<br>";
+                    await sleep(1000 * speed);
+                    break;
+                case "#":
+                    await sleep(2000 * speed);
+                    textBox.innerHTML = "";
+                    break;
+                case " ":
+                    textBox.innerHTML += " ";
+                    break;
+                case ",":
+                    textBox.innerHTML += ",";
+                    await sleep(500 * speed);
+                    break;
+                case "!":
+                case ".":
+                case "?":
+                    textBox.innerHTML += charAt;
+                    await sleep(500 * speed);
+                    break;
+                default:
+                    textBox.innerHTML += charAt;
+                    if (playSound) {
+                        player.play("generic2");
+                    }
+                    await sleep(35 * speed);
             }
         }
         isTyping = false;
@@ -206,7 +219,7 @@ async function displayText(text, speed = 1, location = "text", playSound = true)
 /**
  * Keeps track of how many times an item has been clicked and displays updating text to match.
  * @param {string} dialogueName - The name of the dialogue event to display.
- * @param {number} speed - The speed of the text, inversely proportional to the number.
+ * @param {number} speed - The speed of the text, inversely proportional to the number input.
  * @param {string} location - The div location where the text will be displayed.
  * @param {boolean} playSound - Indicates whether or not this should play a sound.
  * @returns Null, just gives more control over when to continue with certain actions in cutscenes.
