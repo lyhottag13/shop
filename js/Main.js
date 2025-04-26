@@ -7,6 +7,12 @@ const FRAME_WIDTH = (window.innerWidth <= 600) ? 300 : 500;
 const switchAnimator = new Animator(FRAME_WIDTH, "switchAnimation");
 const counterAnimator = new Animator(FRAME_WIDTH, "animation");
 const doorAnimator = new Animator(FRAME_WIDTH, "doorAnimation");
+
+
+const shopContainer = document.getElementById("shopContainer");
+const shopTab = document.getElementById("shopTab");
+const shopMenu = document.getElementById("shopMenu");
+
 const player = new SoundManager();
 let isTyping = false;
 let isLightOn = false;
@@ -168,28 +174,28 @@ async function switchLightsEvent() {
 async function aliEvent() {
     if (!openDialogues.get("ali")) {
         await newText({dialogueName: "ali"});
-        document.getElementById("shopTab").addEventListener("pointerdown", toggleMenu);
-        document.getElementById("shopContainer").style.visibility = "visible";
-        document.getElementById("shopContainer").style.opacity = 1;
+        shopTab.addEventListener("pointerdown", toggleMenu);
+        shopContainer.style.visibility = "visible";
+        shopContainer.style.opacity = 1;
         document.querySelectorAll(".shopItem").forEach((item, index) => {
             item.addEventListener("pointerdown", async () => {
                 toggleMenu();
-                document.getElementById("shopContainer").style.opacity = 0;
-                document.getElementById("shopTab").removeEventListener("pointerdown", toggleMenu);
+                shopContainer.style.opacity = 0;
+                shopTab.removeEventListener("pointerdown", toggleMenu);
                 await newText({dialogueName: "shopItems", index: index > 3 ? MOBILE ? 1 : 0 : index + 2});
-                document.getElementById("shopContainer").style.opacity = 1;
-                document.getElementById("shopTab").addEventListener("pointerdown", toggleMenu);
+                shopContainer.style.opacity = 1;
+                shopTab.addEventListener("pointerdown", toggleMenu);
             });
         });
     } else {
         if (isMenuShowing) {
             toggleMenu();
         }
-        document.getElementById("shopContainer").style.opacity = 0;
-        document.getElementById("shopTab").removeEventListener("pointerdown", toggleMenu);
+        shopContainer.style.opacity = 0;
+        shopTab.removeEventListener("pointerdown", toggleMenu);
         await newText({dialogueName: "ali", starting: 1});
-        document.getElementById("shopContainer").style.opacity = 1;
-        document.getElementById("shopTab").addEventListener("pointerdown", toggleMenu);
+        shopContainer.style.opacity = 1;
+        shopTab.addEventListener("pointerdown", toggleMenu);
     }
     return;
 }
@@ -293,11 +299,11 @@ async function setScreen(screenNumber, transitionTime, fadeOut, fadeIn) {
 function toggleMenu() {
     if (!isMenuShowing) {
         if (!MOBILE) {
-            document.getElementById("shopContainer").style.right = "100px";
+            shopContainer.style.right = "100px";
             document.getElementById("shopTabLabel").textContent = "CLOSE SHOP";
             document.getElementById("counter").style.transform = "translateX(-500px)";
         } else {
-            document.getElementById("shopContainer").style.bottom = "30px";
+            shopContainer.style.bottom = "0";
             document.getElementById("shopTabLabel").textContent = "CLOSE SHOP";
             document.getElementById("counter").style.transform = "translateY(-100px)";
             document.getElementById("textDiv").style.transform = "translateY(-100px)";
@@ -306,11 +312,11 @@ function toggleMenu() {
         isMenuShowing = true;
     } else {
         if (!MOBILE) {
-            document.getElementById("shopContainer").style.right = "-900px";
+            shopContainer.style.right = "-900px";
             document.getElementById("shopTabLabel").textContent = "OPEN SHOP";
             document.getElementById("counter").style.transform = "translateX(0)";
         } else {
-            document.getElementById("shopContainer").style.bottom = "-250px";
+            shopContainer.style.bottom = "-347px";
             document.getElementById("shopTabLabel").textContent = "OPEN SHOP";
             document.getElementById("counter").style.transform = "translateY(0)";
             document.getElementById("textDiv").style.transform = "translateY(0)";
