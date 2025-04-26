@@ -64,7 +64,7 @@ window.onload = async () => {
     await sleep(3000);
     if (!isInitialized) {
         isShowingInitialText = true;
-        displayText(dialogue["startText"][MOBILE ? 1 : 0], 10, "textStart", false);
+        newText({dialogueName: "startText", speed: 10, location: "textStart", playSound: false, index: MOBILE ? 1 : 0});
     }
 };
 // This starts the game.
@@ -114,7 +114,7 @@ async function doorEvent() {
 
 }
 async function closedSignEvent() {
-    await newText("closedSign");
+    await newText({dialogueName: "closedSign"});
     if (openDialogues.get("closedSign").clicks === 2) {
         // Show lightswitch.
         await sleep(1000);
@@ -127,10 +127,10 @@ async function closedSignEvent() {
 }
 async function switchLightsEvent() {
     if (!isTyping) {
-        await newText("switchLights");
+        await newText({dialogueName: "switchLights"});
         await sleep(1400);
         document.getElementById("lightSwitch").remove();
-        newText("switchLights");
+        newText({dialogueName: "switchLights"});
         // Now you see the hand.
         switchAnimator.setAnimation(images["SwitchPull1"], 14, 25, "forwards");
         document.getElementById("switchAnimation").addEventListener("animationend", () => {
@@ -148,14 +148,14 @@ async function switchLightsEvent() {
         document.getElementById("switchAnimation").style.filter = "none";
         // Now we're displaying dialogue.
         await sleep(1500);
-        await newText("switchLights");
+        await newText({dialogueName: "switchLights"});
         await sleep(1500);
-        await newText("switchLights");
+        await newText({dialogueName: "switchLights"});
         await sleep(2000);
         // Now Ali takes the sign.
         counterAnimator.setAnimation(images["OpeningBusiness"], 21, 23, "forwards");
         await sleep(21 / 23 * 1000 + 1500);
-        await newText("switchLights");
+        await newText({dialogueName: "switchLights"});
         await sleep(1800);
         // Now Ali pops up.
         player.playBackgroundMusic("shop");
@@ -167,7 +167,7 @@ async function switchLightsEvent() {
 }
 async function aliEvent() {
     if (!openDialogues.get("ali")) {
-        await newText("ali");
+        await newText({dialogueName: "ali"});
         document.getElementById("shopTab").addEventListener("pointerdown", toggleMenu);
         document.getElementById("shopContainer").style.visibility = "visible";
         document.getElementById("shopContainer").style.opacity = 1;
@@ -176,25 +176,20 @@ async function aliEvent() {
                 toggleMenu();
                 document.getElementById("shopContainer").style.opacity = 0;
                 document.getElementById("shopTab").removeEventListener("pointerdown", toggleMenu);
-                switch (index) {
-                    case 0:
-                        await newText("aliFace");
-                        break;
-                    case 1:
-                        await newText("heart");
-                        break;
-                    case 2:
-                        await newText("pencil");
-                        break;
-                    default:
-                        await newText(MOBILE ? "shopItemsMobile" : "shopItemsDesktop");
-                }
+                await newText({dialogueName: "shopItems", index: index > 2 ? MOBILE ? 1 : 0 : index + 2});
                 document.getElementById("shopContainer").style.opacity = 1;
                 document.getElementById("shopTab").addEventListener("pointerdown", toggleMenu);
             });
         });
     } else {
-        await newText("ali", undefined, undefined, undefined, 1);
+        if (isMenuShowing) {
+            toggleMenu();
+        }
+        document.getElementById("shopContainer").style.opacity = 0;
+        document.getElementById("shopTab").removeEventListener("pointerdown", toggleMenu);
+        await newText({dialogueName: "ali", starting: 1});
+        document.getElementById("shopContainer").style.opacity = 1;
+        document.getElementById("shopTab").addEventListener("pointerdown", toggleMenu);
     }
     return;
 }
@@ -251,7 +246,22 @@ async function displayText(text, speed = 1, location = "text", playSound = true)
  * @param {boolean} playSound - Indicates whether or not this should play a sound.
  * @returns Null, just gives more control over when to continue with certain actions in cutscenes.
  */
-async function newText(dialogueName, speed, location, playSound, starting) {
+// async function newText(dialogueName, speed, location, playSound, starting) {
+//     let openedDialogue = openDialogues.get(dialogueName);
+//     if (openedDialogue) {
+//         openedDialogue.clicks++;
+//     } else {
+//         openedDialogue = { clicks: 0 };
+//         openDialogues.set(dialogueName, openedDialogue);
+//     }
+//     // If the clicks is higher than the number of dialogues, then we just loop the last one.
+//     const numberOfDialogues = dialogue[dialogueName].length;
+//     const currentIndex = Math.min(numberOfDialogues - 1, openedDialogue.clicks);
+//     const textToDisplay = dialogue[dialogueName][starting ? Math.floor(Math.random() * (numberOfDialogues - 1)) + starting : currentIndex];
+//     await displayText(textToDisplay, speed, location, playSound);
+//     return;
+// }
+async function newText({dialogueName, speed, location, playSound, starting, index}) {
     let openedDialogue = openDialogues.get(dialogueName);
     if (openedDialogue) {
         openedDialogue.clicks++;
@@ -259,10 +269,10 @@ async function newText(dialogueName, speed, location, playSound, starting) {
         openedDialogue = { clicks: 0 };
         openDialogues.set(dialogueName, openedDialogue);
     }
-    // If the clicks is higher than the number of dialogues, then we just loop the last one.
     const numberOfDialogues = dialogue[dialogueName].length;
     const currentIndex = Math.min(numberOfDialogues - 1, openedDialogue.clicks);
-    const textToDisplay = dialogue[dialogueName][starting ? Math.floor(Math.random() * (numberOfDialogues - 1)) + starting : currentIndex];
+    // If an index is selected, then we use the index. Else, we clamp it.
+    const textToDisplay = dialogue[dialogueName][index ? index : starting ? Math.floor(Math.random() * (numberOfDialogues - 1)) + starting : currentIndex];
     await displayText(textToDisplay, speed, location, playSound);
     return;
 }
@@ -336,6 +346,6 @@ function keyHandler(event) {
     }
 }
 function sleep(ms) {
-    ms = (skip) ? 5 : ms;
+    ms = (skip) ? 7 : ms;
     return new Promise(resolve => setTimeout(resolve, ms));
 }

@@ -25,19 +25,11 @@
         "Nobody comes down here anymore, not after the GREAT BLANK.#What? Don't tell me you've never heard of it!",
         "Legends tell of three heroes that'll come and clear out the GREAT BLANK!#Ha! I'd like to see them try!"
     ],
-    "shopItemsDesktop": [
-        "Huh? What'd you click?"
-    ],
-    "shopItemsMobile": [
-        "Huh? What'd you tap?"
-    ],
-    "aliFace": [
-        "That's me! Hey, what am I doing there?"
-    ],
-    "heart": [
-        "I've had that lying around for a while.|It whispers sometimes, but that's about it."
-    ],
-    "pencil": [
+    "shopItems": [
+        "Huh? What'd you click?",
+        "Huh? What'd you tap?",
+        "That's me! Hey, what am I doing there?",
+        "I've had that lying around for a while.|It whispers sometimes, but that's about it.",
         "He creeps me out."
     ]
 }

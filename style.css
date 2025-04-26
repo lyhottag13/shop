@@ -31,6 +31,8 @@ body {
     z-index: 0;
     background-repeat: no-repeat;
     image-rendering: pixelated;
+    backface-visibility: hidden;
+    will-change: background-position;
 }
 .screen {
     transform-origin: 50% 25%;
