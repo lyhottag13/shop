@@ -185,6 +185,7 @@ async function aliEvent() {
                 await newText({dialogueName: "shopItems", index: index > 3 ? MOBILE ? 1 : 0 : index + 2});
                 shopContainer.style.opacity = 1;
                 shopTab.addEventListener("pointerdown", toggleMenu);
+                console.log(index > 3 ? MOBILE ? 1 : 0 : index + 2);
             });
         });
     } else {
@@ -263,7 +264,8 @@ async function newText({dialogueName, speed, location, playSound, starting, inde
     const numberOfDialogues = dialogue[dialogueName].length;
     const currentIndex = Math.min(numberOfDialogues - 1, openedDialogue.clicks);
     // If an index is selected, then we use the index. Else, we clamp it.
-    const textToDisplay = dialogue[dialogueName][index ? index : starting ? Math.floor(Math.random() * (numberOfDialogues - 1)) + starting : currentIndex];
+    const textToDisplay = dialogue[dialogueName][index ?? (starting ? Math.floor(Math.random() * (numberOfDialogues - 1)) + starting : currentIndex)];
+    console.log(index ? index : starting ? Math.floor(Math.random() * (numberOfDialogues - 1)) + starting : currentIndex);
     await displayText(textToDisplay, speed, location, playSound);
     return;
 }
