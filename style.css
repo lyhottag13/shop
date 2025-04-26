@@ -142,6 +142,9 @@ body {
     opacity: 0;
 }
 #shopMenu {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     position: absolute;
     right: -130px;
     height: var(--height);

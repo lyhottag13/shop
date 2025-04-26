@@ -28,6 +28,7 @@ const eventHandlers = {
     closedSignEvent,
     aliEvent,
     doorEvent,
+    shopClickEvent,
 };
 player.construct();
 AUDIO.forEach(name => {
@@ -114,7 +115,6 @@ async function doorEvent() {
 }
 async function closedSignEvent() {
     await newText("closedSign");
-    console.log(openDialogues.get("closedSign").clicks);
     if (openDialogues.get("closedSign").clicks === 2) {
         // Show lightswitch.
         await sleep(1000);
@@ -166,13 +166,40 @@ async function switchLightsEvent() {
     return;
 }
 async function aliEvent() {
-    await newText("ali");
-    if (openDialogues.get("ali").clicks === 0) {
+    if (!openDialogues.get("ali")) {
+        await newText("ali");
         document.getElementById("shopTab").addEventListener("pointerdown", toggleMenu);
         document.getElementById("shopContainer").style.visibility = "visible";
         document.getElementById("shopContainer").style.opacity = 1;
+        document.querySelectorAll(".shopItem").forEach((item, index) => {
+            item.addEventListener("pointerdown", async () => {
+                toggleMenu();
+                document.getElementById("shopContainer").style.opacity = 0;
+                document.getElementById("shopTab").removeEventListener("pointerdown", toggleMenu);
+                switch (index) {
+                    case 0:
+                        await newText("aliFace");
+                        break;
+                    case 1:
+                        await newText("heart");
+                        break;
+                    case 2:
+                        await newText("pencil");
+                        break;
+                    default:
+                        await newText(MOBILE ? "shopItemsMobile" : "shopItemsDesktop");
+                }
+                document.getElementById("shopContainer").style.opacity = 1;
+                document.getElementById("shopTab").addEventListener("pointerdown", toggleMenu);
+            });
+        });
+    } else {
+        await newText("ali", undefined, undefined, undefined, 1);
     }
     return;
+}
+async function shopClickEvent() {
+
 }
 async function displayText(text, speed = 1, location = "text", playSound = true) {
     if (!isTyping) {
@@ -224,7 +251,7 @@ async function displayText(text, speed = 1, location = "text", playSound = true)
  * @param {boolean} playSound - Indicates whether or not this should play a sound.
  * @returns Null, just gives more control over when to continue with certain actions in cutscenes.
  */
-async function newText(dialogueName, speed, location, playSound) {
+async function newText(dialogueName, speed, location, playSound, starting) {
     let openedDialogue = openDialogues.get(dialogueName);
     if (openedDialogue) {
         openedDialogue.clicks++;
@@ -235,7 +262,7 @@ async function newText(dialogueName, speed, location, playSound) {
     // If the clicks is higher than the number of dialogues, then we just loop the last one.
     const numberOfDialogues = dialogue[dialogueName].length;
     const currentIndex = Math.min(numberOfDialogues - 1, openedDialogue.clicks);
-    const textToDisplay = dialogue[dialogueName][currentIndex];
+    const textToDisplay = dialogue[dialogueName][starting ? Math.floor(Math.random() * (numberOfDialogues - 1)) + starting : currentIndex];
     await displayText(textToDisplay, speed, location, playSound);
     return;
 }
@@ -305,9 +332,10 @@ function keyHandler(event) {
             break;
         case "e":
             player.playSpammableSFX("explosion");
+            break;
     }
 }
 function sleep(ms) {
-    ms = (skip) ? 10 : ms;
+    ms = (skip) ? 5 : ms;
     return new Promise(resolve => setTimeout(resolve, ms));
 }
