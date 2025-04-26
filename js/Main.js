@@ -213,10 +213,10 @@ async function displayText(text, speed = 1, location = "text", playSound = true)
             switch (charAt) {
                 case "|":
                     textBox.innerHTML += "<br>";
-                    await sleep(1000 * speed);
+                    await sleep(700 * speed);
                     break;
                 case "#":
-                    await sleep(2000 * speed);
+                    await sleep(1200 * speed);
                     textBox.innerHTML = "";
                     break;
                 case " ":
@@ -297,14 +297,15 @@ async function setScreen(screenNumber, transitionTime, fadeOut, fadeIn) {
     currentScreenNumber = screenNumber;
 }
 function toggleMenu() {
+    const shopTabLabel = document.getElementById("shopTabLabel");
     if (!isMenuShowing) {
         if (!MOBILE) {
             shopContainer.style.right = "100px";
-            document.getElementById("shopTabLabel").textContent = "CLOSE SHOP";
+            shopTabLabel.textContent = "CLOSE SHOP";
             document.getElementById("counter").style.transform = "translateX(-500px)";
         } else {
             shopContainer.style.bottom = "0";
-            document.getElementById("shopTabLabel").textContent = "CLOSE SHOP";
+            shopTabLabel.textContent = "CLOSE SHOP";
             document.getElementById("counter").style.transform = "translateY(-100px)";
             document.getElementById("textDiv").style.transform = "translateY(-100px)";
             document.body.style.backgroundPositionY = "-190px";
@@ -313,11 +314,11 @@ function toggleMenu() {
     } else {
         if (!MOBILE) {
             shopContainer.style.right = "-900px";
-            document.getElementById("shopTabLabel").textContent = "OPEN SHOP";
+            shopTabLabel.textContent = "OPEN SHOP";
             document.getElementById("counter").style.transform = "translateX(0)";
         } else {
             shopContainer.style.bottom = "-347px";
-            document.getElementById("shopTabLabel").textContent = "OPEN SHOP";
+            shopTabLabel.textContent = "OPEN SHOP";
             document.getElementById("counter").style.transform = "translateY(0)";
             document.getElementById("textDiv").style.transform = "translateY(0)";
             document.body.style.backgroundPositionY = "0";
