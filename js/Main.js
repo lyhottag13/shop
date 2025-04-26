@@ -15,7 +15,6 @@ const shopMenu = document.getElementById("shopMenu");
 
 const player = new SoundManager();
 let isTyping = false;
-let isLightOn = false;
 let isInteractionAllowed = true;
 let isInitialized = false;
 let currentScreenNumber = 0;
@@ -70,10 +69,14 @@ window.onload = async () => {
     await sleep(3000);
     if (!isInitialized) {
         isShowingInitialText = true;
-        newText({dialogueName: "startText", speed: 10, location: "textStart", playSound: false, index: MOBILE ? 1 : 0});
+        newText({ dialogueName: "startText", speed: 10, location: "textStart", playSound: false, index: MOBILE ? 1 : 0 });
     }
 };
-// This starts the game.
+
+let currentShopItem = 0;
+const arrayOfItems = document.querySelectorAll(".shopItem");
+
+// This starts the game when the user clicks/taps.
 async function initialize() {
     isInitialized = true;
     if (player.audioContext.state === "suspended") {
@@ -92,6 +95,41 @@ async function initialize() {
     setScreen(1, isShowingInitialText ? 1500 : 0, isShowingInitialText ? "1.5s" : "0s", "3s");
     player.playBackgroundMusic("wind");
     await sleep(2000);
+    // TEMP
+    shopTab.addEventListener("pointerdown", toggleMenu);
+    shopContainer.style.visibility = "visible";
+    shopContainer.style.opacity = 1;
+    arrayOfItems.forEach((item, index) => {
+        // This shows the 0th shop item by default.
+        if (index === 0) {
+            document.getElementById("description").textContent = dialogue["itemDescription"][index];
+            item.style.visibility = "visible";
+        } else {
+            item.style.visibility = "hidden";
+        }
+        // If any shop item is clicked, then it will trigger the dialogue.
+        item.addEventListener("pointerdown", async () => {
+            toggleMenu();
+            shopContainer.style.opacity = 0;
+            shopTab.removeEventListener("pointerdown", toggleMenu);
+            await newText({ dialogueName: "shopItems", index: index > 3 ? MOBILE ? 1 : 0 : index + 2 });
+            shopContainer.style.opacity = 1;
+            shopTab.addEventListener("pointerdown", toggleMenu);
+        });
+    });
+    document.querySelectorAll(".arrow").forEach((item, index) => {
+        item.addEventListener("pointerdown", () => {
+            arrayOfItems[currentShopItem].style.visibility = "hidden";
+            // This will increment the shop item currently showing.
+            currentShopItem = (index === 0) ? (currentShopItem - 1) : (currentShopItem + 1);
+            // This clamps the index so it doesn't go out of range.
+            currentShopItem = Math.max(0, currentShopItem);
+            currentShopItem = Math.min(arrayOfItems.length - 1, currentShopItem);
+            arrayOfItems[currentShopItem].style.visibility = "visible";
+            document.getElementById("description").textContent = dialogue["itemDescription"][Math.min(currentShopItem, dialogue["itemDescription"].length - 1)];
+        });
+    });
+    // TEMP
     createButton("doorButton", MOBILE ? "10%" : "23%", MOBILE ? "30%" : "22%", MOBILE ? "40%" : "57%", MOBILE ? "50%" : "77%", () => callEvent("doorEvent"), "door");
 }
 // Calls events so that we don't have overlap of events.
@@ -120,7 +158,7 @@ async function doorEvent() {
 
 }
 async function closedSignEvent() {
-    await newText({dialogueName: "closedSign"});
+    await newText({ dialogueName: "closedSign" });
     if (openDialogues.get("closedSign").clicks === 2) {
         // Show lightswitch.
         await sleep(1000);
@@ -133,10 +171,10 @@ async function closedSignEvent() {
 }
 async function switchLightsEvent() {
     if (!isTyping) {
-        await newText({dialogueName: "switchLights"});
+        await newText({ dialogueName: "switchLights" });
         await sleep(1400);
         document.getElementById("lightSwitch").remove();
-        newText({dialogueName: "switchLights"});
+        newText({ dialogueName: "switchLights" });
         // Now you see the hand.
         switchAnimator.setAnimation(images["SwitchPull1"], 14, 25, "forwards");
         document.getElementById("switchAnimation").addEventListener("animationend", () => {
@@ -154,14 +192,14 @@ async function switchLightsEvent() {
         document.getElementById("switchAnimation").style.filter = "none";
         // Now we're displaying dialogue.
         await sleep(1500);
-        await newText({dialogueName: "switchLights"});
+        await newText({ dialogueName: "switchLights" });
         await sleep(1500);
-        await newText({dialogueName: "switchLights"});
+        await newText({ dialogueName: "switchLights" });
         await sleep(2000);
         // Now Ali takes the sign.
         counterAnimator.setAnimation(images["OpeningBusiness"], 21, 23, "forwards");
         await sleep(21 / 23 * 1000 + 1500);
-        await newText({dialogueName: "switchLights"});
+        await newText({ dialogueName: "switchLights" });
         await sleep(1800);
         // Now Ali pops up.
         player.playBackgroundMusic("shop");
@@ -173,7 +211,7 @@ async function switchLightsEvent() {
 }
 async function aliEvent() {
     if (!openDialogues.get("ali")) {
-        await newText({dialogueName: "ali"});
+        await newText({ dialogueName: "ali" });
         shopTab.addEventListener("pointerdown", toggleMenu);
         shopContainer.style.visibility = "visible";
         shopContainer.style.opacity = 1;
@@ -182,10 +220,9 @@ async function aliEvent() {
                 toggleMenu();
                 shopContainer.style.opacity = 0;
                 shopTab.removeEventListener("pointerdown", toggleMenu);
-                await newText({dialogueName: "shopItems", index: index > 3 ? MOBILE ? 1 : 0 : index + 2});
+                await newText({ dialogueName: "shopItems", index: index > 3 ? MOBILE ? 1 : 0 : index + 2 });
                 shopContainer.style.opacity = 1;
                 shopTab.addEventListener("pointerdown", toggleMenu);
-                console.log(index > 3 ? MOBILE ? 1 : 0 : index + 2);
             });
         });
     } else {
@@ -194,7 +231,7 @@ async function aliEvent() {
         }
         shopContainer.style.opacity = 0;
         shopTab.removeEventListener("pointerdown", toggleMenu);
-        await newText({dialogueName: "ali", starting: 1});
+        await newText({ dialogueName: "ali", starting: 1 });
         shopContainer.style.opacity = 1;
         shopTab.addEventListener("pointerdown", toggleMenu);
     }
@@ -253,7 +290,7 @@ async function displayText(text, speed = 1, location = "text", playSound = true)
  * @param {boolean} playSound - Indicates whether or not this should play a sound.
  * @returns Null, just gives more control over when to continue with certain actions in cutscenes.
  */
-async function newText({dialogueName, speed, location, playSound, starting, index}) {
+async function newText({ dialogueName, speed, location, playSound, starting, index }) {
     let openedDialogue = openDialogues.get(dialogueName);
     if (openedDialogue) {
         openedDialogue.clicks++;
@@ -265,7 +302,6 @@ async function newText({dialogueName, speed, location, playSound, starting, inde
     const currentIndex = Math.min(numberOfDialogues - 1, openedDialogue.clicks);
     // If an index is selected, then we use the index. Else, we clamp it.
     const textToDisplay = dialogue[dialogueName][index ?? (starting ? Math.floor(Math.random() * (numberOfDialogues - 1)) + starting : currentIndex)];
-    console.log(index ? index : starting ? Math.floor(Math.random() * (numberOfDialogues - 1)) + starting : currentIndex);
     await displayText(textToDisplay, speed, location, playSound);
     return;
 }
@@ -319,7 +355,7 @@ function toggleMenu() {
             shopTabLabel.textContent = "OPEN SHOP";
             document.getElementById("counter").style.transform = "translateX(0)";
         } else {
-            shopContainer.style.bottom = "-347px";
+            shopContainer.style.bottom = "-352px";
             shopTabLabel.textContent = "OPEN SHOP";
             document.getElementById("counter").style.transform = "translateY(0)";
             document.getElementById("textDiv").style.transform = "translateY(0)";
