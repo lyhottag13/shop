@@ -55,7 +55,13 @@ body {
     justify-content: center;
     height: 100%;
     width: 100%;
-    /* visibility: hidden; */
+    transition: all 0.5s ease;
+}
+#item {
+    overflow: hidden;
+}
+#description {
+    font-size: 80px;
 }
 #game {
     height: 100%;
@@ -89,11 +95,11 @@ body {
     --frames: ;
     --background-size: ;
     --background-position: ;
-    margin-top: 100px;
-    height: 500px;
+    height: 600px;
     width: 500px;
     background-image: var(--animation-image);
     background-position-x : 0;
+    background-position-y: 100px;
     background-size: var(--background-size);
     animation: anim var(--animation-length) steps(var(--frames)) infinite;
 }
@@ -155,8 +161,8 @@ body {
 #shopMenu {
     display: grid;
     align-items: center;
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr 2fr 1fr;
     position: absolute;
     right: -130px;
     height: var(--height);
@@ -166,6 +172,38 @@ body {
     border-radius: 0px;
     background-color: black;
 
+}
+#item {
+    align-items: center;
+    justify-items: center;
+    position: relative;
+    grid-column: 1;
+    grid-row: 2;
+    background-color: rgb(0, 0, 0);
+    height: 100%;
+    width: 100%;
+}
+#description {
+    display: flex;
+    flex-direction: column;
+    grid-column: 2;
+    grid-row: 1 / 4;
+    background-color: rgb(0, 0, 0);
+    height: 100%;
+    width: 100%;
+    font-size: 30px;
+}
+.arrow {
+    display: flex;
+    align-items: center;
+    background-color: rgb(0, 0, 0);
+    grid-column: 1;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+}
+.arrow img {
+    height: 128px;
 }
 #shopTab {
     position: absolute;
@@ -243,8 +281,7 @@ body {
         width: 300px;
         }
     #animation {
-        margin-top: 100px;
-        height: 300px;
+        height: 400px;
         width: 300px;
     }
     #shopContainer {
@@ -262,8 +299,8 @@ body {
         width: var(--width);
         transform: translate(-50%);
     }
-    #shopContainer img {
-        height: 160px;
+    #item img {
+        height: 80%;
     }
     #shopMenu {
         position: relative;
@@ -273,6 +310,8 @@ body {
         height: inherit;
         width: inherit;
         border-width: 7px;
+        grid-template-columns: 1fr 2fr 1fr;
+        grid-template-rows: repeat(2, 1fr);
     }
     #item {
         align-items: center;
@@ -280,22 +319,32 @@ body {
         position: relative;
         grid-column: 2;
         grid-row: 1;
-        background-color: orange;
+        background-color: rgb(0, 0, 0);
         height: 100%;
         width: 100%;
     }
     #description {
+        display: flex;
+        flex-direction: column;
         grid-column: 2;
         grid-row: 2;
-        background-color: blue;
+        background-color: rgb(0, 0, 0);
         height: 100%;
         width: 100%;
+        font-size: 30px;
+    }
+    #description span {
+        text-align: center;
     }
     .arrow {
-        background-color: white;
+        display: flex;
+        align-items: center;
+        background-color: rgb(0, 0, 0);
         grid-row: 1 / 3;
+        grid-column: auto;
         height: 100%;
         width: 100%;
+        justify-content: center;
     }
     #shopTab {
         position: relative;

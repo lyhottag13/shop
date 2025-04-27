@@ -95,40 +95,59 @@ async function initialize() {
     setScreen(1, isShowingInitialText ? 1500 : 0, isShowingInitialText ? "1.5s" : "0s", "3s");
     player.playBackgroundMusic("wind");
     await sleep(2000);
-    // TEMP
-    shopTab.addEventListener("pointerdown", toggleMenu);
-    shopContainer.style.visibility = "visible";
-    shopContainer.style.opacity = 1;
-    arrayOfItems.forEach((item, index) => {
-        // This shows the 0th shop item by default.
-        if (index === 0) {
-            document.getElementById("description").textContent = dialogue["itemDescription"][index];
-            item.style.visibility = "visible";
-        } else {
-            item.style.visibility = "hidden";
-        }
-        // If any shop item is clicked, then it will trigger the dialogue.
-        item.addEventListener("pointerdown", async () => {
-            toggleMenu();
-            shopContainer.style.opacity = 0;
-            shopTab.removeEventListener("pointerdown", toggleMenu);
-            await newText({ dialogueName: "shopItems", index: index > 3 ? MOBILE ? 1 : 0 : index + 2 });
-            shopContainer.style.opacity = 1;
-            shopTab.addEventListener("pointerdown", toggleMenu);
-        });
-    });
-    document.querySelectorAll(".arrow").forEach((item, index) => {
-        item.addEventListener("pointerdown", () => {
-            arrayOfItems[currentShopItem].style.visibility = "hidden";
-            // This will increment the shop item currently showing.
-            currentShopItem = (index === 0) ? (currentShopItem - 1) : (currentShopItem + 1);
-            // This clamps the index so it doesn't go out of range.
-            currentShopItem = Math.max(0, currentShopItem);
-            currentShopItem = Math.min(arrayOfItems.length - 1, currentShopItem);
-            arrayOfItems[currentShopItem].style.visibility = "visible";
-            document.getElementById("description").textContent = dialogue["itemDescription"][Math.min(currentShopItem, dialogue["itemDescription"].length - 1)];
-        });
-    });
+    // TEMP Testing Shop Menu
+    // shopTab.addEventListener("pointerdown", toggleMenu);
+    // shopContainer.style.visibility = "visible";
+    // shopContainer.style.opacity = 1;
+    // arrayOfItems.forEach((item, itemIndex) => {
+    //     // This shows the 0th shop item by default.
+    //     if (itemIndex === 0) {
+    //         document.querySelectorAll("#description span")[0].textContent = `${dialogue["itemDescription"][0]}`;
+    //         document.querySelectorAll("#description span")[1].textContent = `${dialogue["itemDescription"][1]}`;
+    //         item.style.visibility = "visible";
+    //     } else {
+    //         item.style.visibility = "hidden";
+    //         item.style.transform = `translate${MOBILE ? "X(300" : "Y(300"}px)`;
+    //     }
+    //     // If any shop item is clicked, then it will trigger the dialogue.
+    //     item.addEventListener("pointerdown", async () => {
+    //         toggleMenu();
+    //         shopContainer.style.opacity = 0;
+    //         shopTab.removeEventListener("pointerdown", toggleMenu);
+    //         await newText({ dialogueName: "shopItems", index: itemIndex > 3 ? MOBILE ? 1 : 0 : itemIndex + 2 });
+    //         shopContainer.style.opacity = 1;
+    //         shopTab.addEventListener("pointerdown", toggleMenu);
+    //     });
+    // });
+    // document.querySelectorAll(".arrow").forEach((arrow, arrowIndex) => {
+    //     if (arrowIndex === 0) {
+    //         arrow.querySelector("img").style.transform = `rotate(${MOBILE ? "0" : "90deg"})`;
+    //     } else {
+    //         arrow.querySelector("img").style.transform = `rotate(${MOBILE ? "180deg" : "270deg"})`
+    //     }
+    //     arrow.addEventListener("pointerdown", () => {
+    //         // arrayOfItems[currentShopItem].style.visibility = "hidden";
+    //         // This will increment the shop item currently showing.
+    //         // This clamps the index so it doesn't go out of range.
+    //         // currentShopItem = Math.max(0, Math.min(arrayOfItems.length - 1, currentShopItem));
+    //         if (arrowIndex === 0 && currentShopItem !== 0) {
+    //             arrayOfItems[currentShopItem].style.transform = `translate${MOBILE ? "X(200" : "Y(200"}px)`;
+    //             arrayOfItems[currentShopItem].style.filter = "opacity(0)";
+    //             currentShopItem--;
+    //             arrayOfItems[currentShopItem].style.transform = `translate${MOBILE ? "X(0" : "Y(0"})`;
+    //             arrayOfItems[currentShopItem].style.filter = "opacity(1)";
+    //         } else if (arrowIndex === 1 && currentShopItem !== arrayOfItems.length - 1) {
+    //             arrayOfItems[currentShopItem].style.transform = `translate${MOBILE ? "X(-200" : "Y(-200"}px)`;
+    //             arrayOfItems[currentShopItem].style.filter = "opacity(0)";
+    //             currentShopItem++;
+    //             arrayOfItems[currentShopItem].style.transform = `translate${MOBILE ? "X(0" : "Y(0"})`;
+    //             arrayOfItems[currentShopItem].style.filter = "opacity(1)";
+    //         }
+    //         arrayOfItems[currentShopItem].style.visibility = "visible";
+    //         document.querySelectorAll("#description span")[0].textContent = dialogue["itemDescription"][Math.min(currentShopItem * 2, dialogue["itemDescription"].length - 1)];
+    //         document.querySelectorAll("#description span")[1].textContent = dialogue["itemDescription"][Math.min(currentShopItem * 2 + 1, dialogue["itemDescription"].length - 1)];
+    //     });
+    // });
     // TEMP
     createButton("doorButton", MOBILE ? "10%" : "23%", MOBILE ? "30%" : "22%", MOBILE ? "40%" : "57%", MOBILE ? "50%" : "77%", () => callEvent("doorEvent"), "door");
 }
@@ -187,7 +206,6 @@ async function switchLightsEvent() {
         counterAnimator.setAnimation(images["ClosedLights"], 1, 0, "forwards");
         body.style.backgroundImage = `url("${images["Background"].src}")`;
         body.style.backgroundColor = "rgb(179, 115, 10)";
-        isLightOn = true;
         document.getElementById("closedSign").remove();
         document.getElementById("switchAnimation").style.filter = "none";
         // Now we're displaying dialogue.
@@ -215,14 +233,53 @@ async function aliEvent() {
         shopTab.addEventListener("pointerdown", toggleMenu);
         shopContainer.style.visibility = "visible";
         shopContainer.style.opacity = 1;
-        document.querySelectorAll(".shopItem").forEach((item, index) => {
+        arrayOfItems.forEach((item, itemIndex) => {
+            // This shows the 0th shop item by default.
+            if (itemIndex === 0) {
+                document.querySelectorAll("#description span")[0].textContent = `${dialogue["itemDescription"][0]}`;
+                document.querySelectorAll("#description span")[1].textContent = `${dialogue["itemDescription"][1]}`;
+                item.style.visibility = "visible";
+            } else {
+                item.style.visibility = "hidden";
+                item.style.transform = `translate${MOBILE ? "X(300" : "Y(300"}px)`;
+            }
+            // If any shop item is clicked, then it will trigger the dialogue.
             item.addEventListener("pointerdown", async () => {
                 toggleMenu();
                 shopContainer.style.opacity = 0;
                 shopTab.removeEventListener("pointerdown", toggleMenu);
-                await newText({ dialogueName: "shopItems", index: index > 3 ? MOBILE ? 1 : 0 : index + 2 });
+                await newText({ dialogueName: "shopItems", index: itemIndex > 3 ? MOBILE ? 1 : 0 : itemIndex + 2 });
                 shopContainer.style.opacity = 1;
                 shopTab.addEventListener("pointerdown", toggleMenu);
+            });
+        });
+        document.querySelectorAll(".arrow").forEach((arrow, arrowIndex) => {
+            if (arrowIndex === 0) {
+                arrow.querySelector("img").style.transform = `rotate(${MOBILE ? "0" : "90deg"})`;
+            } else {
+                arrow.querySelector("img").style.transform = `rotate(${MOBILE ? "180deg" : "270deg"})`
+            }
+            arrow.addEventListener("pointerdown", () => {
+                // arrayOfItems[currentShopItem].style.visibility = "hidden";
+                // This will increment the shop item currently showing.
+                // This clamps the index so it doesn't go out of range.
+                // currentShopItem = Math.max(0, Math.min(arrayOfItems.length - 1, currentShopItem));
+                if (arrowIndex === 0 && currentShopItem !== 0) {
+                    arrayOfItems[currentShopItem].style.transform = `translate${MOBILE ? "X(200" : "Y(200"}px)`;
+                    arrayOfItems[currentShopItem].style.filter = "opacity(0)";
+                    currentShopItem--;
+                    arrayOfItems[currentShopItem].style.transform = `translate${MOBILE ? "X(0" : "Y(0"})`;
+                    arrayOfItems[currentShopItem].style.filter = "opacity(1)";
+                } else if (arrowIndex === 1 && currentShopItem !== arrayOfItems.length - 1) {
+                    arrayOfItems[currentShopItem].style.transform = `translate${MOBILE ? "X(-200" : "Y(-200"}px)`;
+                    arrayOfItems[currentShopItem].style.filter = "opacity(0)";
+                    currentShopItem++;
+                    arrayOfItems[currentShopItem].style.transform = `translate${MOBILE ? "X(0" : "Y(0"})`;
+                    arrayOfItems[currentShopItem].style.filter = "opacity(1)";
+                }
+                arrayOfItems[currentShopItem].style.visibility = "visible";
+                document.querySelectorAll("#description span")[0].textContent = dialogue["itemDescription"][Math.min(currentShopItem * 2, dialogue["itemDescription"].length - 1)];
+                document.querySelectorAll("#description span")[1].textContent = dialogue["itemDescription"][Math.min(currentShopItem * 2 + 1, dialogue["itemDescription"].length - 1)];
             });
         });
     } else {
