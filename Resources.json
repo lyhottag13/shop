@@ -1,0 +1,30 @@
+{
+    "images": [
+        "Closed", 
+        "ClosedLights", 
+        "Idle", 
+        "OpeningBusiness", 
+        "Switch", 
+        "SwitchPull", 
+        "Background", 
+        "SwitchPull1", 
+        "SwitchPull2", 
+        "Face", 
+        "Door"
+    ],
+    "shopImages": [
+        "Minecraft",
+        "ETG",
+        "Roblox",
+        "Portal",
+        "Newgrounds",
+        "Fallout",
+        "DST",
+        "HollowKnight",
+        "StardewValley",
+        "TBOI",
+        "Zomboid",
+        "ENA",
+        "D&D"
+    ]
+}

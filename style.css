@@ -300,7 +300,7 @@ body {
         transform: translate(-50%);
     }
     #item img {
-        height: 80%;
+        width: 100px;
     }
     #shopMenu {
         position: relative;
