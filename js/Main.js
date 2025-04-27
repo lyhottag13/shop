@@ -261,7 +261,7 @@ async function aliEvent() {
     }
     return;
 }
-async function displayText({text, speed = 1, location = "text", playSound = true}) {
+async function displayText({ text, speed = 1, location = "text", playSound = true }) {
     if (!isTyping) {
         const textBox = document.getElementById(location);
         textBox.innerHTML = "";
@@ -325,9 +325,9 @@ async function newText({ dialogueName, speed, location, playSound, starting: sta
     const validIndex = index ?? (startingIndex ? (Math.floor(Math.random() * (numberOfDialogues - startingIndex)) + startingIndex) : currentIndex);
     const textToDisplay = dialogueJSON[dialogueName][validIndex];
     await displayText({
-        text: textToDisplay, 
-        speed: speed, 
-        location: location, 
+        text: textToDisplay,
+        speed: speed,
+        location: location,
         playSound: playSound
     });
     return;
@@ -405,50 +405,42 @@ function toggleMenu() {
 function initializeShop() {
     const descriptionParts = document.querySelectorAll("#description span");
     shopTab.addEventListener("pointerdown", toggleMenu);
-        shopContainer.style.visibility = "visible";
-        shopContainer.style.opacity = 1;
-        // This will generate the shop's divs and set items to each div.
-        initializeShopItemDivs();
-        arrayOfItems.forEach((item, itemIndex) => {
-            // This shows the 0th shop item by default.
-            setItemVisibilities(item, itemIndex, descriptionParts);
-            // If any shop item is clicked, then it will trigger the dialogue.
-            item.addEventListener("pointerdown", async function () {
-                initializeItemEvent(itemIndex);
-            });
-        });
-        document.querySelectorAll(".arrow").forEach((arrow, arrowIndex) => {
-            const arrowImage = arrow.querySelector("img");
-            if (arrowIndex === 0) {
-                arrowImage.style.transform = `rotate(${MOBILE ? "0" : "90deg"})`;
-            } else {
-                arrowImage.style.transform = `rotate(${MOBILE ? "180deg" : "270deg"})`
+    shopContainer.style.visibility = "visible";
+    shopContainer.style.opacity = 1;
+    // This will generate the shop's divs and set items to each div.
+    initializeShopItemDivs();
+    arrayOfItems.forEach((item, itemIndex) => {
+        initializeItem(item, itemIndex, descriptionParts);
+    });
+    document.querySelectorAll(".arrow").forEach((arrow, arrowIndex) => {
+        const arrowImage = arrow.querySelector("img");
+        if (arrowIndex === 0) {
+            arrowImage.style.transform = `rotate(${MOBILE ? "0" : "90deg"})`;
+        } else {
+            arrowImage.style.transform = `rotate(${MOBILE ? "180deg" : "270deg"})`
+        }
+        const direction = arrowIndex === 0 ? "" : "-";
+        const displacement = `${direction}200px`;
+        arrow.addEventListener("pointerdown", () => {
+            const isValidMove = ((arrowIndex === 0 && currentShopIndex !== 0) || (arrowIndex === 1 && currentShopIndex !== arrayOfItems.length - 1));
+            let selectedItem = arrayOfItems[currentShopIndex];
+            if (isValidMove) {
+                selectedItem.style.transform = `translate${MOBILE ? "X" : "Y"}(${displacement})`;
+                selectedItem.style.filter = "opacity(0)";
+                currentShopIndex += arrowIndex === 0 ? -1 : 1;
+                selectedItem = arrayOfItems[currentShopIndex];
             }
-            const direction = arrowIndex === 0 ? "" : "-";
-            const displacement = `${direction}200px`;
-            arrow.addEventListener("pointerdown", () => {
-                const isValidMove = ((arrowIndex === 0 && currentShopIndex !== 0) || (arrowIndex === 1 && currentShopIndex !== arrayOfItems.length - 1));
-                let selectedItem = arrayOfItems[currentShopIndex];
-                if (isValidMove) {
-                    selectedItem.style.transform = `translate${MOBILE ? "X" : "Y"}(${displacement})`;
-                    selectedItem.style.filter = "opacity(0)";
-                    currentShopIndex += arrowIndex === 0 ? -1 : 1;
-                    selectedItem = arrayOfItems[currentShopIndex];
-                }
-                selectedItem.style.transform = `translate${MOBILE ? "X" : "Y"}(0)`;
-                selectedItem.style.filter = "opacity(1)";
-                selectedItem.style.visibility = "visible";
-                const validIndex = Math.min(currentShopIndex, dialogueJSON["itemHeader"].length - 1);
-                descriptionParts[0].textContent = dialogueJSON["itemHeader"][validIndex];
-                descriptionParts[1].textContent = dialogueJSON["itemDescription"][validIndex];
-            });
+            selectedItem.style.transform = `translate${MOBILE ? "X" : "Y"}(0)`;
+            selectedItem.style.filter = "opacity(1)";
+            selectedItem.style.visibility = "visible";
+            const validIndex = Math.min(currentShopIndex, dialogueJSON["itemHeader"].length - 1);
+            descriptionParts[0].textContent = dialogueJSON["itemHeader"][validIndex];
+            descriptionParts[1].textContent = dialogueJSON["itemDescription"][validIndex];
         });
+    });
 }
 function initializeItem(item, itemIndex, descriptionParts) {
-    setItemVisibilities(item, itemIndex, descriptionParts)
-    initializeItemEvent(itemIndex);
-}
-function setItemVisibilities(item, itemIndex, descriptionParts) {
+    // This sets the default visible item to the first item.
     if (itemIndex === 0) {
         descriptionParts[0].textContent = dialogueJSON["itemHeader"][0];
         descriptionParts[1].textContent = dialogueJSON["itemDescription"][0];
@@ -457,19 +449,18 @@ function setItemVisibilities(item, itemIndex, descriptionParts) {
         item.style.visibility = "hidden";
         item.style.transform = `translate${MOBILE ? "X" : "Y"}(300px)`;
     }
+    item.addEventListener("pointerdown", async function () {
+        await itemEvent(itemIndex);
+    });
 }
-async function initializeItemEvent(itemIndex) {
+async function itemEvent(itemIndex) {
+    console.log(itemIndex);
     toggleMenu();
     shopContainer.style.opacity = 0;
     shopTab.removeEventListener("pointerdown", toggleMenu);
     await newText({ dialogueName: "itemDialogue", index: itemIndex });
     shopContainer.style.opacity = 1;
     shopTab.addEventListener("pointerdown", toggleMenu);
-}
-function addItemListener(itemIndex) {
-    item.addEventListener("pointerdown", async function () {
-        initializeItemEvent(itemIndex);
-    });
 }
 function initializeShopItemDivs() {
     resourceJSON["shopImages"].forEach((element, index) => {
