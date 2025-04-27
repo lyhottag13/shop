@@ -1,5 +1,6 @@
 import { SoundManager } from "./SoundManager.js";
 import { Animator } from "./Animator.js";
+import { Shop } from "./Shop.js";
 
 const body = document.body;
 const MOBILE = (window.innerWidth <= 600) ? true : false;
@@ -17,6 +18,7 @@ const shopMenu = document.getElementById("shopMenu");
 const counter = document.getElementById("counter");
 const dialogueBox = document.getElementById("textDiv");
 
+const shop = new Shop();
 
 const player = new SoundManager();
 let isTyping = false;
@@ -250,14 +252,9 @@ async function aliEvent() {
         initializeShop();
     } else {
         // This triggers if we're just bantering.
-        if (isMenuShowing) {
-            toggleMenu();
-        }
-        shopContainer.style.opacity = 0;
-        shopTab.removeEventListener("pointerdown", toggleMenu);
+        shop.hide();
         await newText({ dialogueName: "ali", starting: 1 });
-        shopContainer.style.opacity = 1;
-        shopTab.addEventListener("pointerdown", toggleMenu);
+        shop.show();
     }
     return;
 }
@@ -371,46 +368,15 @@ async function setScreen({
     nextScreen.style.opacity = 1;
     currentScreenIndex = nextScreenIndex;
 }
-function toggleMenu() {
-    const shopTabLabel = document.getElementById("shopTabLabel");
-    if (!isMenuShowing) {
-        if (!MOBILE) {
-            shopContainer.style.right = "100px";
-            shopTabLabel.textContent = "CLOSE SHOP";
-            counter.style.transform = "translateX(-500px)";
-        } else {
-            shopContainer.style.bottom = "0";
-            shopTabLabel.textContent = "CLOSE SHOP";
-            counter.style.transform = "translateY(-100px)";
-            dialogueBox.style.transform = "translateY(-100px)";
-            document.body.style.backgroundPositionY = "-190px";
-        }
-        isMenuShowing = true;
-    } else {
-        if (!MOBILE) {
-            shopContainer.style.right = "-900px";
-            shopTabLabel.textContent = "OPEN SHOP";
-            counter.style.transform = "translateX(0)";
-        } else {
-            shopContainer.style.bottom = "-352px";
-            shopTabLabel.textContent = "OPEN SHOP";
-            counter.style.transform = "translateY(0)";
-            dialogueBox.style.transform = "translateY(0)";
-            document.body.style.backgroundPositionY = "0";
-        }
-        isMenuShowing = false;
-    }
-
-}
 function initializeShop() {
     const descriptionParts = document.querySelectorAll("#description span");
-    shopTab.addEventListener("pointerdown", toggleMenu);
+    shopTab.addEventListener("pointerdown", shop.toggleMenu.bind(shop));
     shopContainer.style.visibility = "visible";
     shopContainer.style.opacity = 1;
     // This will generate the shop's divs and set items to each div.
     initializeShopItemDivs();
     arrayOfItems.forEach((item, itemIndex) => {
-        initializeItem(item, itemIndex, descriptionParts);
+        shop.initializeItem(item, itemIndex, descriptionParts, dialogueJSON);
     });
     document.querySelectorAll(".arrow").forEach((arrow, arrowIndex) => {
         const arrowImage = arrow.querySelector("img");
@@ -455,12 +421,12 @@ function initializeItem(item, itemIndex, descriptionParts) {
 }
 async function itemEvent(itemIndex) {
     console.log(itemIndex);
-    toggleMenu();
+    shop.toggleMenu();
     shopContainer.style.opacity = 0;
-    shopTab.removeEventListener("pointerdown", toggleMenu);
+    shopTab.removeEventListener("pointerdown", shop.toggleMenu);
     await newText({ dialogueName: "itemDialogue", index: itemIndex });
     shopContainer.style.opacity = 1;
-    shopTab.addEventListener("pointerdown", toggleMenu);
+    shopTab.addEventListener("pointerdown", shop.toggleMenu);
 }
 function initializeShopItemDivs() {
     resourceJSON["shopImages"].forEach((element, index) => {
