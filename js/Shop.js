@@ -1,5 +1,5 @@
 export class Shop {
-    constructor() {
+    constructor(dialogueBox) {
         this.shopContainer = document.getElementById("shopContainer");
         this.shopTab = document.getElementById("shopTab");
         this.shopMenu = document.getElementById("shopMenu");
@@ -7,17 +7,19 @@ export class Shop {
         this.counter = document.getElementById("counter");
         this.dialogueBox = document.getElementById("textDiv");
         this.MOBILE = (window.innerWidth <= 600) ? true : false;
+        this.dialogueBox1 = dialogueBox;
+        this.toggleMenuHandler = () => this.toggleMenu();
     }
     hide() {
         if (this.isMenuShowing) {
             this.toggleMenu();
         }
         this.shopContainer.style.opacity = 0;
-        this.shopTab.removeEventListener("pointerdown", this.toggleMenu);
+        this.shopTab.removeEventListener("pointerdown", this.toggleMenuHandler);
     }
     show() {
         this.shopContainer.style.opacity = 1;
-        this.shopTab.addEventListener("pointerdown", this.toggleMenu);
+        this.shopTab.addEventListener("pointerdown", this.toggleMenuHandler);
     }
     toggleMenu() {
         const shopTabLabel = document.getElementById("shopTabLabel");
@@ -65,13 +67,12 @@ export class Shop {
         });
     }
     async itemEvent(itemIndex) {
-        console.log(itemIndex);
         this.toggleMenu();
         this.shopContainer.style.opacity = 0;
-        this.shopTab.removeEventListener("pointerdown", this.toggleMenu);
-        // await newText({ dialogueName: "itemDialogue", index: itemIndex });
+        this.shopTab.removeEventListener("pointerdown", this.toggleMenuHandler);
+        await this.dialogueBox1.newText({ dialogueName: "itemDialogue", index: itemIndex });
         this.shopContainer.style.opacity = 1;
-        this.shopTab.addEventListener("pointerdown", this.toggleMenu);
+        this.shopTab.addEventListener("pointerdown", this.toggleMenuHandler);
     }
     initializeShopItemDivs(arrayOfItems) {
         resourceJSON["shopImages"].forEach((element, index) => {

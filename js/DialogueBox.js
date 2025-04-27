@@ -1,22 +1,31 @@
 export class DialogueBox {
     constructor() {
         this.openDialogues = new Map();
+        this.dialogueJSON = null;
+        this.resourceJSON = null;
+        this.isTyping = false;
+        this.player = null;
+    }
+    async construct(player) {
+        this.dialogueJSON = await (await fetch("js/Dialogue.json")).json()
+        this.resourceJSON = await (await (fetch("Resources.json"))).json();
+        this.player = player;
     }
     async displayText({ text, speed = 1, location = "text", playSound = true }) {
-        if (!isTyping) {
+        if (!this.isTyping) {
             const textBox = document.getElementById(location);
             textBox.innerHTML = "";
-            isTyping = true;
+            this.isTyping = true;
             let charAt;
             for (let i = 0; i < text.length; i++) {
                 charAt = text.charAt(i);
                 switch (charAt) {
                     case "|":
                         textBox.innerHTML += "<br>";
-                        await sleep(700 * speed);
+                        await this.sleep(700 * speed);
                         break;
                     case "#":
-                        await sleep(1200 * speed);
+                        await this.sleep(1200 * speed);
                         textBox.innerHTML = "";
                         break;
                     case " ":
@@ -24,23 +33,23 @@ export class DialogueBox {
                         break;
                     case ",":
                         textBox.innerHTML += ",";
-                        await sleep(500 * speed);
+                        await this.sleep(500 * speed);
                         break;
                     case "!":
                     case ".":
                     case "?":
                         textBox.innerHTML += charAt;
-                        await sleep(500 * speed);
+                        await this.sleep(500 * speed);
                         break;
                     default:
                         textBox.innerHTML += charAt;
                         if (playSound) {
-                            player.play("generic2");
+                            this.player.play("generic2");
                         }
-                        await sleep(35 * speed);
+                        await this.sleep(35 * speed);
                 }
             }
-            isTyping = false;
+            this.isTyping = false;
         }
         return;
     }
@@ -58,19 +67,23 @@ export class DialogueBox {
             openedDialogue.clicks++;
         } else {
             openedDialogue = { clicks: 0 };
-            openDialogues.set(dialogueName, openedDialogue);
+            this.openDialogues.set(dialogueName, openedDialogue);
         }
-        const numberOfDialogues = dialogueJSON[dialogueName].length;
+        const numberOfDialogues = this.dialogueJSON[dialogueName].length;
         const currentIndex = Math.min(numberOfDialogues - 1, openedDialogue.clicks);
         // If an index is selected, then we use the index. Else, we clamp it.
         const validIndex = index ?? (startingIndex ? (Math.floor(Math.random() * (numberOfDialogues - startingIndex)) + startingIndex) : currentIndex);
-        const textToDisplay = dialogueJSON[dialogueName][validIndex];
-        await displayText({
+        const textToDisplay = this.dialogueJSON[dialogueName][validIndex];
+        await this.displayText({
             text: textToDisplay,
             speed: speed,
             location: location,
             playSound: playSound
         });
         return;
+    }
+    sleep(ms) {
+        // ms = (skip) ? 7 : ms;
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 }

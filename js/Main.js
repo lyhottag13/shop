@@ -1,6 +1,7 @@
 import { SoundManager } from "./SoundManager.js";
 import { Animator } from "./Animator.js";
 import { Shop } from "./Shop.js";
+import { DialogueBox } from "./DialogueBox.js";
 
 const body = document.body;
 const MOBILE = (window.innerWidth <= 600) ? true : false;
@@ -18,9 +19,11 @@ const shopMenu = document.getElementById("shopMenu");
 const counter = document.getElementById("counter");
 const dialogueBox = document.getElementById("textDiv");
 
-const shop = new Shop();
-
 const player = new SoundManager();
+const dialogueBox1 = new DialogueBox();
+dialogueBox1.construct(player);
+const shop = new Shop(dialogueBox1);
+
 let isTyping = false;
 let isInteractionAllowed = true;
 let isInitialized = false;
