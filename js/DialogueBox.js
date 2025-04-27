@@ -5,6 +5,7 @@ export class DialogueBox {
         this.resourceJSON = null;
         this.isTyping = false;
         this.player = null;
+        this.skip = false;
     }
     async construct(player) {
         this.dialogueJSON = await (await fetch("js/Dialogue.json")).json()
@@ -83,7 +84,10 @@ export class DialogueBox {
         return;
     }
     sleep(ms) {
-        // ms = (skip) ? 7 : ms;
+        ms = (this.skip) ? 7 : ms;
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    toggleSkip() {
+        this.skip = !this.skip;
     }
 }

@@ -22,7 +22,7 @@ const dialogueBox = document.getElementById("textDiv");
 const player = new SoundManager();
 const dialogueBox1 = new DialogueBox();
 dialogueBox1.construct(player);
-const shop = new Shop(dialogueBox1);
+let shop;
 
 let isTyping = false;
 let isInteractionAllowed = true;
@@ -70,7 +70,7 @@ window.onload = async () => {
         image.src = `resources/images/${name}.webp`;
         shopImages[index] = image;
     });
-
+    shop = new Shop(dialogueBox1, shopImages, dialogueJSON);
     setScreen({ nextScreenIndex: 0, betweenScreenTime: 0 });
     document.addEventListener("click", async () => {
         if (!isInitialized) {
@@ -98,6 +98,7 @@ async function initialize() {
     if (player.audioContext.state === "suspended") {
         player.audioContext.resume();
     }
+
     // These lines show the door, the switch, and the closed sign for later.
     doorAnimator.setAnimation(images["Door"], 17, 0, "forwards");
     switchAnimator.setAnimation(images["Switch"], 1, 0, "forwards");
@@ -117,6 +118,7 @@ async function initialize() {
     player.playBackgroundMusic("wind");
     await sleep(2000);
     // TEMP Testing Shop Menu
+    // shop.initializeShop();
     // shopTab.addEventListener("pointerdown", toggleMenu);
     // shopContainer.style.visibility = "visible";
     // shopContainer.style.opacity = 1;
@@ -252,7 +254,7 @@ async function aliEvent() {
     if (!openDialogues.get("ali")) {
         // This triggers if this is the first time we've talked on Ali.
         await newText({ dialogueName: "ali" });
-        initializeShop();
+        shop.initializeShop();
     } else {
         // This triggers if we're just bantering.
         shop.hide();
@@ -371,80 +373,10 @@ async function setScreen({
     nextScreen.style.opacity = 1;
     currentScreenIndex = nextScreenIndex;
 }
-function initializeShop() {
-    const descriptionParts = document.querySelectorAll("#description span");
-    shopTab.addEventListener("pointerdown", shop.toggleMenu.bind(shop));
-    shopContainer.style.visibility = "visible";
-    shopContainer.style.opacity = 1;
-    // This will generate the shop's divs and set items to each div.
-    initializeShopItemDivs();
-    arrayOfItems.forEach((item, itemIndex) => {
-        shop.initializeItem(item, itemIndex, descriptionParts, dialogueJSON);
-    });
-    document.querySelectorAll(".arrow").forEach((arrow, arrowIndex) => {
-        const arrowImage = arrow.querySelector("img");
-        if (arrowIndex === 0) {
-            arrowImage.style.transform = `rotate(${MOBILE ? "0" : "90deg"})`;
-        } else {
-            arrowImage.style.transform = `rotate(${MOBILE ? "180deg" : "270deg"})`
-        }
-        const direction = arrowIndex === 0 ? "" : "-";
-        const displacement = `${direction}200px`;
-        arrow.addEventListener("pointerdown", () => {
-            const isValidMove = ((arrowIndex === 0 && currentShopIndex !== 0) || (arrowIndex === 1 && currentShopIndex !== arrayOfItems.length - 1));
-            let selectedItem = arrayOfItems[currentShopIndex];
-            if (isValidMove) {
-                selectedItem.style.transform = `translate${MOBILE ? "X" : "Y"}(${displacement})`;
-                selectedItem.style.filter = "opacity(0)";
-                currentShopIndex += arrowIndex === 0 ? -1 : 1;
-                selectedItem = arrayOfItems[currentShopIndex];
-            }
-            selectedItem.style.transform = `translate${MOBILE ? "X" : "Y"}(0)`;
-            selectedItem.style.filter = "opacity(1)";
-            selectedItem.style.visibility = "visible";
-            const validIndex = Math.min(currentShopIndex, dialogueJSON["itemHeader"].length - 1);
-            descriptionParts[0].textContent = dialogueJSON["itemHeader"][validIndex];
-            descriptionParts[1].textContent = dialogueJSON["itemDescription"][validIndex];
-        });
-    });
-}
-function initializeItem(item, itemIndex, descriptionParts) {
-    // This sets the default visible item to the first item.
-    if (itemIndex === 0) {
-        descriptionParts[0].textContent = dialogueJSON["itemHeader"][0];
-        descriptionParts[1].textContent = dialogueJSON["itemDescription"][0];
-        item.style.visibility = "visible";
-    } else {
-        item.style.visibility = "hidden";
-        item.style.transform = `translate${MOBILE ? "X" : "Y"}(300px)`;
-    }
-    item.addEventListener("pointerdown", async function () {
-        await itemEvent(itemIndex);
-    });
-}
-async function itemEvent(itemIndex) {
-    console.log(itemIndex);
-    shop.toggleMenu();
-    shopContainer.style.opacity = 0;
-    shopTab.removeEventListener("pointerdown", shop.toggleMenu);
-    await newText({ dialogueName: "itemDialogue", index: itemIndex });
-    shopContainer.style.opacity = 1;
-    shopTab.addEventListener("pointerdown", shop.toggleMenu);
-}
-function initializeShopItemDivs() {
-    resourceJSON["shopImages"].forEach((element, index) => {
-        const newItemDiv = document.createElement("div");
-        newItemDiv.className = "shopItem";
-        const newItemDivImage = document.createElement("img");
-        newItemDivImage.src = shopImages[index].src;
-        newItemDiv.appendChild(newItemDivImage);
-        document.getElementById("item").appendChild(newItemDiv);
-        arrayOfItems.push(newItemDiv);
-    });
-}
 function keyHandler(event) {
     switch (event.key) {
         case "c":
+            dialogueBox1.toggleSkip();
             skip = !skip;
             break;
         case "e":
