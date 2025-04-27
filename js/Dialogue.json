@@ -59,13 +59,11 @@
         "Guppy",
         "Spiffo",
         "Turron",
-        "Cloak of Billowing",
-        "Null"
+        "Cloak of Billowing"
     ],
     "itemDescription": [
         "Big, and glowy.",
         "Looks pretty neat.",
-        "",
-        "Null"
+        ""
     ]
 }
