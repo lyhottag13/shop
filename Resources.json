@@ -1,15 +1,15 @@
 {
     "images": [
-        "Closed", 
-        "ClosedLights", 
-        "Idle", 
-        "OpeningBusiness", 
-        "Switch", 
-        "SwitchPull", 
-        "Background", 
-        "SwitchPull1", 
-        "SwitchPull2", 
-        "Face", 
+        "Closed",
+        "ClosedLights",
+        "Idle",
+        "OpeningBusiness",
+        "Switch",
+        "SwitchPull",
+        "Background",
+        "SwitchPull1",
+        "SwitchPull2",
+        "Face",
         "Door"
     ],
     "shopImages": [
@@ -28,5 +28,15 @@
         "Zomboid",
         "ENA",
         "D&D"
+    ],
+    "audio": [
+        "wind",
+        "shop",
+        "generic1",
+        "generic2",
+        "lightclick",
+        "lightappear",
+        "doorcreak",
+        "explosion"
     ]
 }

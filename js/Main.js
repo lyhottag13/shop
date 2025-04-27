@@ -3,17 +3,13 @@ import { Animator } from "./Animator.js";
 import { Shop } from "./Shop.js";
 import { DialogueBox } from "./DialogueBox.js";
 
-const body = document.body;
-const MOBILE = (window.innerWidth <= 600) ? true : false;
+const isMobile = (window.innerWidth <= 600) ? true : false;
 const FRAME_WIDTH = (window.innerWidth <= 600) ? 300 : 500;
 const switchAnimator = new Animator(FRAME_WIDTH, "switchAnimation");
-const counterAnimator = new Animator(FRAME_WIDTH, "animation");
+const counterAnimator = new Animator(FRAME_WIDTH, "counterAnimation");
 const doorAnimator = new Animator(FRAME_WIDTH, "doorAnimation");
 
 const screens = document.querySelectorAll(".screen");
-
-const counter = document.getElementById("counter");
-const dialogueBox = document.getElementById("textDiv");
 
 const player = new SoundManager();
 const dialogueBox1 = new DialogueBox();
@@ -24,7 +20,6 @@ let isTyping = false;
 let isInteractionAllowed = true;
 let isInitialized = false;
 let currentScreenIndex = 0;
-const AUDIO = ["wind", "shop", "generic1", "generic2", "lightclick", "lightappear", "doorcreak", "explosion"];
 // This allows me to skip through all the events to quickly debug stuff.
 let skip = false;
 
@@ -47,7 +42,7 @@ let isShowingInitialText;
 window.onload = async () => {
     dialogueJSON = await (await fetch("js/Dialogue.json")).json();
     resourceJSON = await (await (fetch("Resources.json"))).json();
-    AUDIO.forEach(name => {
+    resourceJSON["audio"].forEach(name => {
         player.load(name);
     });
     resourceJSON["images"].forEach((name) => {
@@ -68,11 +63,11 @@ window.onload = async () => {
     document.addEventListener("touchend", async () => {
         initialize();
     }, { once: true });
-    // This tells the user to click/tap if they haven't progressed past the black screen yet.
+    // This tells the user to click/tap if they haven't progressed past the initial black screen yet.
     await sleep(3000);
     if (!isInitialized) {
         isShowingInitialText = true;
-        dialogueBox1.newText({ dialogueName: "startText", speed: 10, location: "textStart", playSound: false, index: MOBILE ? 1 : 0 });
+        dialogueBox1.newText({ dialogueName: "startText", speed: 10, location: "textStart", playSound: false, index: isMobile ? 1 : 0 });
     }
 };
 
@@ -105,7 +100,7 @@ async function initialize() {
         // TEMP Testing Shop Menu
         // shop.initializeShop();
         // TEMP
-        createButton("doorButton", MOBILE ? "10%" : "23%", MOBILE ? "30%" : "22%", MOBILE ? "40%" : "57%", MOBILE ? "50%" : "77%", () => callEvent("doorEvent"), "door");
+        createButton("doorButton", isMobile ? "10%" : "23%", isMobile ? "30%" : "22%", isMobile ? "40%" : "57%", isMobile ? "50%" : "77%", () => callEvent("doorEvent"), "door");
     }
 }
 // Calls events so that we don't have overlap of events.
@@ -130,7 +125,7 @@ async function doorEvent() {
     setScreen({ nextScreenIndex: 2, betweenScreenTime: 3000 });
     player.setBackgroundVolume(-1, 0.3, 4);
     await sleep(5000);
-    createButton("closedSign", MOBILE ? "65%" : "62%", "5%", "90%", "20%", () => callEvent("closedSignEvent"), "counter");
+    createButton("closedSign", isMobile ? "65%" : "62%", "5%", "90%", "20%", () => callEvent("closedSignEvent"), "counter");
 }
 async function closedSignEvent() {
     await dialogueBox1.newText({ dialogueName: "closedSign" });
@@ -138,7 +133,7 @@ async function closedSignEvent() {
         // Show lightswitch.
         await sleep(1000);
         player.play("lightappear");
-        createButton("lightSwitch", "0", "80%", "7%", (MOBILE) ? "60%" : "94%", () => callEvent("switchLightsEvent"), "switch");
+        createButton("lightSwitch", "0", "80%", "7%", (isMobile) ? "60%" : "94%", () => callEvent("switchLightsEvent"), "switch");
         document.getElementById("switch").style.opacity = 1;
         await sleep(1500);
     }
@@ -188,7 +183,7 @@ async function aliEvent() {
         // This triggers if this is the first time we've talked on Ali.
         await dialogueBox1.newText({ dialogueName: "ali" });
         shop.initializeShop();
-    } else {
+    } else if (!isTyping) {
         // This triggers if we're just bantering.
         shop.hide();
         await dialogueBox1.newText({ dialogueName: "ali", starting: 1 });

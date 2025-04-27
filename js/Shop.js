@@ -3,22 +3,23 @@ export class Shop {
         this.shopContainer = document.getElementById("shopContainer");
         this.shopTab = document.getElementById("shopTab");
         this.shopMenu = document.getElementById("shopMenu");
-        this.isMenuShowing = false;
         this.counter = document.getElementById("counter");
         this.textDiv = document.getElementById("textDiv");
-        this.MOBILE = (window.innerWidth <= 600) ? true : false;
+        this.arrows = document.querySelectorAll(".arrow");
         this.toggleMenuHandler = () => this.toggleMenu();
         this.arrayOfItems = [];
-        this.currentShopIndex = 0;
         this.dialogueBoxObject = dialogueBoxObject;
         this.shopImages = shopImages;
         this.dialogueJSON = dialogueJSON;
+        this.isMobile = (window.innerWidth <= 600) ? true : false;
+        this.currentShopIndex = 0;
+        this.isMenuShowing = false;
     }
     toggleMenu() {
         const shopTabLabel = document.getElementById("shopTabLabel");
         if (this.isMenuShowing) {
             shopTabLabel.textContent = "OPEN SHOP";
-            if (this.MOBILE) {
+            if (this.isMobile) {
                 this.shopContainer.style.bottom = "-352px";
                 this.counter.style.transform = "translateY(0)";
                 this.textDiv.style.transform = "translateY(0)";
@@ -30,7 +31,7 @@ export class Shop {
             this.isMenuShowing = false;
         } else {
             shopTabLabel.textContent = "CLOSE SHOP";
-            if (this.MOBILE) {
+            if (this.isMobile) {
                 this.shopContainer.style.bottom = "0";
                 this.counter.style.transform = "translateY(-100px)";
                 this.textDiv.style.transform = "translateY(-100px)";
@@ -45,23 +46,26 @@ export class Shop {
     }
     async initializeShop() {
         const descriptionParts = document.querySelectorAll("#description span");
+        const itemShowcase = document.getElementById("item");
         this.shopContainer.style.visibility = "visible";
         this.show();
         // This will generate the shop's divs and set items to each div.
-        await this.initializeDivs();
+        this.shopImages.forEach((_, index) => {
+            this.initializeDiv(itemShowcase, index);
+        });
         this.arrayOfItems.forEach((item, itemIndex) => {
             this.initializeItem(item, itemIndex, descriptionParts);
         });
-        document.querySelectorAll(".arrow").forEach((arrow, arrowIndex) => {
+        this.arrows.forEach((arrow, arrowIndex) => {
             this.initializeArrow(arrow, arrowIndex, descriptionParts);
         });
     }
     initializeArrow(arrow, arrowIndex, descriptionParts) {
         const arrowImage = arrow.querySelector("img");
         if (arrowIndex === 0) {
-            arrowImage.style.transform = `rotate(${this.MOBILE ? "0" : "90deg"})`;
+            arrowImage.style.transform = `rotate(${this.isMobile ? "0" : "90deg"})`;
         } else {
-            arrowImage.style.transform = `rotate(${this.MOBILE ? "180deg" : "270deg"})`
+            arrowImage.style.transform = `rotate(${this.isMobile ? "180deg" : "270deg"})`
         }
         const direction = arrowIndex === 0 ? "" : "-";
         const displacement = `${direction}200px`;
@@ -77,23 +81,32 @@ export class Shop {
             item.style.visibility = "visible";
         } else {
             item.style.visibility = "hidden";
-            item.style.transform = `translate${this.MOBILE ? "X" : "Y"}(300px)`;
+            item.style.transform = `translate${this.isMobile ? "X" : "Y"}(300px)`;
         }
         item.addEventListener("pointerdown", async () => {
             await this.itemEvent(itemIndex);
         });
+    }
+    initializeDiv(itemShowcase, index) {
+        const newItemDiv = document.createElement("div");
+        newItemDiv.className = "shopItem";
+        const newItemDivImage = document.createElement("img");
+        newItemDivImage.src = this.shopImages[index].src;
+        newItemDiv.appendChild(newItemDivImage);
+        itemShowcase.appendChild(newItemDiv);
+        this.arrayOfItems.push(newItemDiv);
     }
     async arrowEvent(arrowIndex, displacement, descriptionParts) {
         // This checks to see if this is a valid move, i.e. we're not going left at the first, or right at the last.
         const isValidMove = ((arrowIndex === 0 && this.currentShopIndex !== 0) || (arrowIndex === 1 && this.currentShopIndex !== this.arrayOfItems.length - 1));
         let selectedItem = this.arrayOfItems[this.currentShopIndex];
         if (isValidMove) {
-            selectedItem.style.transform = `translate${this.MOBILE ? "X" : "Y"}(${displacement})`;
+            selectedItem.style.transform = `translate${this.isMobile ? "X" : "Y"}(${displacement})`;
             selectedItem.style.filter = "opacity(0)";
             this.currentShopIndex += arrowIndex === 0 ? -1 : 1;
             selectedItem = this.arrayOfItems[this.currentShopIndex];
         }
-        selectedItem.style.transform = `translate${this.MOBILE ? "X" : "Y"}(0)`;
+        selectedItem.style.transform = `translate${this.isMobile ? "X" : "Y"}(0)`;
         selectedItem.style.filter = "opacity(1)";
         selectedItem.style.visibility = "visible";
         const validIndex = Math.min(this.currentShopIndex, this.dialogueJSON["itemHeader"].length - 1);
@@ -109,18 +122,6 @@ export class Shop {
         this.hide();
         await this.dialogueBoxObject.newText({ dialogueName: "itemDialogue", index: itemIndex });
         this.show();
-    }
-    async initializeDivs() {
-        for (let i = 0; i < this.shopImages.length; i++) {
-            const newItemDiv = document.createElement("div");
-            newItemDiv.className = "shopItem";
-            const newItemDivImage = document.createElement("img");
-            newItemDivImage.src = this.shopImages[i].src;
-            newItemDiv.appendChild(newItemDivImage);
-            document.getElementById("item").appendChild(newItemDiv);
-            this.arrayOfItems.push(newItemDiv);
-        }
-        return;
     }
     hide() {
         if (this.isMenuShowing) {
