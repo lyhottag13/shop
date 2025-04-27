@@ -9,6 +9,7 @@ export class Shop {
         this.MOBILE = (window.innerWidth <= 600) ? true : false;
         this.dialogueBox1 = dialogueBox;
         this.toggleMenuHandler = () => this.toggleMenu();
+        this.arrayOfItems = [];
     }
     hide() {
         if (this.isMenuShowing) {
@@ -52,6 +53,43 @@ export class Shop {
         }
 
     }
+    initializeShop() {
+        const descriptionParts = document.querySelectorAll("#description span");
+        this.shopTab.addEventListener("pointerdown", this.toggleMenu.bind(this));
+        this.shopContainer.style.visibility = "visible";
+        this.shopContainer.style.opacity = 1;
+        // This will generate the shop's divs and set items to each div.
+        initializeShopItemDivs();
+        this.arrayOfItems.forEach((item, itemIndex) => {
+            this.initializeItem(item, itemIndex, descriptionParts, dialogueJSON);
+        });
+        document.querySelectorAll(".arrow").forEach((arrow, arrowIndex) => {
+            const arrowImage = arrow.querySelector("img");
+            if (arrowIndex === 0) {
+                arrowImage.style.transform = `rotate(${MOBILE ? "0" : "90deg"})`;
+            } else {
+                arrowImage.style.transform = `rotate(${MOBILE ? "180deg" : "270deg"})`
+            }
+            const direction = arrowIndex === 0 ? "" : "-";
+            const displacement = `${direction}200px`;
+            arrow.addEventListener("pointerdown", () => {
+                const isValidMove = ((arrowIndex === 0 && currentShopIndex !== 0) || (arrowIndex === 1 && currentShopIndex !== arrayOfItems.length - 1));
+                let selectedItem = arrayOfItems[currentShopIndex];
+                if (isValidMove) {
+                    selectedItem.style.transform = `translate${MOBILE ? "X" : "Y"}(${displacement})`;
+                    selectedItem.style.filter = "opacity(0)";
+                    currentShopIndex += arrowIndex === 0 ? -1 : 1;
+                    selectedItem = arrayOfItems[currentShopIndex];
+                }
+                selectedItem.style.transform = `translate${MOBILE ? "X" : "Y"}(0)`;
+                selectedItem.style.filter = "opacity(1)";
+                selectedItem.style.visibility = "visible";
+                const validIndex = Math.min(currentShopIndex, dialogueJSON["itemHeader"].length - 1);
+                descriptionParts[0].textContent = dialogueJSON["itemHeader"][validIndex];
+                descriptionParts[1].textContent = dialogueJSON["itemDescription"][validIndex];
+            });
+        });
+    }
     initializeItem(item, itemIndex, descriptionParts, dialogueJSON) {
         // This sets the default visible item to the first item.
         if (itemIndex === 0) {
@@ -74,15 +112,15 @@ export class Shop {
         this.shopContainer.style.opacity = 1;
         this.shopTab.addEventListener("pointerdown", this.toggleMenuHandler);
     }
-    initializeShopItemDivs(arrayOfItems) {
+    initializeShopItemDivs() {
         resourceJSON["shopImages"].forEach((element, index) => {
             const newItemDiv = document.createElement("div");
             newItemDiv.className = "shopItem";
             const newItemDivImage = document.createElement("img");
-            newItemDivImage.src = shopImages[index].src;
+            newItemDivImage.src = this.shopImages[index].src;
             newItemDiv.appendChild(newItemDivImage);
             document.getElementById("item").appendChild(newItemDiv);
-            arrayOfItems.push(newItemDiv);
+            this.arrayOfItems.push(newItemDiv);
         });
     }
 }
