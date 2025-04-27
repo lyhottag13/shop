@@ -85,12 +85,9 @@ window.onload = async () => {
     await sleep(3000);
     if (!isInitialized) {
         isShowingInitialText = true;
-        newText({ dialogueName: "startText", speed: 10, location: "textStart", playSound: false, index: MOBILE ? 1 : 0 });
+        dialogueBox1.newText({ dialogueName: "startText", speed: 10, location: "textStart", playSound: false, index: MOBILE ? 1 : 0 });
     }
 };
-
-let currentShopIndex = 0;
-let arrayOfItems = [];
 
 // This starts the game when the user clicks/taps.
 async function initialize() {
@@ -119,58 +116,6 @@ async function initialize() {
     await sleep(2000);
     // TEMP Testing Shop Menu
     // shop.initializeShop();
-    // shopTab.addEventListener("pointerdown", toggleMenu);
-    // shopContainer.style.visibility = "visible";
-    // shopContainer.style.opacity = 1;
-    // arrayOfItems.forEach((item, itemIndex) => {
-    //     // This shows the 0th shop item by default.
-    //     if (itemIndex === 0) {
-    //         document.querySelectorAll("#description span")[0].textContent = `${dialogue["itemDescription"][0]}`;
-    //         document.querySelectorAll("#description span")[1].textContent = `${dialogue["itemDescription"][1]}`;
-    //         item.style.visibility = "visible";
-    //     } else {
-    //         item.style.visibility = "hidden";
-    //         item.style.transform = `translate${MOBILE ? "X(300" : "Y(300"}px)`;
-    //     }
-    //     // If any shop item is clicked, then it will trigger the dialogue.
-    //     item.addEventListener("pointerdown", async () => {
-    //         toggleMenu();
-    //         shopContainer.style.opacity = 0;
-    //         shopTab.removeEventListener("pointerdown", toggleMenu);
-    //         await newText({ dialogueName: "shopItems", index: itemIndex > 3 ? MOBILE ? 1 : 0 : itemIndex + 2 });
-    //         shopContainer.style.opacity = 1;
-    //         shopTab.addEventListener("pointerdown", toggleMenu);
-    //     });
-    // });
-    // document.querySelectorAll(".arrow").forEach((arrow, arrowIndex) => {
-    //     if (arrowIndex === 0) {
-    //         arrow.querySelector("img").style.transform = `rotate(${MOBILE ? "0" : "90deg"})`;
-    //     } else {
-    //         arrow.querySelector("img").style.transform = `rotate(${MOBILE ? "180deg" : "270deg"})`
-    //     }
-    //     arrow.addEventListener("pointerdown", () => {
-    //         // arrayOfItems[currentShopItem].style.visibility = "hidden";
-    //         // This will increment the shop item currently showing.
-    //         // This clamps the index so it doesn't go out of range.
-    //         // currentShopItem = Math.max(0, Math.min(arrayOfItems.length - 1, currentShopItem));
-    //         if (arrowIndex === 0 && currentShopItem !== 0) {
-    //             arrayOfItems[currentShopItem].style.transform = `translate${MOBILE ? "X(200" : "Y(200"}px)`;
-    //             arrayOfItems[currentShopItem].style.filter = "opacity(0)";
-    //             currentShopItem--;
-    //             arrayOfItems[currentShopItem].style.transform = `translate${MOBILE ? "X(0" : "Y(0"})`;
-    //             arrayOfItems[currentShopItem].style.filter = "opacity(1)";
-    //         } else if (arrowIndex === 1 && currentShopItem !== arrayOfItems.length - 1) {
-    //             arrayOfItems[currentShopItem].style.transform = `translate${MOBILE ? "X(-200" : "Y(-200"}px)`;
-    //             arrayOfItems[currentShopItem].style.filter = "opacity(0)";
-    //             currentShopItem++;
-    //             arrayOfItems[currentShopItem].style.transform = `translate${MOBILE ? "X(0" : "Y(0"})`;
-    //             arrayOfItems[currentShopItem].style.filter = "opacity(1)";
-    //         }
-    //         arrayOfItems[currentShopItem].style.visibility = "visible";
-    //         document.querySelectorAll("#description span")[0].textContent = dialogue["itemDescription"][Math.min(currentShopItem * 2, dialogue["itemDescription"].length - 1)];
-    //         document.querySelectorAll("#description span")[1].textContent = dialogue["itemDescription"][Math.min(currentShopItem * 2 + 1, dialogue["itemDescription"].length - 1)];
-    //     });
-    // });
     // TEMP
     createButton("doorButton", MOBILE ? "10%" : "23%", MOBILE ? "30%" : "22%", MOBILE ? "40%" : "57%", MOBILE ? "50%" : "77%", () => callEvent("doorEvent"), "door");
 }
@@ -191,7 +136,7 @@ async function doorEvent() {
     doorAnimator.setAnimation(images["Door"], 17, 13, "forwards");
     await sleep(2500);
     // The door will zoom in here.
-    document.getElementById("screen1").style.transform = "scale(2)";
+    screens[1].style.transform = "scale(2)";
     // The website swaps to the other screen now.
     setScreen({ nextScreenIndex: 2, betweenScreenTime: 3000 });
     player.setBackgroundVolume(-1, 0.3, 4);
@@ -200,8 +145,8 @@ async function doorEvent() {
 
 }
 async function closedSignEvent() {
-    await newText({ dialogueName: "closedSign" });
-    if (openDialogues.get("closedSign").clicks === 2) {
+    await dialogueBox1.newText({ dialogueName: "closedSign" });
+    if (dialogueBox1.openDialogues.get("closedSign").clicks === 2) {
         // Show lightswitch.
         await sleep(1000);
         player.play("lightappear");
@@ -213,10 +158,10 @@ async function closedSignEvent() {
 }
 async function switchLightsEvent() {
     if (!isTyping) {
-        await newText({ dialogueName: "switchLights" });
+        await dialogueBox1.newText({ dialogueName: "switchLights" });
         await sleep(1400);
         document.getElementById("lightSwitch").remove();
-        newText({ dialogueName: "switchLights" });
+        dialogueBox1.newText({ dialogueName: "switchLights" });
         // Now you see the hand.
         switchAnimator.setAnimation(images["SwitchPull1"], 14, 25, "forwards");
         document.getElementById("switchAnimation").addEventListener("animationend", () => {
@@ -233,14 +178,14 @@ async function switchLightsEvent() {
         document.getElementById("switchAnimation").style.filter = "none";
         // Now we're displaying dialogue.
         await sleep(1500);
-        await newText({ dialogueName: "switchLights" });
+        await dialogueBox1.newText({ dialogueName: "switchLights" });
         await sleep(1500);
-        await newText({ dialogueName: "switchLights" });
+        await dialogueBox1.newText({ dialogueName: "switchLights" });
         await sleep(2000);
         // Now Ali takes the sign.
         counterAnimator.setAnimation(images["OpeningBusiness"], 21, 23, "forwards");
         await sleep(21 / 23 * 1000 + 1500);
-        await newText({ dialogueName: "switchLights" });
+        await dialogueBox1.newText({ dialogueName: "switchLights" });
         await sleep(1800);
         // Now Ali pops up.
         player.playBackgroundMusic("shop");
@@ -251,87 +196,16 @@ async function switchLightsEvent() {
     return;
 }
 async function aliEvent() {
-    if (!openDialogues.get("ali")) {
+    if (!dialogueBox1.openDialogues.get("ali")) {
         // This triggers if this is the first time we've talked on Ali.
-        await newText({ dialogueName: "ali" });
+        await dialogueBox1.newText({ dialogueName: "ali" });
         shop.initializeShop();
     } else {
         // This triggers if we're just bantering.
         shop.hide();
-        await newText({ dialogueName: "ali", starting: 1 });
+        await dialogueBox1.newText({ dialogueName: "ali", starting: 1 });
         shop.show();
     }
-    return;
-}
-async function displayText({ text, speed = 1, location = "text", playSound = true }) {
-    if (!isTyping) {
-        const textBox = document.getElementById(location);
-        textBox.innerHTML = "";
-        isTyping = true;
-        let charAt;
-        for (let i = 0; i < text.length; i++) {
-            charAt = text.charAt(i);
-            switch (charAt) {
-                case "|":
-                    textBox.innerHTML += "<br>";
-                    await sleep(700 * speed);
-                    break;
-                case "#":
-                    await sleep(1200 * speed);
-                    textBox.innerHTML = "";
-                    break;
-                case " ":
-                    textBox.innerHTML += " ";
-                    break;
-                case ",":
-                    textBox.innerHTML += ",";
-                    await sleep(500 * speed);
-                    break;
-                case "!":
-                case ".":
-                case "?":
-                    textBox.innerHTML += charAt;
-                    await sleep(500 * speed);
-                    break;
-                default:
-                    textBox.innerHTML += charAt;
-                    if (playSound) {
-                        player.play("generic2");
-                    }
-                    await sleep(35 * speed);
-            }
-        }
-        isTyping = false;
-    }
-    return;
-}
-/**
- * Keeps track of how many times an item has been clicked and displays updating text to match.
- * @param {string} dialogueName - The name of the dialogue event to display.
- * @param {number} speed - The speed of the text, inversely proportional to the number input.
- * @param {string} location - The div location where the text will be displayed.
- * @param {boolean} playSound - Indicates whether or not this should play a sound.
- * @returns Null, just gives more control over when to continue with certain actions in cutscenes.
- */
-async function newText({ dialogueName, speed, location, playSound, starting: startingIndex, index }) {
-    let openedDialogue = openDialogues.get(dialogueName);
-    if (openedDialogue) {
-        openedDialogue.clicks++;
-    } else {
-        openedDialogue = { clicks: 0 };
-        openDialogues.set(dialogueName, openedDialogue);
-    }
-    const numberOfDialogues = dialogueJSON[dialogueName].length;
-    const currentIndex = Math.min(numberOfDialogues - 1, openedDialogue.clicks);
-    // If an index is selected, then we use the index. Else, we clamp it.
-    const validIndex = index ?? (startingIndex ? (Math.floor(Math.random() * (numberOfDialogues - startingIndex)) + startingIndex) : currentIndex);
-    const textToDisplay = dialogueJSON[dialogueName][validIndex];
-    await displayText({
-        text: textToDisplay,
-        speed: speed,
-        location: location,
-        playSound: playSound
-    });
     return;
 }
 function createButton(id, top, left, width, height, functionName, div) {
@@ -360,8 +234,8 @@ async function setScreen({
     fadeOut = betweenScreenTime,
     fadeIn = fadeOut
 }) {
-    const currentScreen = document.getElementById(`screen${currentScreenIndex}`);
-    const nextScreen = document.getElementById(`screen${nextScreenIndex}`);
+    const currentScreen = screens[currentScreenIndex];
+    const nextScreen = screens[nextScreenIndex];
     currentScreen.style.setProperty("--transition-time", `${fadeOut / 1000}s`);
     nextScreen.style.setProperty("--transition-time", `${fadeIn / 1000}s`);
     currentScreen.style.opacity = 0;

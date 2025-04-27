@@ -106,7 +106,6 @@ export class Shop {
         this.shopTab.removeEventListener("pointerdown", this.toggleMenuHandler);
         await this.dialogueBoxObject.newText({ dialogueName: "itemDialogue", index: itemIndex });
         this.shopContainer.style.opacity = 1;
-        console.log(this.toggleMenuHandler);
         this.shopTab.addEventListener("pointerdown", this.toggleMenuHandler);
     }
     async initializeShopItemDivs() {
