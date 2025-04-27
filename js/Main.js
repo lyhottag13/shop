@@ -12,10 +12,6 @@ const doorAnimator = new Animator(FRAME_WIDTH, "doorAnimation");
 
 const screens = document.querySelectorAll(".screen");
 
-const shopContainer = document.getElementById("shopContainer");
-const shopTab = document.getElementById("shopTab");
-const shopMenu = document.getElementById("shopMenu");
-
 const counter = document.getElementById("counter");
 const dialogueBox = document.getElementById("textDiv");
 
@@ -28,17 +24,14 @@ let isTyping = false;
 let isInteractionAllowed = true;
 let isInitialized = false;
 let currentScreenIndex = 0;
-let isMenuShowing = false;
 const AUDIO = ["wind", "shop", "generic1", "generic2", "lightclick", "lightappear", "doorcreak", "explosion"];
-const IMAGES = ["Closed", "ClosedLights", "Idle", "OpeningBusiness", "Switch", "SwitchPull", "Background", "SwitchPull1", "SwitchPull2", "Face", "Door"];
-
 // This allows me to skip through all the events to quickly debug stuff.
 let skip = false;
 
 
 
 const images = {};
-const shopImages = {};
+const shopImages = [];
 const eventHandlers = {
     switchLightsEvent,
     closedSignEvent,
@@ -46,9 +39,6 @@ const eventHandlers = {
     doorEvent,
 };
 player.construct();
-
-
-const openDialogues = new Map();
 
 let dialogueJSON;
 let resourceJSON;
@@ -67,21 +57,18 @@ window.onload = async () => {
     });
     resourceJSON["shopImages"].forEach((name, index) => {
         const image = new Image();
-        image.src = `resources/images/${name}.webp`;
+        image.src = `resources/images/ShopImages/${name}.webp`;
         shopImages[index] = image;
     });
     shop = new Shop(dialogueBox1, shopImages, dialogueJSON);
     setScreen({ nextScreenIndex: 0, betweenScreenTime: 0 });
     document.addEventListener("click", async () => {
-        if (!isInitialized) {
-            initialize();
-        }
+        initialize();
     }, { once: true });
     document.addEventListener("touchend", async () => {
-        if (!isInitialized) {
-            initialize();
-        }
+        initialize();
     }, { once: true });
+    // This tells the user to click/tap if they haven't progressed past the black screen yet.
     await sleep(3000);
     if (!isInitialized) {
         isShowingInitialText = true;
@@ -91,33 +78,35 @@ window.onload = async () => {
 
 // This starts the game when the user clicks/taps.
 async function initialize() {
-    isInitialized = true;
-    if (player.audioContext.state === "suspended") {
-        player.audioContext.resume();
+    if (!isInitialized) {
+        isInitialized = true;
+        if (player.audioContext.state === "suspended") {
+            player.audioContext.resume();
+        }
+
+        // These lines show the door, the switch, and the closed sign for later.
+        doorAnimator.setAnimation(images["Door"], 17, 0, "forwards");
+        switchAnimator.setAnimation(images["Switch"], 1, 0, "forwards");
+        counterAnimator.setAnimation(images["Closed"], 1, 0, "forwards");
+        screens[1].style.display = "flex";
+
+        // This will listen for key presses, if I press c, I initiate "skip" mode.
+        document.addEventListener("keydown", event => keyHandler(event));
+
+        // If the screen is currently showing the initial text, then it'll wait a little longer.
+        setScreen({
+            nextScreenIndex: 1,
+            betweenScreenTime: isShowingInitialText ? 1500 : 0,
+            fadeOut: isShowingInitialText ? 1500 : 0,
+            fadeIn: 3000
+        });
+        player.playBackgroundMusic("wind");
+        await sleep(2000);
+        // TEMP Testing Shop Menu
+        // shop.initializeShop();
+        // TEMP
+        createButton("doorButton", MOBILE ? "10%" : "23%", MOBILE ? "30%" : "22%", MOBILE ? "40%" : "57%", MOBILE ? "50%" : "77%", () => callEvent("doorEvent"), "door");
     }
-
-    // These lines show the door, the switch, and the closed sign for later.
-    doorAnimator.setAnimation(images["Door"], 17, 0, "forwards");
-    switchAnimator.setAnimation(images["Switch"], 1, 0, "forwards");
-    counterAnimator.setAnimation(images["Closed"], 1, 0, "forwards");
-    screens[1].style.display = "flex";
-
-    // This will listen for key presses, if I press c, I initiate "skip" mode.
-    document.addEventListener("keydown", event => keyHandler(event));
-
-    // If the screen is currently showing the initial text, then it'll wait a little longer.
-    setScreen({
-        nextScreenIndex: 1,
-        betweenScreenTime: isShowingInitialText ? 1500 : 0,
-        fadeOut: isShowingInitialText ? 1500 : 0,
-        fadeIn: 3000
-    });
-    player.playBackgroundMusic("wind");
-    await sleep(2000);
-    // TEMP Testing Shop Menu
-    // shop.initializeShop();
-    // TEMP
-    createButton("doorButton", MOBILE ? "10%" : "23%", MOBILE ? "30%" : "22%", MOBILE ? "40%" : "57%", MOBILE ? "50%" : "77%", () => callEvent("doorEvent"), "door");
 }
 // Calls events so that we don't have overlap of events.
 async function callEvent(eventName) {
@@ -142,7 +131,6 @@ async function doorEvent() {
     player.setBackgroundVolume(-1, 0.3, 4);
     await sleep(5000);
     createButton("closedSign", MOBILE ? "65%" : "62%", "5%", "90%", "20%", () => callEvent("closedSignEvent"), "counter");
-
 }
 async function closedSignEvent() {
     await dialogueBox1.newText({ dialogueName: "closedSign" });
