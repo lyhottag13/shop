@@ -153,14 +153,16 @@ async function switchLightsEvent() {
         await sleep(13 / 25 * 1000);
         // The lights activate here.
         player.stopBackgroundMusic(1);
-        player.play("lightclick");
+        player.play("lightclickdown");
         counterAnimator.setAnimation(images["ClosedLights"], 1, 0, "forwards");
         body.style.backgroundImage = `url("${images["Background"].src}")`;
         body.style.backgroundColor = "rgb(179, 115, 10)";
         document.getElementById("closedSign").remove();
         document.getElementById("switchAnimation").style.filter = "none";
+        await sleep(13 / 25 * 1000);
+        player.play("lightclickup");
         // Now we're displaying dialogue.
-        await sleep(1500);
+        await sleep(1500 - (13 / 25 * 1000));
         await dialogueBox1.newText({ dialogueName: "switchLights" });
         await sleep(1500);
         await dialogueBox1.newText({ dialogueName: "switchLights" });

@@ -34,7 +34,8 @@
         "shop",
         "generic1",
         "generic2",
-        "lightclick",
+        "lightclickdown",
+        "lightclickup",
         "lightappear",
         "doorcreak",
         "explosion"
