@@ -121,9 +121,9 @@ async function doorEvent() {
     await sleep(2500);
     // The door will zoom in here.
     screens[1].style.transform = "scale(2)";
-    // The website swaps to the other screen now.
+    // The website swaps to the shop screen now.
     setScreen({ nextScreenIndex: 2, betweenScreenTime: 3000 });
-    player.setBackgroundVolume(-1, 0.3, 4);
+    player.setBackgroundVolume({endVolume: 0.3, delay: 4});
     await sleep(5000);
     createButton("closedSign", isMobile ? "65%" : "62%", "5%", "90%", "20%", () => callEvent("closedSignEvent"), "counter");
 }
@@ -174,7 +174,7 @@ async function switchLightsEvent() {
         await sleep(1800);
         // Now Ali pops up.
         player.playBackgroundMusic("shop");
-        player.setBackgroundVolume(0, 1, 0.5);
+        player.setBackgroundVolume({initialVolume: 0, endVolume: 1, delay: 0.5});
         counterAnimator.setAnimation(images["Idle"], 17, 12, "infinite");
         createButton("ali", "40%", "10%", "80%", "60%", () => callEvent("aliEvent"), "counter");
     }

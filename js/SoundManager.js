@@ -14,23 +14,23 @@ export class SoundManager {
         this.backgroundSource = null;
         this.gain = this.audioContext.createGain();
     }
-    async load(name) {
-        const response = await fetch(`resources/audio/${name}.mp3`);
+    async load(fileName) {
+        const response = await fetch(`resources/audio/${fileName}.mp3`);
         const array = await response.arrayBuffer();
         const buffer = await this.audioContext.decodeAudioData(array);
-        this.buffers[name] = buffer;
+        this.buffers[fileName] = buffer;
     }
-    play(name) {
+    play(fileName) {
         this.source = this.audioContext.createBufferSource();
-        this.source.buffer = this.buffers[name];
+        this.source.buffer = this.buffers[fileName];
         this.source.connect(this.audioContext.destination);
         this.source.start(0);
     }
-    playSpammableSFX(name) {
+    playSpammableSFX(fileName) {
         if (!this.isSpamming) {
             this.isSpamming = true;
             this.source = this.audioContext.createBufferSource();
-            this.source.buffer = this.buffers[name];
+            this.source.buffer = this.buffers[fileName];
             this.source.connect(this.audioContext.destination);
             this.source.start(0);
             this.source.onended = () => {
@@ -43,17 +43,17 @@ export class SoundManager {
      * so that the stopBackgroundMusic method will be able to gradually stop the music or 
      * setBackgroundVolume can gradually volumize the music.
      * 
-     * @param {string} name -  The file name of the background music to be played.
+     * @param {string} fileName -  The file name of the background music to be played.
      */
-    playBackgroundMusic(name) {
+    playBackgroundMusic(fileName) {
         this.backgroundSource = this.audioContext.createBufferSource();
-        this.backgroundSource.buffer = this.buffers[name];
+        this.backgroundSource.buffer = this.buffers[fileName];
         this.backgroundSource.connect(this.gain).connect(this.audioContext.destination);
         this.backgroundSource.start(0);
         this.gain.gain.value = 1;
         this.backgroundSource.loop = true;
     }
-    stopBackgroundMusic(delay) {
+    stopBackgroundMusic(delay = 0) {
         if (this.backgroundSource === null) {
             return;
         }
@@ -62,12 +62,9 @@ export class SoundManager {
         this.gain.gain.linearRampToValueAtTime(0, now + delay);
         this.backgroundSource.stop(now + delay);
     }
-    setBackgroundVolume(initialVolume, endVolume, delay) {
+    setBackgroundVolume({initialVolume = this.gain.gain.value, endVolume, delay}) {
         if (this.backgroundSource === null) {
             return;
-        }
-        if (initialVolume < 0) {
-            initialVolume = this.gain.gain.value;
         }
         this.gain.gain.setValueAtTime(initialVolume, this.audioContext.currentTime);
         this.gain.gain.linearRampToValueAtTime(endVolume, this.audioContext.currentTime + delay);

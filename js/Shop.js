@@ -81,7 +81,7 @@ export class Shop {
             item.style.visibility = "visible";
         } else {
             item.style.visibility = "hidden";
-            item.style.transform = `translate${this.isMobile ? "X" : "Y"}(300px)`;
+            item.style.transform = `translate${this.isMobile ? "X" : "Y"}(300px) scale(0.5)`;
         }
         item.addEventListener("pointerdown", async () => {
             await this.itemEvent(itemIndex);
@@ -101,12 +101,12 @@ export class Shop {
         const isValidMove = ((arrowIndex === 0 && this.currentShopIndex !== 0) || (arrowIndex === 1 && this.currentShopIndex !== this.arrayOfItems.length - 1));
         let selectedItem = this.arrayOfItems[this.currentShopIndex];
         if (isValidMove) {
-            selectedItem.style.transform = `translate${this.isMobile ? "X" : "Y"}(${displacement})`;
+            selectedItem.style.transform = `translate${this.isMobile ? "X" : "Y"}(${displacement}) scale(0.5)`;
             selectedItem.style.filter = "opacity(0)";
             this.currentShopIndex += arrowIndex === 0 ? -1 : 1;
             selectedItem = this.arrayOfItems[this.currentShopIndex];
         }
-        selectedItem.style.transform = `translate${this.isMobile ? "X" : "Y"}(0)`;
+        selectedItem.style.transform = `translate${this.isMobile ? "X" : "Y"}(0) scale(1)`;
         selectedItem.style.filter = "opacity(1)";
         selectedItem.style.visibility = "visible";
         const validIndex = Math.min(this.currentShopIndex, this.dialogueJSON["itemHeader"].length - 1);
