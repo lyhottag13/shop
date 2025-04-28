@@ -183,6 +183,9 @@ body {
     height: 100%;
     width: 100%;
 }
+#item img {
+    height: 100%;
+}
 #description {
     display: flex;
     flex-direction: column;
