@@ -2,13 +2,27 @@
     font-family: fa;
     src: url("resources/misc/8bitoperator_jve.woff2") format("woff2");
     font-display: swap;
-    
+
 }
-html, body {
+
+html,
+body {
     cursor: url("resources/images/Cursor.webp") 16 16, auto;
     height: 100%;
     margin: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
+img {
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
 body {
     background-repeat: no-repeat;
     /* background-image: url("resources/images/Background.webp"); */
@@ -21,12 +35,14 @@ body {
     transition: background-position 1s ease;
 
 }
+
 .interactable {
     position: absolute;
     cursor: url("resources/images/CursorHighlight.webp") 16 16, auto;
     opacity: 0;
     z-index: 100;
 }
+
 .animation {
     z-index: 0;
     background-repeat: no-repeat;
@@ -34,6 +50,7 @@ body {
     backface-visibility: hidden;
     will-change: background-position;
 }
+
 .screen {
     transform-origin: 50% 25%;
     height: 100%;
@@ -44,10 +61,12 @@ body {
     transition: all var(--transition-time) ease;
     opacity: 0;
 }
+
 .text {
     font-family: fa;
     color: white;
 }
+
 .shopItem {
     position: absolute;
     display: flex;
@@ -57,15 +76,19 @@ body {
     width: 100%;
     transition: all 0.5s ease;
 }
+
 #item {
     overflow: hidden;
 }
+
 #description {
     font-size: 80px;
 }
+
 #game {
     height: 100%;
 }
+
 #door {
     display: flex;
     flex-direction: column;
@@ -74,6 +97,7 @@ body {
     height: 500px;
     width: 500px;
 }
+
 #doorAnimation {
     --background-width: ;
     --animation-image: ;
@@ -84,10 +108,11 @@ body {
     height: 500px;
     width: 500px;
     background-image: var(--animation-image);
-    background-position-x : 0;
+    background-position-x: 0;
     background-size: var(--background-size);
     animation: anim var(--animation-length) steps(var(--frames)) infinite;
 }
+
 #counterAnimation {
     --background-width: ;
     --animation-image: ;
@@ -98,7 +123,7 @@ body {
     height: 600px;
     width: 500px;
     background-image: var(--animation-image);
-    background-position-x : 0;
+    background-position-x: 0;
     background-position-y: 100px;
     background-size: var(--background-size);
     animation: anim var(--animation-length) steps(var(--frames)) infinite;
@@ -111,25 +136,26 @@ body {
     --frames: ;
     --background-size: ;
     --background-position: ;
-    filter: drop-shadow(0 0 13px rgb(255, 255, 255))
-    drop-shadow(0 0 13px rgb(255, 255, 255))
-    drop-shadow(0 0 13px rgb(255, 255, 255));
+    filter: drop-shadow(0 0 13px rgb(255, 255, 255)) drop-shadow(0 0 13px rgb(255, 255, 255)) drop-shadow(0 0 13px rgb(255, 255, 255));
     height: 500px;
     width: 500px;
     background-image: var(--animation-image);
-    background-position-x : 0;
+    background-position-x: 0;
     background-size: var(--background-size);
     animation: anim var(--animation-length) steps(var(--frames)) infinite;
     padding-bottom: 3px;
 }
+
 @keyframes anim {
     0% {
         background-position-x: 0;
     }
+
     100% {
         background-position-x: 100%;
     }
 }
+
 #switch {
     height: 300px;
     position: fixed;
@@ -139,12 +165,14 @@ body {
     opacity: 0;
     transition: all 2s ease;
 }
+
 #counter {
     position: relative;
     text-align: center;
     margin: 0 auto;
     transition: all 1s ease;
 }
+
 #shopContainer {
     --height: 500px;
     --width: 1000px;
@@ -158,6 +186,7 @@ body {
     transition: all 0.5s ease;
     opacity: 0;
 }
+
 #shopMenu {
     display: grid;
     align-items: center;
@@ -173,6 +202,7 @@ body {
     background-color: black;
 
 }
+
 #item {
     align-items: center;
     justify-items: center;
@@ -183,9 +213,13 @@ body {
     height: 100%;
     width: 100%;
 }
+
 #item img {
-    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
+
 #description {
     display: flex;
     flex-direction: column;
@@ -196,6 +230,7 @@ body {
     width: 100%;
     font-size: 30px;
 }
+
 .arrow {
     display: flex;
     align-items: center;
@@ -205,9 +240,11 @@ body {
     width: 100%;
     justify-content: center;
 }
+
 .arrow img {
     height: 128px;
 }
+
 #shopTab {
     position: absolute;
     top: 300px;
@@ -222,9 +259,11 @@ body {
     text-align: center;
     z-index: 0;
 }
+
 #shopTab:hover {
     color: yellow;
 }
+
 #borderCover {
     position: absolute;
     height: 100px;
@@ -234,6 +273,7 @@ body {
     left: 110px;
     z-index: 100;
 }
+
 /* #test {
     top: 23%;
     left: 22%;
@@ -248,11 +288,13 @@ body {
     background-color: black;
     color: white;
 }
+
 #text {
     font-size: 80px;
     padding: 20px;
     margin-top: 0px;
 }
+
 #textStart {
     position: relative;
     font-size: 80px;
@@ -260,6 +302,7 @@ body {
     padding: 20px;
     text-align: center;
 }
+
 @media (max-width: 600px) {
     body {
         background-size: 260%;
@@ -268,25 +311,31 @@ body {
         background-color: rgb(10, 10, 10);
         cursor: url("resources/images/Cursor.webp") 16 16, auto;
     }
+
     #switch {
         margin-bottom: -300px;
     }
+
     #door {
         margin-top: 50%;
     }
+
     #doorAnimation {
         height: 300px;
         width: 300px;
 
     }
+
     #switchAnimation {
         height: 300px;
         width: 300px;
-        }
+    }
+
     #counterAnimation {
         height: 400px;
         width: 300px;
     }
+
     #shopContainer {
         position: absolute;
         align-items: center;
@@ -302,9 +351,7 @@ body {
         width: var(--width);
         transform: translate(-50%);
     }
-    #item img {
-        width: 100px;
-    }
+
     #shopMenu {
         position: relative;
         top: 0;
@@ -316,6 +363,7 @@ body {
         grid-template-columns: 1fr 2fr 1fr;
         grid-template-rows: repeat(2, 1fr);
     }
+
     #item {
         align-items: center;
         justify-items: center;
@@ -326,6 +374,7 @@ body {
         height: 100%;
         width: 100%;
     }
+
     #description {
         display: flex;
         flex-direction: column;
@@ -336,9 +385,11 @@ body {
         width: 100%;
         font-size: 30px;
     }
+
     #description span {
         text-align: center;
     }
+
     .arrow {
         display: flex;
         align-items: center;
@@ -349,6 +400,7 @@ body {
         width: 100%;
         justify-content: center;
     }
+
     #shopTab {
         position: relative;
         top: 0;
@@ -361,6 +413,7 @@ body {
         border-width: 7px;
         margin-bottom: -7px;
     }
+
     #borderCover {
         position: absolute;
         height: 7px;
@@ -371,11 +424,13 @@ body {
         translate: -50%;
         z-index: 100;
     }
+
     #textDiv {
         margin: 0px;
         border-width: 7px;
         transition: all 1s ease;
     }
+
     #text {
         font-size: 40px;
     }
