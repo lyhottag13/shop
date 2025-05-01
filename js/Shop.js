@@ -124,9 +124,7 @@ export class Shop {
         this.show();
     }
     hide() {
-        if (this.isMenuShowing) {
-            this.toggleMenu();
-        }
+        this.isMenuShowing && this.toggleMenu();
         this.shopContainer.style.opacity = 0;
         this.shopTab.removeEventListener("pointerdown", this.toggleMenuHandler);
     }
