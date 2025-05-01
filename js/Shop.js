@@ -77,9 +77,9 @@ export class Shop {
         // This sets the default visible item to the first item.
         if (itemIndex === 0) {
             descriptionParts[0].textContent = this.dialogueJSON["itemHeader"][0];
-            descriptionParts[0].style.fontSize = "80px";
+            descriptionParts[0].style.fontSize = this.isMobile ? "35px" : "80px";
             descriptionParts[1].textContent = this.dialogueJSON["itemDescription"][0];
-            descriptionParts[1].style.fontSize = "40px";
+            descriptionParts[1].style.fontSize = this.isMobile ? "25px" : "40px";
             item.style.visibility = "visible";
         } else {
             item.style.visibility = "hidden";

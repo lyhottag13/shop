@@ -6,6 +6,7 @@ export class DialogueBox {
         this.isTyping = false;
         this.player = null;
         this.skip = false;
+        this.dialogueBox = document.getElementById("textDiv");
     }
     async construct(player) {
         this.dialogueJSON = await (await fetch("js/Dialogue.json")).json()
@@ -89,5 +90,15 @@ export class DialogueBox {
     }
     toggleSkip() {
         this.skip = !this.skip;
+    }
+    showAli() {
+        if (!document.querySelector("#textDiv img")) {
+            const aliFace = document.createElement("img");
+            aliFace.src = "resources/images/Face.webp";
+            document.getElementById("textDiv").prepend(aliFace);
+        }
+    }
+    hideAli() {
+        document.querySelector("#textDiv img")?.remove();
     }
 }

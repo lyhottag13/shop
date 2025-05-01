@@ -183,6 +183,7 @@ async function switchLightsEvent() {
 async function aliEvent() {
     if (!dialogueBox1.openDialogues.get("ali")) {
         // This triggers if this is the first time we've talked on Ali.
+        dialogueBox1.showAli();
         await dialogueBox1.newText({ dialogueName: "ali" });
         shop.initializeShop();
     } else if (!isTyping) {

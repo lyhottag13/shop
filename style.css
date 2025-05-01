@@ -281,6 +281,9 @@ body {
     height: 77%;
 } */
 #textDiv {
+    display: flex;
+    flex-direction: row;
+    float: inline-start;
     width: 95%;
     border: solid rgb(255, 255, 255);
     border-width: 10px;
@@ -288,7 +291,9 @@ body {
     background-color: black;
     color: white;
 }
-
+#textDiv img {
+    height: 200px;
+}
 #text {
     font-size: 80px;
     padding: 20px;
@@ -403,6 +408,7 @@ body {
     }
 
     #shopTab {
+        flex-shrink: 0;
         position: relative;
         top: 0;
         left: 0;
@@ -420,7 +426,7 @@ body {
         height: 7px;
         width: 210px;
         background-color: rgb(0, 0, 0);
-        top: 49px;
+        top: 57px;
         left: 50%;
         translate: -50%;
         z-index: 100;
@@ -430,6 +436,9 @@ body {
         margin: 0px;
         border-width: 7px;
         transition: all 1s ease;
+    }
+    #textDiv img {
+        height: 90px;
     }
 
     #text {
