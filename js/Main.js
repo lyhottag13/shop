@@ -85,7 +85,7 @@ async function startGame() {
 
         // These lines show the door, the switch, and the closed sign for later.
         doorAnimator.setAnimation(images["Door"], 17, 0, "forwards");
-        switchAnimator.setAnimation(images["Switch"], 1, 0, "forwards");
+        switchAnimator.setAnimation(images["SwitchPull1"], 1, 0, "forwards");
         counterAnimator.setAnimation(images["Closed"], 1, 0, "forwards");
         screens[1].style.display = "flex";
 
@@ -157,7 +157,7 @@ async function switchLightsEvent() {
         // The lights activate here.
         player.stopBackgroundMusic(1);
         player.play("lightclickdown");
-        counterAnimator.setAnimation(images["ClosedLights"], 1, 0, "forwards");
+        counterAnimator.setAnimation(images["OpeningBusiness"], 1, 0, "forwards");
         body.style.backgroundImage = `url("${images["Background"].src}")`;
         body.style.backgroundColor = "rgb(179, 115, 10)";
         document.getElementById("closedSign").remove();
