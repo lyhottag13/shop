@@ -206,9 +206,10 @@ async function aliEvent() {
 async function startHowdy() {
     document.getElementById("counterAnimation").style.backgroundPositionY = "-400px";
     await counterAnimator.setAnimation(images["Emerging1"], 27, 20, "forwards", "13500px 1000px");
+    player.playSpammableSFX("explosion");
 }
 async function startAliAnimation() {
-    await counterAnimator.setAnimation(images["Emerging2"], 18, 18, "forwards", "9000px 1000px");
+    await counterAnimator.setAnimation(images["Emerging2"], 18, 16, "forwards", "9000px 1000px");
     counterAnimator.setAnimation(images["Idle"], 17, 12, "infinite");
     document.getElementById("counterAnimation").style.backgroundPositionY = "100px";
 }

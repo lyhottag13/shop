@@ -98,7 +98,7 @@ export class DialogueBox {
             document.getElementById("textDiv").prepend(aliFace);
         }
     }
-    hideAli() {
+    hideAliIcon() {
         document.querySelector("#textDiv img")?.remove();
     }
 }
