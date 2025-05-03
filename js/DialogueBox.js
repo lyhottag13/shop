@@ -1,59 +1,70 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 export class DialogueBox {
-    constructor() {
+    constructor(dialogueJSON) {
         this.openDialogues = new Map();
-        this.dialogueJSON = null;
-        this.resourceJSON = null;
+        this.dialogueJSON = dialogueJSON;
         this.isTyping = false;
         this.player = null;
         this.skip = false;
         this.dialogueBox = document.getElementById("textDiv");
     }
-    async construct(player) {
-        this.dialogueJSON = await (await fetch("js/Dialogue.json")).json()
-        this.resourceJSON = await (await (fetch("Resources.json"))).json();
-        this.player = player;
+    construct(player) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.dialogueJSON = yield (yield fetch("js/Dialogue.json")).json();
+            this.player = player;
+        });
     }
-    async displayText({ text, speed = 1, location = "text", playSound = true }) {
-        if (!this.isTyping) {
-            const textBox = document.getElementById(location);
-            textBox.innerHTML = "";
-            this.isTyping = true;
-            let charAt;
-            for (let i = 0; i < text.length; i++) {
-                charAt = text.charAt(i);
-                switch (charAt) {
-                    case "|":
-                        textBox.innerHTML += "<br>";
-                        await this.sleep(700 * speed);
-                        break;
-                    case "#":
-                        await this.sleep(1200 * speed);
-                        textBox.innerHTML = "";
-                        break;
-                    case " ":
-                        textBox.innerHTML += " ";
-                        break;
-                    case ",":
-                        textBox.innerHTML += ",";
-                        await this.sleep(500 * speed);
-                        break;
-                    case "!":
-                    case ".":
-                    case "?":
-                        textBox.innerHTML += charAt;
-                        await this.sleep(500 * speed);
-                        break;
-                    default:
-                        textBox.innerHTML += charAt;
-                        if (playSound) {
-                            this.player.play("generic2");
-                        }
-                        await this.sleep(35 * speed);
+    displayText(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ text, speed = 1, location = "text", playSound = true }) {
+            if (!this.isTyping) {
+                const textBox = document.getElementById(location);
+                textBox.innerHTML = "";
+                this.isTyping = true;
+                let charAt;
+                for (let i = 0; i < text.length; i++) {
+                    charAt = text.charAt(i);
+                    switch (charAt) {
+                        case "|":
+                            textBox.innerHTML += "<br>";
+                            yield this.sleep(700 * speed);
+                            break;
+                        case "#":
+                            yield this.sleep(1200 * speed);
+                            textBox.innerHTML = "";
+                            break;
+                        case " ":
+                            textBox.innerHTML += " ";
+                            break;
+                        case ",":
+                            textBox.innerHTML += ",";
+                            yield this.sleep(500 * speed);
+                            break;
+                        case "!":
+                        case ".":
+                        case "?":
+                            textBox.innerHTML += charAt;
+                            yield this.sleep(500 * speed);
+                            break;
+                        default:
+                            textBox.innerHTML += charAt;
+                            if (playSound) {
+                                this.player.play("generic2");
+                            }
+                            yield this.sleep(35 * speed);
+                    }
                 }
+                this.isTyping = false;
             }
-            this.isTyping = false;
-        }
-        return;
+            return;
+        });
     }
     /**
      * Keeps track of how many times an item has been clicked and displays updating text to match.
@@ -63,26 +74,29 @@ export class DialogueBox {
      * @param {boolean} playSound - Indicates whether or not this should play a sound.
      * @returns Null, just gives more control over when to continue with certain actions in cutscenes.
      */
-    async newText({ dialogueName, speed, location, playSound, starting: startingIndex, index }) {
-        let openedDialogue = this.openDialogues.get(dialogueName);
-        if (openedDialogue) {
-            openedDialogue.clicks++;
-        } else {
-            openedDialogue = { clicks: 0 };
-            this.openDialogues.set(dialogueName, openedDialogue);
-        }
-        const numberOfDialogues = this.dialogueJSON[dialogueName].length;
-        const currentIndex = Math.min(numberOfDialogues - 1, openedDialogue.clicks);
-        // If an index is selected, then we use the index. Else, we clamp it.
-        const validIndex = index ?? (startingIndex ? (Math.floor(Math.random() * (numberOfDialogues - startingIndex)) + startingIndex) : currentIndex);
-        const textToDisplay = this.dialogueJSON[dialogueName][validIndex];
-        await this.displayText({
-            text: textToDisplay,
-            speed: speed,
-            location: location,
-            playSound: playSound
+    newText(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ dialogueName, speed, location, playSound, starting: startingIndex, index }) {
+            let openedDialogue = this.openDialogues.get(dialogueName);
+            if (openedDialogue) {
+                openedDialogue.clicks++;
+            }
+            else {
+                openedDialogue = { clicks: 0 };
+                this.openDialogues.set(dialogueName, openedDialogue);
+            }
+            const numberOfDialogues = this.dialogueJSON[dialogueName].length;
+            const currentIndex = Math.min(numberOfDialogues - 1, openedDialogue.clicks);
+            // If an index is selected, then we use the index. Else, we clamp it.
+            const validIndex = index !== null && index !== void 0 ? index : (startingIndex ? (Math.floor(Math.random() * (numberOfDialogues - startingIndex)) + startingIndex) : currentIndex);
+            const textToDisplay = this.dialogueJSON[dialogueName][validIndex];
+            yield this.displayText({
+                text: textToDisplay,
+                speed: speed,
+                location: location,
+                playSound: playSound
+            });
+            return;
         });
-        return;
     }
     sleep(ms) {
         ms = (this.skip) ? 7 : ms;
@@ -99,6 +113,7 @@ export class DialogueBox {
         }
     }
     hideAliIcon() {
-        document.querySelector("#textDiv img")?.remove();
+        var _a;
+        (_a = document.querySelector("#textDiv img")) === null || _a === void 0 ? void 0 : _a.remove();
     }
 }
