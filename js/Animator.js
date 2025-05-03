@@ -2,8 +2,9 @@ export class Animator {
     constructor(width, source) {
         this.animation = document.getElementById(source);
         this.FRAME_WIDTH = width;
+        this.isMobile = window.innerWidth < 600 ? true : false;
     }
-    async setAnimation(imageSource, frames, framerate, end, backgroundSize = `auto 500px`) {
+    async setAnimation(imageSource, frames, framerate, end, backgroundSize = `auto ${this.isMobile ? "3" : "5"}00px`) {
         this.animation.style.setProperty("--animation-image", `url(${imageSource.src})`);
         this.animation.style.setProperty("--background-width", this.FRAME_WIDTH * frames);
         this.animation.style.setProperty("--background-size", backgroundSize);
