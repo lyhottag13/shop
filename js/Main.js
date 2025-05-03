@@ -16,7 +16,6 @@ const dialogueBox1 = new DialogueBox();
 dialogueBox1.construct(player);
 let shop;
 
-let isTyping = false;
 let isInteractionAllowed = true;
 let isInitialized = false;
 let currentScreenIndex = 0;
@@ -119,7 +118,6 @@ async function callEvent(eventName) {
 async function doorEvent() {
     document.getElementById("doorButton").remove();
     // The door is clicked.
-    isTyping = false;
     player.play("doorcreak");
     await sleep(1500);
     doorAnimator.setAnimation(images["Door"], 17, 13, "forwards");
@@ -145,7 +143,7 @@ async function closedSignEvent() {
     return;
 }
 async function switchLightsEvent() {
-    if (!isTyping) {
+    if (!dialogueBox1.isTyping) {
         await dialogueBox1.newText({ dialogueName: "switchLights" });
         await sleep(1400);
         document.getElementById("lightSwitch").remove();
@@ -195,7 +193,7 @@ async function aliEvent() {
         startAliAnimation();
         await dialogueBox1.newText({ dialogueName: "ali" });
         shop.initializeShop();
-    } else if (!isTyping) {
+    } else if (!dialogueBox1.isTyping) {
         // This triggers if we're just bantering.
         shop.hide();
         await dialogueBox1.newText({ dialogueName: "ali", starting: 2 });
