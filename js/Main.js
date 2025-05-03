@@ -4,7 +4,7 @@ import { Shop } from "./Shop.js";
 import { DialogueBox } from "./DialogueBox.js";
 
 const isMobile = (window.innerWidth <= 600) ? true : false;
-const FRAME_WIDTH = (window.innerWidth <= 600) ? 300 : 500;
+const FRAME_WIDTH = (window.innerWidth <= 600) ? 300 : 132;
 const switchAnimator = new Animator(FRAME_WIDTH, "switchAnimation");
 const counterAnimator = new Animator(FRAME_WIDTH, "counterAnimation");
 const doorAnimator = new Animator(FRAME_WIDTH, "doorAnimation");
@@ -42,26 +42,14 @@ let isShowingInitialText;
 window.onload = async () => {
     dialogueJSON = await (await fetch("js/Dialogue.json")).json();
     resourceJSON = await (await (fetch("Resources.json"))).json();
-    resourceJSON["audio"].forEach(name => {
-        player.load(name);
-    });
-    resourceJSON["images"].forEach((name) => {
-        const image = new Image();
-        image.src = `resources/images/${name}.webp`;
-        images[name] = image;
-    });
-    resourceJSON["shopImages"].forEach((name, index) => {
-        const image = new Image();
-        image.src = `resources/images/ShopImages/${name}.webp`;
-        shopImages[index] = image;
-    });
+    preload();
     shop = new Shop(dialogueBox1, shopImages, dialogueJSON);
     setScreen({ nextScreenIndex: 0, betweenScreenTime: 0 });
     document.addEventListener("click", async () => {
-        initialize();
+        startGame();
     }, { once: true });
     document.addEventListener("touchend", async () => {
-        initialize();
+        startGame();
     }, { once: true });
     // This tells the user to click/tap if they haven't progressed past the initial black screen yet.
     await sleep(3000);
@@ -71,8 +59,25 @@ window.onload = async () => {
     }
 };
 
+function preload() {
+    resourceJSON["audio"].forEach(name => {
+        player.load(name);
+    });
+    resourceJSON["images"].forEach((name) => {
+        const image = new Image();
+        image.src = `resources/images/${name}.webp`;
+        image.decode();
+        images[name] = image;
+    });
+    resourceJSON["shopImages"].forEach((name, index) => {
+        const image = new Image();
+        image.src = `resources/images/ShopImages/${name}.webp`;
+        shopImages[index] = image;
+    });
+}
+
 // This starts the game when the user clicks/taps.
-async function initialize() {
+async function startGame() {
     if (!isInitialized) {
         isInitialized = true;
         if (player.audioContext.state === "suspended") {
@@ -123,7 +128,7 @@ async function doorEvent() {
     screens[1].style.transform = "scale(2)";
     // The website swaps to the shop screen now.
     setScreen({ nextScreenIndex: 2, betweenScreenTime: 3000 });
-    player.setBackgroundVolume({endVolume: 0.3, delay: 4});
+    player.setBackgroundVolume({ endVolume: 0.3, delay: 4 });
     await sleep(5000);
     createButton("closedSign", isMobile ? "65%" : "62%", "5%", "90%", "20%", () => callEvent("closedSignEvent"), "counter");
 }
@@ -174,25 +179,38 @@ async function switchLightsEvent() {
         await sleep(1800);
         // Now Ali pops up.
         player.playBackgroundMusic("shop");
-        player.setBackgroundVolume({initialVolume: 0, endVolume: 1, delay: 0.5});
-        counterAnimator.setAnimation(images["Idle"], 17, 12, "infinite");
+        player.setBackgroundVolume({ initialVolume: 0, endVolume: 1, delay: 0.5 });
+        startHowdy();
+        await sleep(800);
+        dialogueBox1.showAliIcon();
+        dialogueBox1.newText({ dialogueName: "ali" });
+        // Now Ali has thrown his sign, it is completely gone.
         createButton("ali", "40%", "10%", "80%", "60%", () => callEvent("aliEvent"), "counter");
     }
     return;
 }
 async function aliEvent() {
-    if (!dialogueBox1.openDialogues.get("ali")) {
-        // This triggers if this is the first time we've talked on Ali.
-        dialogueBox1.showAli();
+    if (dialogueBox1.openDialogues.get("ali").clicks === 0) {
+        // This triggers if this is the first time we've talked to Ali.
+        startAliAnimation();
         await dialogueBox1.newText({ dialogueName: "ali" });
         shop.initializeShop();
     } else if (!isTyping) {
         // This triggers if we're just bantering.
         shop.hide();
-        await dialogueBox1.newText({ dialogueName: "ali", starting: 1 });
+        await dialogueBox1.newText({ dialogueName: "ali", starting: 2 });
         shop.show();
     }
     return;
+}
+async function startHowdy() {
+    document.getElementById("counterAnimation").style.backgroundPositionY = "-400px";
+    await counterAnimator.setAnimation(images["Emerging1"], 27, 20, "forwards", "13500px 1000px");
+}
+async function startAliAnimation() {
+    await counterAnimator.setAnimation(images["Emerging2"], 18, 20, "forwards", "9000px 1000px");
+    counterAnimator.setAnimation(images["Idle"], 17, 12, "infinite");
+    document.getElementById("counterAnimation").style.backgroundPositionY = "100px";
 }
 function createButton(id, top, left, width, height, functionName, div) {
     div = div ?? "counter";

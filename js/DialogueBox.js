@@ -91,7 +91,7 @@ export class DialogueBox {
     toggleSkip() {
         this.skip = !this.skip;
     }
-    showAli() {
+    showAliIcon() {
         if (!document.querySelector("#textDiv img")) {
             const aliFace = document.createElement("img");
             aliFace.src = "resources/images/Face.webp";

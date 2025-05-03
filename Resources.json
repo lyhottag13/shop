@@ -10,7 +10,9 @@
         "SwitchPull1",
         "SwitchPull2",
         "Face",
-        "Door"
+        "Door",
+        "Emerging1",
+        "Emerging2"
     ],
     "shopImages": [
         "Undertale",
