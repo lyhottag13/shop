@@ -1,0 +1,20 @@
+{
+  "name": "shop",
+  "version": "1.0.0",
+  "description": "This is a project created in collaboration between two rad guys.\r ## Credits:\r Art: Original spritework.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lyhottag13/shop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lyhottag13/shop/issues"
+  },
+  "homepage": "https://github.com/lyhottag13/shop#readme"
+}

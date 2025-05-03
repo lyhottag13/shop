@@ -202,12 +202,12 @@ async function aliEvent() {
     return;
 }
 async function startHowdy() {
-    document.getElementById("counterAnimation").style.backgroundPositionY = "-200px";
-    await counterAnimator.setAnimation(images["Emerging1"], 27, 20, "forwards", "auto 600px");
+    document.getElementById("counterAnimation").style.backgroundPositionY =`-${isMobile ? "2" : "4"}00px`;
+    await counterAnimator.setAnimation(images["Emerging1"], 27, 20, "forwards", `auto ${isMobile ? "6" : "10"}00px`);
     player.playSpammableSFX("explosion");
 }
 async function startAliAnimation() {
-    await counterAnimator.setAnimation(images["Emerging2"], 18, 16, "forwards", "auto 600px");
+    await counterAnimator.setAnimation(images["Emerging2"], 18, 16, "forwards", `auto ${isMobile ? "6" : "10"}00px`);
     counterAnimator.setAnimation(images["Idle"], 17, 12, "infinite");
     document.getElementById("counterAnimation").style.backgroundPositionY = "100px";
 }
