@@ -208,7 +208,7 @@ async function startHowdy() {
     await counterAnimator.setAnimation(images["Emerging1"], 27, 20, "forwards", "13500px 1000px");
 }
 async function startAliAnimation() {
-    await counterAnimator.setAnimation(images["Emerging2"], 18, 20, "forwards", "9000px 1000px");
+    await counterAnimator.setAnimation(images["Emerging2"], 18, 18, "forwards", "9000px 1000px");
     counterAnimator.setAnimation(images["Idle"], 17, 12, "infinite");
     document.getElementById("counterAnimation").style.backgroundPositionY = "100px";
 }
