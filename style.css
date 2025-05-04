@@ -291,9 +291,11 @@ body {
     background-color: black;
     color: white;
 }
+
 #textDiv img {
     height: 200px;
 }
+
 #text {
     font-size: 80px;
     padding: 20px;
@@ -316,6 +318,10 @@ body {
         background-position: -70px -0px;
         background-color: rgb(10, 10, 10);
         cursor: url("resources/images/Cursor.webp") 16 16, auto;
+    }
+
+    .screen {
+        transform-origin: 50% 50%;
     }
 
     #switch {
@@ -437,6 +443,7 @@ body {
         border-width: 7px;
         transition: all 1s ease;
     }
+
     #textDiv img {
         height: 90px;
     }

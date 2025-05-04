@@ -1,34 +1,32 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 export class SoundManager {
-    constructor(buffers = {}, isSpamming = false) {
+    private source!: AudioBufferSourceNode;
+    private backgroundSource!: AudioBufferSourceNode;
+    private audioContext: AudioContext;
+    private buffers: Record<string, AudioBuffer>;
+    private isSpamming: boolean;
+    private gain: GainNode;
+    constructor(
+        buffers: Record<string, AudioBuffer> = {},
+        isSpamming: boolean = false
+    ) {
         this.isSpamming = isSpamming;
         this.buffers = buffers;
-        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.audioContext =  new (window.AudioContext || (window as any).webkitAudioContext)();
         this.gain = this.audioContext.createGain();
     }
-    load(fileName) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const response = yield fetch(`resources/audio/${fileName}.mp3`);
-            const array = yield response.arrayBuffer();
-            const buffer = yield this.audioContext.decodeAudioData(array);
-            this.buffers[fileName] = buffer;
-        });
+    async load(fileName: string) {
+        const response = await fetch(`resources/audio/${fileName}.mp3`);
+        const array = await response.arrayBuffer();
+        const buffer = await this.audioContext.decodeAudioData(array);
+        this.buffers[fileName] = buffer;
     }
-    play(fileName) {
+    play(fileName: string) {
         this.source = this.audioContext.createBufferSource();
         this.source.buffer = this.buffers[fileName];
         this.source.connect(this.audioContext.destination);
         this.source.start(0);
     }
-    playSpammableSFX(fileName) {
+    playSpammableSFX(fileName: string) {
         if (!this.isSpamming) {
             this.isSpamming = true;
             this.source = this.audioContext.createBufferSource();
@@ -37,17 +35,17 @@ export class SoundManager {
             this.source.start(0);
             this.source.onended = () => {
                 this.isSpamming = false;
-            };
+            }
         }
     }
     /**
      * This method will begin playing the background music. It connects a gain to the background music
-     * so that the stopBackgroundMusic method will be able to gradually stop the music or
+     * so that the stopBackgroundMusic method will be able to gradually stop the music or 
      * setBackgroundVolume can gradually volumize the music.
-     *
+     * 
      * @param fileName -  The file name of the background music to be played.
      */
-    playBackgroundMusic(fileName) {
+    playBackgroundMusic(fileName: string) {
         this.backgroundSource = this.audioContext.createBufferSource();
         this.backgroundSource.buffer = this.buffers[fileName];
         this.backgroundSource.connect(this.gain).connect(this.audioContext.destination);
@@ -65,7 +63,15 @@ export class SoundManager {
         this.gain.gain.linearRampToValueAtTime(0, now + delay);
         this.backgroundSource.stop(now + delay);
     }
-    setBackgroundVolume({ initialVolume = this.gain.gain.value, endVolume, delay }) {
+    setBackgroundVolume({
+        initialVolume = this.gain.gain.value, 
+        endVolume, 
+        delay
+    }: {
+        initialVolume: number, 
+        endVolume: number, 
+        delay: number
+    }) {
         if (!this.backgroundSource) {
             return;
         }

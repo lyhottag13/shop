@@ -32,7 +32,6 @@ const eventHandlers = {
     aliEvent,
     doorEvent,
 };
-player.construct();
 
 let dialogueJSON;
 let resourceJSON;
