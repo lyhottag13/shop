@@ -49,7 +49,7 @@ export class Shop {
     async initializeShop() {
         const itemShowcase = document.getElementById("item");
         this.shopContainer.style.visibility = "visible";
-        this.show();
+        this.toggleMenuVisibility("show");
         // This will generate the shop's divs and set items to each div.
         this.shopImages.forEach((_, index) => {
             this.initializeDiv(itemShowcase, index);
