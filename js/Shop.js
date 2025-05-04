@@ -6,6 +6,7 @@ export class Shop {
         this.counter = document.getElementById("counter");
         this.textDiv = document.getElementById("textDiv");
         this.arrows = document.querySelectorAll(".arrow");
+        this.descriptionParts = document.querySelectorAll("#description span");
         this.toggleMenuHandler = () => this.toggleMenu();
         this.arrayOfItems = [];
         this.dialogueBoxObject = dialogueBoxObject;
@@ -20,10 +21,7 @@ export class Shop {
         if (this.isMenuShowing) {
             shopTabLabel.textContent = "OPEN SHOP";
             if (this.isMobile) {
-                this.shopContainer.style.bottom = "-352px";
-                this.counter.style.transform = "translateY(0)";
-                this.textDiv.style.transform = "translateY(0)";
-                document.body.style.backgroundPositionY = "0";
+                this.moveWorld("-352px", "0", "0");
             } else {
                 this.shopContainer.style.right = "-900px";
                 this.counter.style.transform = "translateX(0)";
@@ -32,10 +30,7 @@ export class Shop {
         } else {
             shopTabLabel.textContent = "CLOSE SHOP";
             if (this.isMobile) {
-                this.shopContainer.style.bottom = "0";
-                this.counter.style.transform = "translateY(-100px)";
-                this.textDiv.style.transform = "translateY(-100px)";
-                document.body.style.backgroundPositionY = "-190px";
+                this.moveWorld("0", "-100px", "-190px");
             } else {
                 this.shopContainer.style.right = "100px";
                 this.counter.style.transform = "translateX(-500px)";
@@ -44,8 +39,13 @@ export class Shop {
         }
 
     }
+    moveWorld(bottom, translate, body) {
+        this.shopContainer.style.bottom = bottom;
+        this.counter.style.transform = `translateY(${translate})`;
+        this.textDiv.style.transform = `translateY(${translate})`;
+        document.body.style.backgroundPositionY = body;
+    }
     async initializeShop() {
-        const descriptionParts = document.querySelectorAll("#description span");
         const itemShowcase = document.getElementById("item");
         this.shopContainer.style.visibility = "visible";
         this.show();
@@ -54,32 +54,29 @@ export class Shop {
             this.initializeDiv(itemShowcase, index);
         });
         this.arrayOfItems.forEach((item, itemIndex) => {
-            this.initializeItem(item, itemIndex, descriptionParts);
+            this.initializeItem(item, itemIndex);
         });
         this.arrows.forEach((arrow, arrowIndex) => {
-            this.initializeArrow(arrow, arrowIndex, descriptionParts);
+            this.initializeArrow(arrow, arrowIndex);
         });
     }
-    initializeArrow(arrow, arrowIndex, descriptionParts) {
+    initializeArrow(arrow, arrowIndex) {
         const arrowImage = arrow.querySelector("img");
         if (arrowIndex === 0) {
-            arrowImage.style.transform = `rotate(${this.isMobile ? "0" : "90deg"})`;
+            arrowImage.style.transform = `rotate(${this.isMobile ? "0" : "90"}deg)`;
         } else {
-            arrowImage.style.transform = `rotate(${this.isMobile ? "180deg" : "270deg"})`
+            arrowImage.style.transform = `rotate(${this.isMobile ? "180" : "270"}deg)`
         }
         const direction = arrowIndex === 0 ? "" : "-";
         const displacement = `${direction}200px`;
         arrow.addEventListener("pointerdown", () => {
-            this.arrowEvent(arrowIndex, displacement, descriptionParts);
+            this.arrowEvent(arrowIndex, displacement);
         });
     }
-    initializeItem(item, itemIndex, descriptionParts) {
+    initializeItem(item, itemIndex) {
         // This sets the default visible item to the first item.
         if (itemIndex === 0) {
-            descriptionParts[0].textContent = this.dialogueJSON["itemHeader"][0];
-            descriptionParts[0].style.fontSize = this.isMobile ? "35px" : "80px";
-            descriptionParts[1].textContent = this.dialogueJSON["itemDescription"][0];
-            descriptionParts[1].style.fontSize = this.isMobile ? "25px" : "40px";
+            this.updateShopTextContent(0);
             item.style.visibility = "visible";
         } else {
             item.style.visibility = "hidden";
@@ -98,7 +95,7 @@ export class Shop {
         itemShowcase.appendChild(newItemDiv);
         this.arrayOfItems.push(newItemDiv);
     }
-    async arrowEvent(arrowIndex, displacement, descriptionParts) {
+    async arrowEvent(arrowIndex, displacement) {
         // This checks to see if this is a valid move, i.e. we're not going left at the first, or right at the last.
         const isValidMove = ((arrowIndex === 0 && this.currentShopIndex !== 0) || (arrowIndex === 1 && this.currentShopIndex !== this.arrayOfItems.length - 1));
         let selectedItem = this.arrayOfItems[this.currentShopIndex];
@@ -112,8 +109,7 @@ export class Shop {
         selectedItem.style.filter = "opacity(1)";
         selectedItem.style.visibility = "visible";
         const validIndex = Math.min(this.currentShopIndex, this.dialogueJSON["itemHeader"].length - 1);
-        descriptionParts[0].textContent = this.dialogueJSON["itemHeader"][validIndex];
-        descriptionParts[1].textContent = this.dialogueJSON["itemDescription"][validIndex];
+        this.updateShopTextContent(validIndex);
     }
     /**
      * This hides and plays the dialogue associated with the item, then 
@@ -133,5 +129,9 @@ export class Shop {
     show() {
         this.shopContainer.style.opacity = 1;
         this.shopTab.addEventListener("pointerdown", this.toggleMenuHandler);
+    }
+    updateShopTextContent(index) {
+        this.descriptionParts[0].textContent = this.dialogueJSON["itemHeader"][index];
+        this.descriptionParts[1].textContent = this.dialogueJSON["itemDescription"][index];
     }
 }
