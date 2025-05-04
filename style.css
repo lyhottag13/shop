@@ -7,7 +7,7 @@
 
 html,
 body {
-    cursor: url("resources/images/Cursor.webp") 0 0, auto;
+    cursor: url("resources/images/Cursor.webp") 16 16, auto;
     height: 100%;
     margin: 0;
     user-select: none;

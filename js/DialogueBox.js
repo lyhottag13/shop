@@ -8,19 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 export class DialogueBox {
-    constructor(dialogueJSON) {
+    constructor(dialogueJSON, player) {
         this.openDialogues = new Map();
         this.dialogueJSON = dialogueJSON;
         this.isTyping = false;
-        this.player = null;
+        this.player = player;
         this.skip = false;
         this.dialogueBox = document.getElementById("textDiv");
-    }
-    construct(player) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.dialogueJSON = yield (yield fetch("js/Dialogue.json")).json();
-            this.player = player;
-        });
     }
     displayText(_a) {
         return __awaiter(this, arguments, void 0, function* ({ text, speed = 1, location = "text", playSound = true }) {

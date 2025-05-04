@@ -1,5 +1,5 @@
 export class Shop {
-    constructor(dialogueBoxObject, shopImages, dialogueJSON) {
+    constructor(dialogueBoxObject, shopImages, dialogueJSON, tools) {
         this.shopContainer = document.getElementById("shopContainer");
         this.shopTab = document.getElementById("shopTab");
         this.shopMenu = document.getElementById("shopMenu");
@@ -15,6 +15,7 @@ export class Shop {
         this.isMobile = (window.innerWidth <= 600) ? true : false;
         this.currentShopIndex = 0;
         this.isMenuShowing = false;
+        this.tools = tools;
     }
     toggleMenu() {
         const shopTabLabel = document.getElementById("shopTabLabel");
@@ -117,18 +118,25 @@ export class Shop {
      * @param {number} itemIndex - The index of the item that the user clicked.
      */
     async itemEvent(itemIndex) {
-        this.hide();
+        this.toggleMenuVisibility("hide");
         await this.dialogueBoxObject.newText({ dialogueName: "itemDialogue", index: itemIndex });
-        this.show();
+        this.toggleMenuVisibility("show");
     }
-    hide() {
-        this.isMenuShowing && this.toggleMenu();
-        this.shopContainer.style.opacity = 0;
-        this.shopTab.removeEventListener("pointerdown", this.toggleMenuHandler);
-    }
-    show() {
-        this.shopContainer.style.opacity = 1;
-        this.shopTab.addEventListener("pointerdown", this.toggleMenuHandler);
+    toggleMenuVisibility(instruction) {
+        switch (instruction) {
+            case "hide":
+                this.isMenuShowing && this.toggleMenu();
+                this.shopContainer.style.opacity = 0;
+                this.shopTab.removeEventListener("pointerdown", this.toggleMenuHandler);
+                this.tools.isInteractionAllowed = false;
+                break;
+            case "show":
+                this.shopContainer.style.opacity = 1;
+                this.shopTab.addEventListener("pointerdown", this.toggleMenuHandler);
+                this.tools.isInteractionAllowed = true;
+                break;
+        }
+        this.tools.setCursor();
     }
     updateShopTextContent(index) {
         this.descriptionParts[0].textContent = this.dialogueJSON["itemHeader"][index];

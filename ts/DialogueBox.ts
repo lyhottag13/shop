@@ -1,21 +1,22 @@
+import { SoundManager } from "./SoundManager";
+
 export class DialogueBox {
     openDialogues: Map<string, Dialogue>;
     dialogueJSON: JSON;
     isTyping: boolean;
-    player: any;
+    player: SoundManager;
     skip: boolean;
     dialogueBox: HTMLElement;
-    constructor(dialogueJSON: JSON) {
+    constructor(
+        dialogueJSON: JSON,
+        player: SoundManager
+    ) {
         this.openDialogues = new Map();
         this.dialogueJSON = dialogueJSON;
         this.isTyping = false;
-        this.player = null;
+        this.player = player;
         this.skip = false;
         this.dialogueBox = document.getElementById("textDiv")!;
-    }
-    async construct(player: any) {
-        this.dialogueJSON = await (await fetch("js/Dialogue.json")).json();
-        this.player = player;
     }
     async displayText({
         text,
