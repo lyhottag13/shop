@@ -50,8 +50,8 @@ window.onload = async () => {
     document.addEventListener("touchend", async () => {
         startGame();
     }, { once: true });
-    // This tells the user to click/tap if they haven't progressed past the initial black screen yet.
     await sleep(3000);
+    // This tells the user to click/tap if they haven't progressed past the initial black screen yet.
     if (!isInitialized) {
         isShowingInitialText = true;
         dialogueBox1.newText({ dialogueName: "startText", speed: 10, location: "textStart", playSound: false, index: isMobile ? 1 : 0 });
@@ -74,7 +74,6 @@ function preload() {
         shopImages[index] = image;
     });
 }
-
 // This starts the game when the user clicks/taps.
 async function startGame() {
     if (!isInitialized) {
