@@ -109,8 +109,10 @@ async function startGame() {
 async function callEvent(eventName) {
     if (isInteractionAllowed) {
         isInteractionAllowed = false;
+        setCursor();
         await eventHandlers[eventName]();
         isInteractionAllowed = true;
+        setCursor();
     }
 }
 async function doorEvent() {
@@ -262,4 +264,11 @@ function keyHandler(event) {
 function sleep(ms) {
     ms = (skip) ? 7 : ms;
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+function setCursor() {
+    if (isInteractionAllowed) {
+        document.body.style.cursor = "url('resources/images/Cursor.webp') 0 0, auto";
+    } else {
+        document.body.style.cursor = "url('resources/images/Cursor3.webp') 0 0, auto";
+    }
 }
