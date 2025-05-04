@@ -8,12 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 export class Tools {
-    constructor(skip = false, isInteractionAllowed = true, player, dialogueBox, eventHandlers) {
+    constructor(currentScreenIndex = 0, skip = false, player, dialogueBox) {
+        this.currentScreenIndex = currentScreenIndex;
         this.skip = skip;
         this.player = player;
         this.dialogueBox = dialogueBox;
-        this.isInteractionAllowed = isInteractionAllowed;
-        this.eventHandlers = eventHandlers;
+        this.screens = document.querySelectorAll(".screen");
     }
     keyHandler(event) {
         switch (event.key) {
@@ -30,23 +30,31 @@ export class Tools {
         ms = (this.skip) ? 7 : ms;
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-    setCursor() {
-        if (this.isInteractionAllowed) {
-            document.body.style.cursor = "url('resources/images/Cursor.webp') 16 16, auto";
-        }
-        else {
-            document.body.style.cursor = "url('resources/images/Cursor3.webp') 16 16, auto";
+    setCursor(instruction) {
+        switch (instruction) {
+            case "wait":
+                document.body.style.cursor = "url('resources/images/Cursor3.webp') 16 16, auto";
+                break;
+            case "normal":
+                document.body.style.cursor = "url('resources/images/Cursor.webp') 16 16, auto";
+                break;
         }
     }
-    callEvent(eventName) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.isInteractionAllowed) {
-                this.isInteractionAllowed = false;
-                this.setCursor();
-                yield this.eventHandlers[eventName]();
-                this.isInteractionAllowed = true;
-                this.setCursor();
-            }
+    setScreen(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ nextScreenIndex, betweenScreenTime = 2000, fadeOut = betweenScreenTime, fadeIn = fadeOut, currentScreenTransition = "" }) {
+            const currentScreen = this.screens[this.currentScreenIndex];
+            const nextScreen = this.screens[nextScreenIndex];
+            currentScreen.style.setProperty("--transition-time", `${fadeOut / 1000}s`);
+            nextScreen.style.setProperty("--transition-time", `${fadeIn / 1000}s`);
+            currentScreen.style.transform = currentScreenTransition;
+            currentScreen.style.opacity = "0";
+            yield this.sleep(betweenScreenTime);
+            currentScreen.style.transform = "";
+            currentScreen.style.display = "none";
+            nextScreen.style.display = "flex";
+            nextScreen.offsetHeight;
+            nextScreen.style.opacity = "1";
+            this.currentScreenIndex = nextScreenIndex;
         });
     }
     createButton(id, top, left, width, height, functionName, div) {

@@ -5,20 +5,19 @@ export class Tools {
     private skip: boolean;
     private player: SoundManager;
     private dialogueBox: DialogueBox;
-    private isInteractionAllowed: boolean;
-    private eventHandlers: Record<string, () => Promise<void>>;
+    private screens: NodeListOf<HTMLElement>;
+    private currentScreenIndex: number;
     constructor(
+        currentScreenIndex: number = 0,
         skip: boolean = false,
-        isInteractionAllowed: boolean = true,
         player: SoundManager,
         dialogueBox: DialogueBox,
-        eventHandlers: Record<string, () => Promise<void>>
     ) {
+        this.currentScreenIndex = currentScreenIndex;
         this.skip = skip;
         this.player = player;
         this.dialogueBox = dialogueBox;
-        this.isInteractionAllowed = isInteractionAllowed;
-        this.eventHandlers = eventHandlers;
+        this.screens = document.querySelectorAll(".screen");
     }
     keyHandler(event: KeyboardEvent) {
         switch (event.key) {
@@ -35,21 +34,36 @@ export class Tools {
         ms = (this.skip) ? 7 : ms;
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-    setCursor() {
-        if (this.isInteractionAllowed) {
-            document.body.style.cursor = "url('resources/images/Cursor.webp') 16 16, auto";
-        } else {
-            document.body.style.cursor = "url('resources/images/Cursor3.webp') 16 16, auto";
+    setCursor(instruction: string) {
+        switch (instruction) {
+            case "wait":
+                document.body.style.cursor = "url('resources/images/Cursor3.webp') 16 16, auto";
+                break;
+            case "normal":
+                document.body.style.cursor = "url('resources/images/Cursor.webp') 16 16, auto";
+                break;
         }
     }
-    async callEvent(eventName: string) {
-        if (this.isInteractionAllowed) {
-            this.isInteractionAllowed = false;
-            this.setCursor();
-            await this.eventHandlers[eventName]();
-            this.isInteractionAllowed = true;
-            this.setCursor();
-        }
+    async setScreen({
+        nextScreenIndex,
+        betweenScreenTime = 2000,
+        fadeOut = betweenScreenTime,
+        fadeIn = fadeOut,
+        currentScreenTransition = ""
+    }: ScreenSwitcherOptions) {
+        const currentScreen = this.screens[this.currentScreenIndex];
+        const nextScreen = this.screens[nextScreenIndex];
+        currentScreen.style.setProperty("--transition-time", `${fadeOut / 1000}s`);
+        nextScreen.style.setProperty("--transition-time", `${fadeIn / 1000}s`);
+        currentScreen.style.transform = currentScreenTransition;
+        currentScreen.style.opacity = "0";
+        await this.sleep(betweenScreenTime);
+        currentScreen.style.transform = "";
+        currentScreen.style.display = "none";
+        nextScreen.style.display = "flex";
+        nextScreen.offsetHeight;
+        nextScreen.style.opacity = "1";
+        this.currentScreenIndex = nextScreenIndex;
     }
     createButton(id: string, top: string, left: string, width: string, height: string, functionName: () => any, div: string) {
         div = div ?? "counter";
@@ -63,4 +77,11 @@ export class Tools {
         document.getElementById(div)!.appendChild(button);
         button.addEventListener("pointerdown", functionName);
     }
+}
+type ScreenSwitcherOptions = {
+    nextScreenIndex: number,
+    betweenScreenTime: number,
+    fadeOut: number,
+    fadeIn: number,
+    currentScreenTransition: string
 }
