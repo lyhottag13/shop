@@ -1,5 +1,14 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 export class Shop {
-    constructor(dialogueBoxObject, shopImages, dialogueJSON, tools) {
+    constructor(dialogueBoxObject, shopImages, dialogueJSON, tools, eventHandler) {
         this.shopContainer = document.getElementById("shopContainer");
         this.shopTab = document.getElementById("shopTab");
         this.shopMenu = document.getElementById("shopMenu");
@@ -7,7 +16,7 @@ export class Shop {
         this.textDiv = document.getElementById("textDiv");
         this.arrows = document.querySelectorAll(".arrow");
         this.descriptionParts = document.querySelectorAll("#description span");
-        this.toggleMenuHandler = () => this.toggleMenu();
+        this.toggleMenuHandler = () => __awaiter(this, void 0, void 0, function* () { return this.toggleMenu(); });
         this.arrayOfItems = [];
         this.dialogueBoxObject = dialogueBoxObject;
         this.shopImages = shopImages;
@@ -16,6 +25,7 @@ export class Shop {
         this.currentShopIndex = 0;
         this.isMenuShowing = false;
         this.tools = tools;
+        this.eventHandler = eventHandler;
     }
     toggleMenu() {
         const shopTabLabel = document.getElementById("shopTabLabel");
@@ -23,22 +33,24 @@ export class Shop {
             shopTabLabel.textContent = "OPEN SHOP";
             if (this.isMobile) {
                 this.moveWorld("-352px", "0", "0");
-            } else {
+            }
+            else {
                 this.shopContainer.style.right = "-900px";
                 this.counter.style.transform = "translateX(0)";
             }
             this.isMenuShowing = false;
-        } else {
+        }
+        else {
             shopTabLabel.textContent = "CLOSE SHOP";
             if (this.isMobile) {
                 this.moveWorld("0", "-100px", "-190px");
-            } else {
+            }
+            else {
                 this.shopContainer.style.right = "100px";
                 this.counter.style.transform = "translateX(-500px)";
             }
             this.isMenuShowing = true;
         }
-
     }
     moveWorld(bottom, translate, body) {
         this.shopContainer.style.bottom = bottom;
@@ -46,27 +58,30 @@ export class Shop {
         this.textDiv.style.transform = `translateY(${translate})`;
         document.body.style.backgroundPositionY = body;
     }
-    async initializeShop() {
-        const itemShowcase = document.getElementById("item");
-        this.shopContainer.style.visibility = "visible";
-        this.toggleMenuVisibility("show");
-        // This will generate the shop's divs and set items to each div.
-        this.shopImages.forEach((_, index) => {
-            this.initializeDiv(itemShowcase, index);
-        });
-        this.arrayOfItems.forEach((item, itemIndex) => {
-            this.initializeItem(item, itemIndex);
-        });
-        this.arrows.forEach((arrow, arrowIndex) => {
-            this.initializeArrow(arrow, arrowIndex);
+    initializeShop() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const itemShowcase = document.getElementById("item");
+            this.shopContainer.style.visibility = "visible";
+            this.toggleMenuVisibility("show");
+            // This will generate the shop's divs and set items to each div.
+            this.shopImages.forEach((_, index) => {
+                this.initializeDiv(itemShowcase, index);
+            });
+            this.arrayOfItems.forEach((item, itemIndex) => {
+                this.initializeItem(item, itemIndex);
+            });
+            this.arrows.forEach((arrow, arrowIndex) => {
+                this.initializeArrow(arrow, arrowIndex);
+            });
         });
     }
     initializeArrow(arrow, arrowIndex) {
         const arrowImage = arrow.querySelector("img");
         if (arrowIndex === 0) {
             arrowImage.style.transform = `rotate(${this.isMobile ? "0" : "90"}deg)`;
-        } else {
-            arrowImage.style.transform = `rotate(${this.isMobile ? "180" : "270"}deg)`
+        }
+        else {
+            arrowImage.style.transform = `rotate(${this.isMobile ? "180" : "270"}deg)`;
         }
         const direction = arrowIndex === 0 ? "" : "-";
         const displacement = `${direction}200px`;
@@ -79,13 +94,14 @@ export class Shop {
         if (itemIndex === 0) {
             this.updateShopTextContent(0);
             item.style.visibility = "visible";
-        } else {
+        }
+        else {
             item.style.visibility = "hidden";
             item.style.transform = `translate${this.isMobile ? "X" : "Y"}(300px) scale(0.5)`;
         }
-        item.addEventListener("pointerdown", async () => {
-            await this.itemEvent(itemIndex);
-        });
+        item.addEventListener("pointerdown", () => __awaiter(this, void 0, void 0, function* () {
+            yield this.itemEvent(itemIndex);
+        }));
     }
     initializeDiv(itemShowcase, index) {
         const newItemDiv = document.createElement("div");
@@ -96,47 +112,54 @@ export class Shop {
         itemShowcase.appendChild(newItemDiv);
         this.arrayOfItems.push(newItemDiv);
     }
-    async arrowEvent(arrowIndex, displacement) {
-        // This checks to see if this is a valid move, i.e. we're not going left at the first, or right at the last.
-        const isValidMove = ((arrowIndex === 0 && this.currentShopIndex !== 0) || (arrowIndex === 1 && this.currentShopIndex !== this.arrayOfItems.length - 1));
-        let selectedItem = this.arrayOfItems[this.currentShopIndex];
-        if (isValidMove) {
-            selectedItem.style.transform = `translate${this.isMobile ? "X" : "Y"}(${displacement}) scale(0.5)`;
-            selectedItem.style.filter = "opacity(0)";
-            this.currentShopIndex += arrowIndex === 0 ? -1 : 1;
-            selectedItem = this.arrayOfItems[this.currentShopIndex];
-        }
-        selectedItem.style.transform = `translate${this.isMobile ? "X" : "Y"}(0) scale(1)`;
-        selectedItem.style.filter = "opacity(1)";
-        selectedItem.style.visibility = "visible";
-        const validIndex = Math.min(this.currentShopIndex, this.dialogueJSON["itemHeader"].length - 1);
-        this.updateShopTextContent(validIndex);
+    arrowEvent(arrowIndex, displacement) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // This checks to see if this is a valid move, i.e. we're not going left at the first, or right at the last.
+            const isValidMove = ((arrowIndex === 0 && this.currentShopIndex !== 0) || (arrowIndex === 1 && this.currentShopIndex !== this.arrayOfItems.length - 1));
+            let selectedItem = this.arrayOfItems[this.currentShopIndex];
+            if (isValidMove) {
+                selectedItem.style.transform = `translate${this.isMobile ? "X" : "Y"}(${displacement}) scale(0.5)`;
+                selectedItem.style.filter = "opacity(0)";
+                this.currentShopIndex += arrowIndex === 0 ? -1 : 1;
+                selectedItem = this.arrayOfItems[this.currentShopIndex];
+            }
+            selectedItem.style.transform = `translate${this.isMobile ? "X" : "Y"}(0) scale(1)`;
+            selectedItem.style.filter = "opacity(1)";
+            selectedItem.style.visibility = "visible";
+            const validIndex = Math.min(this.currentShopIndex, this.dialogueJSON["itemHeader"].length - 1);
+            this.updateShopTextContent(validIndex);
+        });
     }
     /**
-     * This hides and plays the dialogue associated with the item, then 
+     * This hides and plays the dialogue associated with the item, then
      * shows the menu when the dialogue is over.
      * @param {number} itemIndex - The index of the item that the user clicked.
      */
-    async itemEvent(itemIndex) {
-        this.toggleMenuVisibility("hide");
-        await this.dialogueBoxObject.newText({ dialogueName: "itemDialogue", index: itemIndex });
-        this.toggleMenuVisibility("show");
+    itemEvent(itemIndex) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.toggleMenuVisibility("hide");
+            yield this.dialogueBoxObject.newText({ dialogueName: "itemDialogue", index: itemIndex });
+            this.toggleMenuVisibility("show");
+        });
     }
     toggleMenuVisibility(instruction) {
+        let cursor = "wait";
         switch (instruction) {
             case "hide":
                 this.isMenuShowing && this.toggleMenu();
-                this.shopContainer.style.opacity = 0;
+                this.shopContainer.style.opacity = "0";
                 this.shopTab.removeEventListener("pointerdown", this.toggleMenuHandler);
-                this.tools.isInteractionAllowed = false;
+                this.eventHandler.setInteractionAllowed(false);
+                cursor = "wait";
                 break;
             case "show":
-                this.shopContainer.style.opacity = 1;
+                this.shopContainer.style.opacity = "1";
                 this.shopTab.addEventListener("pointerdown", this.toggleMenuHandler);
-                this.tools.isInteractionAllowed = true;
+                this.eventHandler.setInteractionAllowed(true);
+                cursor = "normal";
                 break;
         }
-        this.tools.setCursor();
+        this.tools.setCursor(cursor);
     }
     updateShopTextContent(index) {
         this.descriptionParts[0].textContent = this.dialogueJSON["itemHeader"][index];

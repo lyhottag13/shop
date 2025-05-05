@@ -29,6 +29,7 @@ let dialogueJSON;
 let resourceJSON;
 
 let isShowingInitialText;
+
 window.onload = async () => {
     dialogueJSON = await (await fetch("resources/JSON/Dialogue.json")).json();
     resourceJSON = await (await (fetch("resources/JSON/Resources.json"))).json();
@@ -36,6 +37,7 @@ window.onload = async () => {
     preload();
 
     createObjects();
+
     tools.setScreen({ nextScreenIndex: 0, betweenScreenTime: 0 });
     document.addEventListener("click", async () => {
         startGame();
@@ -71,8 +73,8 @@ function preload() {
 function createObjects() {
     dialogueBox1 = new DialogueBox(dialogueJSON, player);
     tools = new Tools(0, false, player, dialogueBox1);
-    shop = new Shop(dialogueBox1, shopImages, dialogueJSON, tools);
     eventHandler = new EventHandler({tools: tools });
+    shop = new Shop(dialogueBox1, shopImages, dialogueJSON, tools, eventHandler);
     eventList = new EventList(player, tools, dialogueBox1, eventHandler, switchAnimator, counterAnimator, doorAnimator, shop, images);
     eventHandler.setList(eventList.getList());
 }
