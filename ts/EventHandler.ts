@@ -33,6 +33,9 @@ export class EventHandler {
                 break;
         }
     }
+    setList(eventList: Record<string, () => Promise<void>>) {
+        this.eventHandlers = eventList;
+    }
 }
 type EventHandlerOptions = {
     isInteractionAllowed?: boolean,

@@ -8,9 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 export class EventHandler {
-    constructor({ isInteractionAllowed = true, eventHandlers, tools }) {
+    constructor({ isInteractionAllowed = true, tools }) {
         this.isInteractionAllowed = isInteractionAllowed;
-        this.eventHandlers = eventHandlers;
+        this.eventHandlers = undefined;
         this.tools = tools;
     }
     // Calls events so that we don't have overlap of events.
@@ -34,5 +34,8 @@ export class EventHandler {
                 this.tools.setCursor("wait");
                 break;
         }
+    }
+    setList(eventList) {
+        this.eventHandlers = eventList;
     }
 }

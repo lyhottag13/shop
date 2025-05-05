@@ -68,7 +68,7 @@ export class SoundManager {
         endVolume, 
         delay
     }: {
-        initialVolume: number, 
+        initialVolume?: number, 
         endVolume: number, 
         delay: number
     }) {

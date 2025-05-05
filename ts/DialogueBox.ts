@@ -87,11 +87,11 @@ export class DialogueBox {
         index
     }: {
         dialogueName: string;
-        speed: number;
-        location: string;
-        playSound: boolean;
-        starting: number;
-        index: number;
+        speed?: number;
+        location?: string;
+        playSound?: boolean;
+        starting?: number;
+        index?: number;
     }) {
         let openedDialogue = this.openDialogues.get(dialogueName);
         if (openedDialogue) {

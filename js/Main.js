@@ -4,7 +4,7 @@ import { Shop } from "./Shop.js";
 import { DialogueBox } from "./DialogueBox.js";
 import { Tools } from "./Tools.js";
 import { EventHandler } from "./EventHandler.js";
-// import { GameContext } from "./GameContext.js";
+import { EventList } from "./EventList.js";
 
 const isMobile = (window.innerWidth <= 600) ? true : false;
 const FRAME_WIDTH = (window.innerWidth <= 600) ? 300 : 132;
@@ -17,18 +17,12 @@ let dialogueBox1;
 let shop;
 let tools;
 let eventHandler;
+let eventList;
 let isInitialized = false;
-let currentScreenIndex = 0;
 // This allows me to skip through all the events to quickly debug stuff.
 
 const images = {};
 const shopImages = [];
-const eventHandlers = {
-    switchLightsEvent,
-    closedSignEvent,
-    aliEvent,
-    doorEvent,
-};
 
 
 let dialogueJSON;
@@ -41,10 +35,7 @@ window.onload = async () => {
 
     preload();
 
-    dialogueBox1 = new DialogueBox(dialogueJSON, player);
-    tools = new Tools(0, false, player, dialogueBox1);
-    shop = new Shop(dialogueBox1, shopImages, dialogueJSON, tools);
-    eventHandler = new EventHandler({ eventHandlers: eventHandlers, tools: tools });
+    createObjects();
     tools.setScreen({ nextScreenIndex: 0, betweenScreenTime: 0 });
     document.addEventListener("click", async () => {
         startGame();
@@ -76,6 +67,15 @@ function preload() {
         shopImages[index] = image;
     });
 }
+
+function createObjects() {
+    dialogueBox1 = new DialogueBox(dialogueJSON, player);
+    tools = new Tools(0, false, player, dialogueBox1);
+    shop = new Shop(dialogueBox1, shopImages, dialogueJSON, tools);
+    eventHandler = new EventHandler({tools: tools });
+    eventList = new EventList(player, tools, dialogueBox1, eventHandler, switchAnimator, counterAnimator, doorAnimator, shop, images);
+    eventHandler.setList(eventList.getList());
+}
 // This starts the game when the user clicks/taps.
 async function startGame() {
     if (!isInitialized) {
@@ -106,99 +106,4 @@ async function startGame() {
         // TEMP
         tools.createButton("doorButton", isMobile ? "10%" : "23%", isMobile ? "30%" : "22%", isMobile ? "40%" : "57%", isMobile ? "50%" : "77%", () => eventHandler.callEvent("doorEvent"), "door");
     }
-}
-
-async function doorEvent() {
-    document.getElementById("doorButton").remove();
-    // The door is clicked.
-    player.play("doorcreak");
-    await tools.sleep(1500);
-    doorAnimator.setAnimation(images["Door"], 17, 13, "forwards");
-    await tools.sleep(2500);
-    // The website swaps to the shop screen now.
-    tools.setScreen({ nextScreenIndex: 2, betweenScreenTime: 3000, currentScreenTransition: "scale(2)" });
-    player.setBackgroundVolume({ endVolume: 0.3, delay: 4 });
-    await tools.sleep(5000);
-    tools.createButton("closedSign", isMobile ? "65%" : "62%", "5%", "90%", "20%", () => eventHandler.callEvent("closedSignEvent"), "counter");
-}
-async function closedSignEvent() {
-    await dialogueBox1.newText({ dialogueName: "closedSign" });
-    if (dialogueBox1.openDialogues.get("closedSign").clicks === 2) {
-        // Show lightswitch.
-        await tools.sleep(1000);
-        player.play("lightappear");
-        tools.createButton("lightSwitch", "0", "80%", "7%", (isMobile) ? "60%" : "94%", () => eventHandler.callEvent("switchLightsEvent"), "switch");
-        document.getElementById("switch").style.opacity = 1;
-        await tools.sleep(1500);
-    }
-    return;
-}
-async function switchLightsEvent() {
-    if (!dialogueBox1.isTyping) {
-        await dialogueBox1.newText({ dialogueName: "switchLights" });
-        await tools.sleep(1400);
-        document.getElementById("lightSwitch").remove();
-        dialogueBox1.newText({ dialogueName: "switchLights" });
-        // Now you see the hand.
-        switchAnimator.setAnimation(images["SwitchPull1"], 14, 25, "forwards");
-        document.getElementById("switchAnimation").addEventListener("animationend", () => {
-            switchAnimator.setAnimation(images["SwitchPull2"], 24, 25, "forwards");
-        }, { once: true });
-        await tools.sleep(13 / 25 * 1000);
-        // The lights activate here.
-        player.stopBackgroundMusic(1);
-        player.play("lightclickdown");
-        counterAnimator.setAnimation(images["OpeningBusiness"], 1, 0, "forwards");
-        body.style.backgroundImage = `url("${images["Background"].src}")`;
-        body.style.backgroundColor = "rgb(179, 115, 10)";
-        document.getElementById("closedSign").remove();
-        document.getElementById("switchAnimation").style.filter = "none";
-        await tools.sleep(13 / 25 * 1000);
-        player.play("lightclickup");
-        // Now we're displaying dialogue.
-        await tools.sleep(1500 - (13 / 25 * 1000));
-        await dialogueBox1.newText({ dialogueName: "switchLights" });
-        await tools.sleep(1500);
-        await dialogueBox1.newText({ dialogueName: "switchLights" });
-        await tools.sleep(2000);
-        // Now Ali takes the sign.
-        counterAnimator.setAnimation(images["OpeningBusiness"], 21, 23, "forwards");
-        await tools.sleep(21 / 23 * 1000 + 1500);
-        await dialogueBox1.newText({ dialogueName: "switchLights" });
-        await tools.sleep(1800);
-        // Now Ali pops up.
-        player.playBackgroundMusic("shop");
-        player.setBackgroundVolume({ initialVolume: 0, endVolume: 1, delay: 0.5 });
-        startHowdy();
-        await tools.sleep(800);
-        dialogueBox1.showAliIcon();
-        dialogueBox1.newText({ dialogueName: "ali" });
-        // Now Ali has thrown his sign, it is completely gone.
-        tools.createButton("ali", "40%", "10%", "80%", "60%", () => eventHandler.callEvent("aliEvent"), "counter");
-    }
-    return;
-}
-async function aliEvent() {
-    if (dialogueBox1.openDialogues.get("ali").clicks === 0) {
-        // This triggers if this is the first time we've talked to Ali.
-        startAliAnimation();
-        await dialogueBox1.newText({ dialogueName: "ali" });
-        shop.initializeShop();
-    } else if (!dialogueBox1.isTyping) {
-        // This triggers if we're just bantering.
-        shop.toggleMenuVisibility("hide");
-        await dialogueBox1.newText({ dialogueName: "ali", starting: 2 });
-        shop.toggleMenuVisibility("show");
-    }
-    return;
-}
-async function startHowdy() {
-    document.getElementById("counterAnimation").style.backgroundPositionY = `-${isMobile ? "2" : "4"}00px`;
-    await counterAnimator.setAnimation(images["Emerging1"], 27, 20, "forwards", `auto ${isMobile ? "6" : "10"}00px`);
-    player.playSpammableSFX("explosion");
-}
-async function startAliAnimation() {
-    await counterAnimator.setAnimation(images["Emerging2"], 18, 16, "forwards", `auto ${isMobile ? "6" : "10"}00px`);
-    counterAnimator.setAnimation(images["Idle"], 17, 12, "infinite");
-    document.getElementById("counterAnimation").style.backgroundPositionY = "100px";
 }

@@ -80,8 +80,8 @@ export class Tools {
 }
 type ScreenSwitcherOptions = {
     nextScreenIndex: number,
-    betweenScreenTime: number,
-    fadeOut: number,
-    fadeIn: number,
-    currentScreenTransition: string
+    betweenScreenTime?: number,
+    fadeOut?: number,
+    fadeIn?: number,
+    currentScreenTransition?: string
 }
