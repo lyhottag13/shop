@@ -1,6 +1,7 @@
 import { Animator } from "./Animator";
 import { DialogueBox } from "./DialogueBox";
 import { EventHandler } from "./EventHandler";
+import { Shop } from "./Shop";
 import { SoundManager } from "./SoundManager";
 import { Tools } from "./Tools";
 
@@ -12,7 +13,7 @@ export class EventList {
     private switchAnimator: Animator;
     private counterAnimator: Animator;
     private doorAnimator: Animator;
-    private shop: any;
+    private shop: Shop;
     private images: Record<string, HTMLImageElement>;
     private isMobile: boolean;
     private eventList: Record<string, (...args: any[]) => Promise<void>>;
@@ -26,7 +27,7 @@ export class EventList {
         switchAnimator: Animator,
         counterAnimator: Animator,
         doorAnimator: Animator,
-        shop: any,
+        shop: Shop,
         images: Record<string, HTMLImageElement>,
         isMobile: boolean = window.innerWidth < 600 ? true : false,
     ) {

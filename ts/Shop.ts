@@ -3,13 +3,13 @@ import { EventList } from "./EventList";
 import { Tools } from "./Tools";
 
 export class Shop {
-    private shopContainer: HTMLElement;
-    private shopTab: HTMLElement;
-    private shopMenu: HTMLElement;
-    private counter: HTMLElement;
-    private textDiv: HTMLElement;
-    private arrows: NodeListOf<HTMLElement>;
-    private descriptionParts: NodeListOf<HTMLElement>;
+    private shopContainer: HTMLDivElement;
+    private shopTab: HTMLDivElement;
+    private shopMenu: HTMLDivElement;
+    private counter: HTMLDivElement;
+    private textDiv: HTMLDivElement;
+    private arrows: NodeListOf<HTMLDivElement>;
+    private descriptionParts: NodeListOf<HTMLSpanElement>;
     private toggleMenuHandler: () => Promise<void>;
     private arrayOfItems: Array<HTMLDivElement>;
     private shopImages: Array<HTMLImageElement>;
@@ -27,11 +27,11 @@ export class Shop {
         tools: Tools,
         eventHandler: EventHandler
     ) {
-        this.shopContainer = document.getElementById("shopContainer")!;
-        this.shopTab = document.getElementById("shopTab")!;
-        this.shopMenu = document.getElementById("shopMenu")!;
-        this.counter = document.getElementById("counter")!;
-        this.textDiv = document.getElementById("textDiv")!;
+        this.shopContainer = document.getElementById("shopContainer")! as HTMLDivElement;
+        this.shopTab = document.getElementById("shopTab")! as HTMLDivElement;
+        this.shopMenu = document.getElementById("shopMenu")! as HTMLDivElement;
+        this.counter = document.getElementById("counter")! as HTMLDivElement;
+        this.textDiv = document.getElementById("textDiv")! as HTMLDivElement;
         this.arrows = document.querySelectorAll(".arrow")!;
         this.descriptionParts = document.querySelectorAll("#description span")!;
         this.toggleMenuHandler = async () => this.toggleMenu();
@@ -44,7 +44,7 @@ export class Shop {
         this.tools = tools;
         this.eventHandler = eventHandler;
     }
-    toggleMenu() {
+    public toggleMenu() {
         const shopTabLabel = document.getElementById("shopTabLabel")!;
         if (this.isMenuShowing) {
             shopTabLabel.textContent = "OPEN SHOP";
@@ -67,13 +67,13 @@ export class Shop {
         }
 
     }
-    moveWorld(bottom: string, translate: string, body: string) {
+    private moveWorld(bottom: string, translate: string, body: string) {
         this.shopContainer.style.bottom = bottom;
         this.counter.style.transform = `translateY(${translate})`;
         this.textDiv.style.transform = `translateY(${translate})`;
         document.body.style.backgroundPositionY = body;
     }
-    async initializeShop() {
+    public async initializeShop() {
         const itemShowcase = document.getElementById("item")!;
         this.shopContainer.style.visibility = "visible";
         this.toggleMenuVisibility("show");
@@ -88,7 +88,7 @@ export class Shop {
             this.initializeArrow(arrow, arrowIndex);
         });
     }
-    initializeArrow(arrow: HTMLElement, arrowIndex: number) {
+    private initializeArrow(arrow: HTMLElement, arrowIndex: number) {
         const arrowImage = arrow.querySelector("img")!;
         if (arrowIndex === 0) {
             arrowImage.style.transform = `rotate(${this.isMobile ? "0" : "90"}deg)`;
@@ -101,7 +101,7 @@ export class Shop {
             this.arrowEvent(arrowIndex, displacement);
         });
     }
-    initializeItem(item: HTMLElement, itemIndex: number) {
+    private initializeItem(item: HTMLElement, itemIndex: number) {
         // This sets the default visible item to the first item.
         if (itemIndex === 0) {
             this.updateShopTextContent(0);
@@ -114,7 +114,7 @@ export class Shop {
             await this.eventList.itemEvent(itemIndex);
         });
     }
-    initializeDiv(itemShowcase: HTMLElement, index: number) {
+    private initializeDiv(itemShowcase: HTMLElement, index: number) {
         const newItemDiv = document.createElement("div");
         newItemDiv.className = "shopItem";
         const newItemDivImage = document.createElement("img");
@@ -123,7 +123,7 @@ export class Shop {
         itemShowcase.appendChild(newItemDiv);
         this.arrayOfItems.push(newItemDiv);
     }
-    async arrowEvent(arrowIndex: number, displacement: string) {
+    private async arrowEvent(arrowIndex: number, displacement: string) {
         // This checks to see if this is a valid move, i.e. we're not going left at the first, or right at the last.
         const isValidMove = ((arrowIndex === 0 && this.currentShopIndex !== 0) || (arrowIndex === 1 && this.currentShopIndex !== this.arrayOfItems.length - 1));
         let selectedItem = this.arrayOfItems[this.currentShopIndex];
@@ -139,7 +139,7 @@ export class Shop {
         const validIndex = Math.min(this.currentShopIndex, this.dialogueJSON["itemHeader"].length - 1);
         this.updateShopTextContent(validIndex);
     }
-    toggleMenuVisibility(instruction: string) {
+    public toggleMenuVisibility(instruction: string) {
         let cursor = "wait";
         switch (instruction) {
             case "hide":
@@ -158,7 +158,7 @@ export class Shop {
         }
         this.tools.setCursor(cursor);
     }
-    updateShopTextContent(index: number) {
+    private updateShopTextContent(index: number) {
         this.descriptionParts[0].textContent = this.dialogueJSON["itemHeader"][index];
         this.descriptionParts[1].textContent = this.dialogueJSON["itemDescription"][index];
     }

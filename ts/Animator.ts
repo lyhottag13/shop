@@ -1,8 +1,8 @@
 export class Animator {
-    animation: HTMLElement;
+    animation: HTMLDivElement;
     isMobile: boolean;
     constructor(source: string) {
-        this.animation = document.getElementById(source)!;
+        this.animation = document.getElementById(source)! as HTMLDivElement;
         this.isMobile = window.innerWidth < 600 ? true : false;
     }
     public async setAnimation(imageSource: HTMLImageElement, frames: number, framerate: number, end: string, backgroundSize = `auto ${this.isMobile ? "3" : "5"}00px`): Promise<void> {
