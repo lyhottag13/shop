@@ -1,4 +1,3 @@
-import { DialogueBox } from "./DialogueBox";
 import { EventHandler } from "./EventHandler";
 import { EventList } from "./EventList";
 import { Tools } from "./Tools";
@@ -13,7 +12,6 @@ export class Shop {
     private descriptionParts: NodeListOf<HTMLElement>;
     private toggleMenuHandler: () => Promise<void>;
     private arrayOfItems: Array<HTMLDivElement>;
-    private dialogueBoxObject: DialogueBox;
     private shopImages: Array<HTMLImageElement>;
     private dialogueJSON: Record<string, Array<string>>;
     private isMobile: boolean;
@@ -24,7 +22,6 @@ export class Shop {
     private eventList!: EventList;
 
     constructor(
-        dialogueBoxObject: DialogueBox,
         shopImages: Array<HTMLImageElement>, 
         dialogueJSON: Record<string, Array<string>>, 
         tools: Tools,
@@ -39,7 +36,6 @@ export class Shop {
         this.descriptionParts = document.querySelectorAll("#description span")!;
         this.toggleMenuHandler = async () => this.toggleMenu();
         this.arrayOfItems = [];
-        this.dialogueBoxObject = dialogueBoxObject;
         this.shopImages = shopImages;
         this.dialogueJSON = dialogueJSON;
         this.isMobile = (window.innerWidth <= 600) ? true : false;

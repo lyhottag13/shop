@@ -7,12 +7,11 @@ export class Animator {
     }
     public async setAnimation(imageSource: HTMLImageElement, frames: number, framerate: number, end: string, backgroundSize = `auto ${this.isMobile ? "3" : "5"}00px`): Promise<void> {
         this.animation.style.setProperty("--bg-end", `-${(this.isMobile ? 300 : 500) * (frames - 1)}px`)
-        this.animation.style.setProperty("--background-size", backgroundSize);
         this.animation.style.backgroundImage = `url(${imageSource.src})`;
+        this.animation.style.backgroundSize = backgroundSize;
         const length = frames / framerate;
         this.animation.style.animation = `none`;
         this.animation.offsetHeight;
-        console.log("soo");
         this.animation.style.animation = `anim ${length}s steps(${end === "infinite" ? (frames) + ", jump-none" : frames - 1}) ${end}`;
         await new Promise(resolve => {
             this.animation.addEventListener("animationend", resolve, { once: true });

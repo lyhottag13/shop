@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 export class Shop {
-    constructor(dialogueBoxObject, shopImages, dialogueJSON, tools, eventHandler) {
+    constructor(shopImages, dialogueJSON, tools, eventHandler) {
         this.shopContainer = document.getElementById("shopContainer");
         this.shopTab = document.getElementById("shopTab");
         this.shopMenu = document.getElementById("shopMenu");
@@ -18,7 +18,6 @@ export class Shop {
         this.descriptionParts = document.querySelectorAll("#description span");
         this.toggleMenuHandler = () => __awaiter(this, void 0, void 0, function* () { return this.toggleMenu(); });
         this.arrayOfItems = [];
-        this.dialogueBoxObject = dialogueBoxObject;
         this.shopImages = shopImages;
         this.dialogueJSON = dialogueJSON;
         this.isMobile = (window.innerWidth <= 600) ? true : false;

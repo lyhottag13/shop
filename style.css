@@ -97,31 +97,25 @@ body {
 
 #doorAnimation {
     --bg-end: ;
-    --background-size: ;
     height: 500px;
     width: 500px;
     background-position-x: 0;
-    background-size: var(--background-size);
 }
 
 #counterAnimation {
     --bg-end: ;
-    --background-size: ;
     height: 600px;
     width: 500px;
     background-position-x: 0;
     background-position-y: 100px;
-    background-size: var(--background-size);
 }
 
 #switchAnimation {
     --bg-end: ;
-    --background-size: ;
     filter: drop-shadow(0 0 13px rgb(255, 255, 255)) drop-shadow(0 0 13px rgb(255, 255, 255)) drop-shadow(0 0 13px rgb(255, 255, 255));
     height: 500px;
     width: 500px;
     background-position-x: 0;
-    background-size: var(--background-size);
     padding-bottom: 3px;
 }
 

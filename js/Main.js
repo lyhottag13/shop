@@ -73,11 +73,10 @@ function createObjects() {
     dialogueBox1 = new DialogueBox(dialogueJSON, player);
     tools = new Tools(0, false, player, dialogueBox1);
     eventHandler = new EventHandler({tools: tools });
-    shop = new Shop(dialogueBox1, shopImages, dialogueJSON, tools, eventHandler);
+    shop = new Shop(shopImages, dialogueJSON, tools, eventHandler);
     eventList = new EventList(player, tools, dialogueBox1, eventHandler, switchAnimator, counterAnimator, doorAnimator, shop, images);
     eventHandler.setList(eventList.getList());
     shop.setList(eventList.getList());
-    console.log(shop.eventList);
 }
 // This starts the game when the user clicks/taps.
 async function startGame() {

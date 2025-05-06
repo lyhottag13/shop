@@ -15,12 +15,11 @@ export class Animator {
     setAnimation(imageSource_1, frames_1, framerate_1, end_1) {
         return __awaiter(this, arguments, void 0, function* (imageSource, frames, framerate, end, backgroundSize = `auto ${this.isMobile ? "3" : "5"}00px`) {
             this.animation.style.setProperty("--bg-end", `-${(this.isMobile ? 300 : 500) * (frames - 1)}px`);
-            this.animation.style.setProperty("--background-size", backgroundSize);
             this.animation.style.backgroundImage = `url(${imageSource.src})`;
+            this.animation.style.backgroundSize = backgroundSize;
             const length = frames / framerate;
             this.animation.style.animation = `none`;
             this.animation.offsetHeight;
-            console.log("soo");
             this.animation.style.animation = `anim ${length}s steps(${end === "infinite" ? (frames) + ", jump-none" : frames - 1}) ${end}`;
             yield new Promise(resolve => {
                 this.animation.addEventListener("animationend", resolve, { once: true });

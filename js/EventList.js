@@ -26,6 +26,7 @@ export class EventList {
             aliEvent: this.aliEvent.bind(this),
             itemEvent: this.itemEvent.bind(this)
         };
+        this.enableIdleAnimation = false;
     }
     doorEvent() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -114,7 +115,9 @@ export class EventList {
             else if (!this.dialogueBox1.isTyping) {
                 // This triggers if we're just bantering.
                 this.shop.toggleMenuVisibility("hide");
+                yield this.setToTalk();
                 yield this.dialogueBox1.newText({ dialogueName: "ali", starting: 2 });
+                this.startIdleAnimation();
                 this.shop.toggleMenuVisibility("show");
             }
             return;
@@ -130,19 +133,42 @@ export class EventList {
     startAliAnimation() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.counterAnimator.setAnimation(this.images["Emerging2"], 17, 16, "forwards", `auto ${this.isMobile ? "6" : "10"}00px`);
-            this.counterAnimator.setAnimation(this.images["Idle"], 17, 12, "infinite");
             document.getElementById("counterAnimation").style.backgroundPositionY = "100px";
+            this.startIdleAnimation();
+        });
+    }
+    startIdleAnimation() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.enableIdleAnimation) {
+                return;
+            }
+            this.enableIdleAnimation = true;
+            while (this.enableIdleAnimation) {
+                yield this.counterAnimator.setAnimation(this.images["IdleLeft"], 10, 12, "forwards");
+                if (!this.enableIdleAnimation)
+                    break;
+                yield this.counterAnimator.setAnimation(this.images["IdleRight"], 9, 12, "forwards");
+                if (!this.enableIdleAnimation)
+                    break;
+            }
         });
     }
     itemEvent(itemIndex) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            (_a = document.getElementById("counterAnimation")) === null || _a === void 0 ? void 0 : _a.addEventListener("animationiteration", () => {
-                this.counterAnimator.setAnimation(this.images["Talking"], 3, 10, "infinite");
-            }, { once: true });
             this.shop.toggleMenuVisibility("hide");
-            yield this.shop.dialogueBoxObject.newText({ dialogueName: "itemDialogue", index: itemIndex });
+            yield this.setToTalk();
+            yield this.dialogueBox1.newText({ dialogueName: "itemDialogue", index: itemIndex });
+            this.startIdleAnimation();
             this.shop.toggleMenuVisibility("show");
+        });
+    }
+    setToTalk() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield new Promise(resolve => {
+                document.getElementById("counterAnimation").addEventListener("animationend", resolve, { once: true });
+            });
+            this.enableIdleAnimation = false;
+            this.counterAnimator.setAnimation(this.images["Talking"], 3, 7, "infinite");
         });
     }
     getList() {

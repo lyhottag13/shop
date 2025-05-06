@@ -10,7 +10,9 @@
         "Door",
         "Emerging1",
         "Emerging2",
-        "Talking"
+        "Talking",
+        "IdleLeft",
+        "IdleRight"
     ],
     "shopImages": [
         "Undertale",

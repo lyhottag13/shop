@@ -16,6 +16,7 @@ export class EventList {
     private images: Record<string, HTMLImageElement>;
     private isMobile: boolean;
     private eventList: Record<string, (...args: any[]) => Promise<void>>;
+    private enableIdleAnimation: boolean;
 
     constructor(
         player: SoundManager,
@@ -46,6 +47,7 @@ export class EventList {
             aliEvent: this.aliEvent.bind(this),
             itemEvent: this.itemEvent.bind(this)
         }
+        this.enableIdleAnimation = false;
     }
     public async doorEvent(): Promise<void> {
         document.getElementById("doorButton")!.remove();
@@ -126,7 +128,9 @@ export class EventList {
         } else if (!this.dialogueBox1.isTyping) {
             // This triggers if we're just bantering.
             this.shop.toggleMenuVisibility("hide");
+            await this.setToTalk();
             await this.dialogueBox1.newText({ dialogueName: "ali", starting: 2 });
+            this.startIdleAnimation();
             this.shop.toggleMenuVisibility("show");
         }
         return;
@@ -138,16 +142,34 @@ export class EventList {
     }
     public async startAliAnimation(): Promise<void> {
         await this.counterAnimator.setAnimation(this.images["Emerging2"], 17, 16, "forwards", `auto ${this.isMobile ? "6" : "10"}00px`);
-        this.counterAnimator.setAnimation(this.images["Idle"], 17, 12, "infinite");
         document.getElementById("counterAnimation")!.style.backgroundPositionY = "100px";
+        this.startIdleAnimation();
+    }
+    public async startIdleAnimation(): Promise<void> {
+        if (this.enableIdleAnimation) {
+            return;
+        }
+        this.enableIdleAnimation = true;
+        while (this.enableIdleAnimation) {
+            await this.counterAnimator.setAnimation(this.images["IdleLeft"], 10, 12, "forwards");
+            if (!this.enableIdleAnimation) break;
+            await this.counterAnimator.setAnimation(this.images["IdleRight"], 9, 12, "forwards");
+            if (!this.enableIdleAnimation) break;
+        }
     }
     public async itemEvent(itemIndex: number): Promise<void> {
-        document.getElementById("counterAnimation")?.addEventListener("animationiteration", () => {
-            this.counterAnimator.setAnimation(this.images["Talking"], 3, 10, "infinite");
-        }, { once: true });
         this.shop.toggleMenuVisibility("hide");
-        await this.shop.dialogueBoxObject.newText({ dialogueName: "itemDialogue", index: itemIndex });
+        await this.setToTalk();
+        await this.dialogueBox1.newText({ dialogueName: "itemDialogue", index: itemIndex });
+        this.startIdleAnimation();
         this.shop.toggleMenuVisibility("show");
+    }
+    public async setToTalk(): Promise<void> {
+        await new Promise(resolve => {
+            document.getElementById("counterAnimation")!.addEventListener("animationend", resolve, { once: true });
+        });
+        this.enableIdleAnimation = false;
+        this.counterAnimator.setAnimation(this.images["Talking"], 3, 7, "infinite");
     }
     public getList(): Record<string, () => Promise<void>> {
         return this.eventList;
