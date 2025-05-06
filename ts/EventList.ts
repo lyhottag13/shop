@@ -15,7 +15,7 @@ export class EventList {
     private shop: any;
     private images: Record<string, HTMLImageElement>;
     private isMobile: boolean;
-    private eventList: Record<string, () => Promise<void>>;
+    private eventList: Record<string, (...args: any[]) => Promise<void>>;
 
     constructor(
         player: SoundManager,
@@ -44,9 +44,10 @@ export class EventList {
             closedSignEvent: this.closedSignEvent.bind(this),
             switchLightsEvent: this.switchLightsEvent.bind(this),
             aliEvent: this.aliEvent.bind(this),
+            itemEvent: this.itemEvent.bind(this)
         }
     }
-    async doorEvent() {
+    public async doorEvent(): Promise<void> {
         document.getElementById("doorButton")!.remove();
         // The door is clicked.
         this.player.play("doorcreak");
@@ -59,7 +60,7 @@ export class EventList {
         await this.tools.sleep(5000);
         this.tools.createButton("closedSign", this.isMobile ? "65%" : "62%", "5%", "90%", "20%", () => this.eventHandler.callEvent("closedSignEvent"), "counter");
     }
-    async closedSignEvent() {
+    public async closedSignEvent(): Promise<void> {
         await this.dialogueBox1.newText({ dialogueName: "closedSign" });
         if (this.dialogueBox1.openDialogues.get("closedSign")!.clicks === 2) {
             // Show lightswitch.
@@ -71,7 +72,7 @@ export class EventList {
         }
         return;
     }
-    async switchLightsEvent() {
+    public async switchLightsEvent(): Promise<void> {
         if (!this.dialogueBox1.isTyping) {
             await this.dialogueBox1.newText({ dialogueName: "switchLights" });
             await this.tools.sleep(1400);
@@ -116,7 +117,7 @@ export class EventList {
         }
         return;
     }
-    async aliEvent() {
+    public async aliEvent(): Promise<void> {
         if (this.dialogueBox1.openDialogues.get("ali")!.clicks === 0) {
             // This triggers if this is the first time we've talked to Ali.
             this.startAliAnimation();
@@ -130,17 +131,25 @@ export class EventList {
         }
         return;
     }
-    async startHowdy() {
+    public async startHowdy(): Promise<void> {
         document.getElementById("counterAnimation")!.style.backgroundPositionY = `-${this.isMobile ? "2" : "4"}00px`;
         await this.counterAnimator.setAnimation(this.images["Emerging1"], 27, 20, "forwards", `auto ${this.isMobile ? "6" : "10"}00px`);
         this.player.playSpammableSFX("explosion");
     }
-    async startAliAnimation() {
-        await this.counterAnimator.setAnimation(this.images["Emerging2"], 18, 16, "forwards", `auto ${this.isMobile ? "6" : "10"}00px`);
+    public async startAliAnimation(): Promise<void> {
+        await this.counterAnimator.setAnimation(this.images["Emerging2"], 17, 16, "forwards", `auto ${this.isMobile ? "6" : "10"}00px`);
         this.counterAnimator.setAnimation(this.images["Idle"], 17, 12, "infinite");
         document.getElementById("counterAnimation")!.style.backgroundPositionY = "100px";
     }
-    getList(): Record<string, () => Promise<void>> {
+    public async itemEvent(itemIndex: number): Promise<void> {
+        document.getElementById("counterAnimation")?.addEventListener("animationiteration", () => {
+            this.counterAnimator.setAnimation(this.images["Talking"], 3, 10, "infinite");
+        }, { once: true });
+        this.shop.toggleMenuVisibility("hide");
+        await this.shop.dialogueBoxObject.newText({ dialogueName: "itemDialogue", index: itemIndex });
+        this.shop.toggleMenuVisibility("show");
+    }
+    public getList(): Record<string, () => Promise<void>> {
         return this.eventList;
     }
 }

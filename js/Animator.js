@@ -8,21 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 export class Animator {
-    constructor(width, source) {
+    constructor(source) {
         this.animation = document.getElementById(source);
-        this.frameWidth = width;
         this.isMobile = window.innerWidth < 600 ? true : false;
     }
     setAnimation(imageSource_1, frames_1, framerate_1, end_1) {
         return __awaiter(this, arguments, void 0, function* (imageSource, frames, framerate, end, backgroundSize = `auto ${this.isMobile ? "3" : "5"}00px`) {
-            this.animation.style.setProperty("--animation-image", `url(${imageSource.src})`);
-            this.animation.style.setProperty("--background-width", `${this.frameWidth * frames}`);
+            this.animation.style.setProperty("--bg-end", `-${(this.isMobile ? 300 : 500) * (frames - 1)}px`);
             this.animation.style.setProperty("--background-size", backgroundSize);
-            this.animation.style.setProperty("--frames", `${frames - 1}`);
-            this.animation.style.setProperty("--animation-length", `${frames / framerate}s`);
+            this.animation.style.backgroundImage = `url(${imageSource.src})`;
+            const length = frames / framerate;
             this.animation.style.animation = `none`;
             this.animation.offsetHeight;
-            this.animation.style.animation = `anim var(--animation-length) steps(var(--frames)) ${end}`;
+            console.log("soo");
+            this.animation.style.animation = `anim ${length}s steps(${end === "infinite" ? (frames) + ", jump-none" : frames - 1}) ${end}`;
             yield new Promise(resolve => {
                 this.animation.addEventListener("animationend", resolve, { once: true });
             });

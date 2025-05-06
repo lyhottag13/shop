@@ -96,60 +96,42 @@ body {
 }
 
 #doorAnimation {
-    --background-width: ;
-    --animation-image: ;
-    --animation-length: ;
-    --frames: ;
+    --bg-end: ;
     --background-size: ;
-    --background-position: ;
     height: 500px;
     width: 500px;
-    background-image: var(--animation-image);
     background-position-x: 0;
     background-size: var(--background-size);
-    animation: anim var(--animation-length) steps(var(--frames)) infinite;
 }
 
 #counterAnimation {
-    --background-width: ;
-    --animation-image: ;
-    --animation-length: ;
-    --frames: ;
+    --bg-end: ;
     --background-size: ;
-    --background-position: ;
     height: 600px;
     width: 500px;
-    background-image: var(--animation-image);
     background-position-x: 0;
     background-position-y: 100px;
     background-size: var(--background-size);
-    animation: anim var(--animation-length) steps(var(--frames)) infinite;
 }
 
 #switchAnimation {
-    --background-width: ;
-    --animation-image: ;
-    --animation-length: ;
-    --frames: ;
+    --bg-end: ;
     --background-size: ;
-    --background-position: ;
     filter: drop-shadow(0 0 13px rgb(255, 255, 255)) drop-shadow(0 0 13px rgb(255, 255, 255)) drop-shadow(0 0 13px rgb(255, 255, 255));
     height: 500px;
     width: 500px;
-    background-image: var(--animation-image);
     background-position-x: 0;
     background-size: var(--background-size);
-    animation: anim var(--animation-length) steps(var(--frames)) infinite;
     padding-bottom: 3px;
 }
 
 @keyframes anim {
-    0% {
+    from {
         background-position-x: 0;
     }
 
-    100% {
-        background-position-x: 100%;
+    to {
+        background-position-x: var(--bg-end);
     }
 }
 
@@ -227,12 +209,15 @@ body {
     width: 100%;
     font-size: 220px;
 }
+
 #description span:nth-of-type(1) {
     font-size: 80px;
 }
+
 #description span:nth-of-type(2) {
     font-size: 40px;
 }
+
 .arrow {
     display: flex;
     align-items: center;
@@ -406,12 +391,15 @@ body {
     #description span {
         text-align: center;
     }
+
     #description span:nth-of-type(1) {
         font-size: 35px;
     }
+
     #description span:nth-of-type(2) {
         font-size: 25px;
     }
+
     .arrow {
         display: flex;
         align-items: center;

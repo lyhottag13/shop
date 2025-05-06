@@ -7,10 +7,9 @@ import { EventHandler } from "./EventHandler.js";
 import { EventList } from "./EventList.js";
 
 const isMobile = (window.innerWidth <= 600) ? true : false;
-const FRAME_WIDTH = (window.innerWidth <= 600) ? 300 : 132;
-const switchAnimator = new Animator(FRAME_WIDTH, "switchAnimation");
-const counterAnimator = new Animator(FRAME_WIDTH, "counterAnimation");
-const doorAnimator = new Animator(FRAME_WIDTH, "doorAnimation");
+const switchAnimator = new Animator("switchAnimation");
+const counterAnimator = new Animator("counterAnimation");
+const doorAnimator = new Animator("doorAnimation");
 
 const player = new SoundManager();
 let dialogueBox1;
@@ -77,6 +76,8 @@ function createObjects() {
     shop = new Shop(dialogueBox1, shopImages, dialogueJSON, tools, eventHandler);
     eventList = new EventList(player, tools, dialogueBox1, eventHandler, switchAnimator, counterAnimator, doorAnimator, shop, images);
     eventHandler.setList(eventList.getList());
+    shop.setList(eventList.getList());
+    console.log(shop.eventList);
 }
 // This starts the game when the user clicks/taps.
 async function startGame() {

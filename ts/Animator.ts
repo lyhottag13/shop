@@ -1,21 +1,19 @@
 export class Animator {
     animation: HTMLElement;
     isMobile: boolean;
-    frameWidth: number;
-    constructor(width: number, source: string) {
+    constructor(source: string) {
         this.animation = document.getElementById(source)!;
-        this.frameWidth = width;
         this.isMobile = window.innerWidth < 600 ? true : false;
     }
-    async setAnimation(imageSource: HTMLImageElement, frames: number, framerate: number, end: string, backgroundSize = `auto ${this.isMobile ? "3" : "5"}00px`): Promise<void> {
-        this.animation.style.setProperty("--animation-image", `url(${imageSource.src})`);
-        this.animation.style.setProperty("--background-width", `${this.frameWidth * frames}`);
+    public async setAnimation(imageSource: HTMLImageElement, frames: number, framerate: number, end: string, backgroundSize = `auto ${this.isMobile ? "3" : "5"}00px`): Promise<void> {
+        this.animation.style.setProperty("--bg-end", `-${(this.isMobile ? 300 : 500) * (frames - 1)}px`)
         this.animation.style.setProperty("--background-size", backgroundSize);
-        this.animation.style.setProperty("--frames", `${frames - 1}`);
-        this.animation.style.setProperty("--animation-length", `${frames / framerate}s`);
+        this.animation.style.backgroundImage = `url(${imageSource.src})`;
+        const length = frames / framerate;
         this.animation.style.animation = `none`;
         this.animation.offsetHeight;
-        this.animation.style.animation = `anim var(--animation-length) steps(var(--frames)) ${end}`;
+        console.log("soo");
+        this.animation.style.animation = `anim ${length}s steps(${end === "infinite" ? (frames) + ", jump-none" : frames - 1}) ${end}`;
         await new Promise(resolve => {
             this.animation.addEventListener("animationend", resolve, { once: true });
         });

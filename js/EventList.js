@@ -24,6 +24,7 @@ export class EventList {
             closedSignEvent: this.closedSignEvent.bind(this),
             switchLightsEvent: this.switchLightsEvent.bind(this),
             aliEvent: this.aliEvent.bind(this),
+            itemEvent: this.itemEvent.bind(this)
         };
     }
     doorEvent() {
@@ -128,9 +129,20 @@ export class EventList {
     }
     startAliAnimation() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.counterAnimator.setAnimation(this.images["Emerging2"], 18, 16, "forwards", `auto ${this.isMobile ? "6" : "10"}00px`);
+            yield this.counterAnimator.setAnimation(this.images["Emerging2"], 17, 16, "forwards", `auto ${this.isMobile ? "6" : "10"}00px`);
             this.counterAnimator.setAnimation(this.images["Idle"], 17, 12, "infinite");
             document.getElementById("counterAnimation").style.backgroundPositionY = "100px";
+        });
+    }
+    itemEvent(itemIndex) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            (_a = document.getElementById("counterAnimation")) === null || _a === void 0 ? void 0 : _a.addEventListener("animationiteration", () => {
+                this.counterAnimator.setAnimation(this.images["Talking"], 3, 10, "infinite");
+            }, { once: true });
+            this.shop.toggleMenuVisibility("hide");
+            yield this.shop.dialogueBoxObject.newText({ dialogueName: "itemDialogue", index: itemIndex });
+            this.shop.toggleMenuVisibility("show");
         });
     }
     getList() {

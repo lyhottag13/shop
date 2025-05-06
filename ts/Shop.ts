@@ -1,5 +1,6 @@
 import { DialogueBox } from "./DialogueBox";
 import { EventHandler } from "./EventHandler";
+import { EventList } from "./EventList";
 import { Tools } from "./Tools";
 
 export class Shop {
@@ -20,6 +21,7 @@ export class Shop {
     private isMenuShowing: boolean;
     private tools: Tools;
     private eventHandler: EventHandler;
+    private eventList!: EventList;
 
     constructor(
         dialogueBoxObject: DialogueBox,
@@ -113,7 +115,7 @@ export class Shop {
             item.style.transform = `translate${this.isMobile ? "X" : "Y"}(300px) scale(0.5)`;
         }
         item.addEventListener("pointerdown", async () => {
-            await this.itemEvent(itemIndex);
+            await this.eventList.itemEvent(itemIndex);
         });
     }
     initializeDiv(itemShowcase: HTMLElement, index: number) {
@@ -141,16 +143,6 @@ export class Shop {
         const validIndex = Math.min(this.currentShopIndex, this.dialogueJSON["itemHeader"].length - 1);
         this.updateShopTextContent(validIndex);
     }
-    /**
-     * This hides and plays the dialogue associated with the item, then 
-     * shows the menu when the dialogue is over.
-     * @param {number} itemIndex - The index of the item that the user clicked.
-     */
-    async itemEvent(itemIndex: number) {
-        this.toggleMenuVisibility("hide");
-        await this.dialogueBoxObject.newText({ dialogueName: "itemDialogue", index: itemIndex });
-        this.toggleMenuVisibility("show");
-    }
     toggleMenuVisibility(instruction: string) {
         let cursor = "wait";
         switch (instruction) {
@@ -173,5 +165,8 @@ export class Shop {
     updateShopTextContent(index: number) {
         this.descriptionParts[0].textContent = this.dialogueJSON["itemHeader"][index];
         this.descriptionParts[1].textContent = this.dialogueJSON["itemDescription"][index];
+    }
+    public setList(eventList: EventList): void {
+        this.eventList = eventList;
     }
 }
