@@ -70,7 +70,7 @@ function preload() {
 }
 
 function createObjects() {
-    dialogueBox1 = new DialogueBox(dialogueJSON, player);
+    dialogueBox1 = new DialogueBox(dialogueJSON, player, images);
     tools = new Tools(0, false, player, dialogueBox1);
     eventHandler = new EventHandler({tools: tools });
     shop = new Shop(shopImages, dialogueJSON, tools, eventHandler);

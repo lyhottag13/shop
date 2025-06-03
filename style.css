@@ -281,6 +281,7 @@ body {
 }
 
 #text {
+    width: 90%;
     font-size: 80px;
     padding: 20px;
     margin-top: 0px;

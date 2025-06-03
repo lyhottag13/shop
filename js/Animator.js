@@ -12,15 +12,15 @@ export class Animator {
         this.animation = document.getElementById(source);
         this.isMobile = window.innerWidth < 600 ? true : false;
     }
-    setAnimation(imageSource_1, frames_1, framerate_1, end_1) {
+    setAnimation(imageSource_1, frames_1, framerate_1, end_1, bgend, backgroundSize1, cancelJump) {
         return __awaiter(this, arguments, void 0, function* (imageSource, frames, framerate, end, backgroundSize = `auto ${this.isMobile ? "3" : "5"}00px`) {
-            this.animation.style.setProperty("--bg-end", `-${(this.isMobile ? 300 : 500) * (frames - 1)}px`);
+            this.animation.style.setProperty("--bg-end", `-${bgend ?? (this.isMobile ? 300 : 500) * (frames - 1)}px`);
             this.animation.style.backgroundImage = `url(${imageSource.src})`;
-            this.animation.style.backgroundSize = backgroundSize;
+            this.animation.style.backgroundSize = backgroundSize1 ?? `auto ${this.isMobile ? "3" : "5"}00px`;
             const length = frames / framerate;
             this.animation.style.animation = `none`;
             this.animation.offsetHeight;
-            this.animation.style.animation = `anim ${length}s steps(${end === "infinite" ? (frames) + ", jump-none" : frames - 1}) ${end}`;
+            this.animation.style.animation = `anim ${length}s steps(${end === "infinite" ? (frames) + (cancelJump ?? ", jump-none") : frames - 1}) ${end}`;
             yield new Promise(resolve => {
                 this.animation.addEventListener("animationend", resolve, { once: true });
             });

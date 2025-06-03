@@ -7,14 +7,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import { Animator } from "./Animator.js";
 export class DialogueBox {
-    constructor(dialogueJSON, player) {
+    constructor(dialogueJSON, player, images) {
         this.openDialogues = new Map();
         this.dialogueJSON = dialogueJSON;
         this.isTyping = false;
         this.player = player;
         this.skip = false;
         this.dialogueBox = document.getElementById("textDiv");
+        this.animator;
+        this.images = images;
     }
     displayText(_a) {
         return __awaiter(this, arguments, void 0, function* ({ text, speed = 1, location = "text", playSound = true }) {
@@ -23,6 +26,11 @@ export class DialogueBox {
                 textBox.innerHTML = "";
                 this.isTyping = true;
                 let charAt;
+            
+                const aliFace = document.querySelector("#textDiv div");
+                if (aliFace) {
+                    this.animator.setAnimation(this.images["Dialogue Ali"], 2, 7, "infinite", "400", "auto 200px", "");
+                }
                 for (let i = 0; i < text.length; i++) {
                     charAt = text.charAt(i);
                     switch (charAt) {
@@ -56,6 +64,9 @@ export class DialogueBox {
                     }
                 }
                 this.isTyping = false;
+                if (aliFace) {
+                    this.animator.setAnimation(this.images["Dialogue Ali"], 1, 7, "infinite", "200", "auto 200px", "");
+                }
             }
             return;
         });
@@ -101,9 +112,16 @@ export class DialogueBox {
     }
     showAliIcon() {
         if (!document.querySelector("#textDiv img")) {
-            const aliFace = document.createElement("img");
-            aliFace.src = "resources/images/Face.webp";
+            const aliFace = document.createElement("div");
+            aliFace.className = "animation";
+            aliFace.id = "aliFace";
+            aliFace.style.height = "200px";
+            aliFace.style.width = "200px";
+            aliFace.style.setProperty("--bg-end", "-400px");
+            aliFace.style.backgroundSize = "auto 200px";
             document.getElementById("textDiv").prepend(aliFace);
+            this.animator = new Animator("aliFace");
+            this.animator.setAnimation(this.images["Dialogue Ali"], 1, 2, "infinite", 200);
         }
     }
     hideAliIcon() {

@@ -126,13 +126,13 @@ export class EventList {
     startHowdy() {
         return __awaiter(this, void 0, void 0, function* () {
             document.getElementById("counterAnimation").style.backgroundPositionY = `-${this.isMobile ? "2" : "4"}00px`;
-            yield this.counterAnimator.setAnimation(this.images["Emerging1"], 27, 20, "forwards", `auto ${this.isMobile ? "6" : "10"}00px`);
+            yield this.counterAnimator.setAnimation(this.images["Emerging1"], 27, 20, "forwards", null, `auto ${this.isMobile ? "6" : "10"}00px`);
             this.player.playSpammableSFX("explosion");
         });
     }
     startAliAnimation() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.counterAnimator.setAnimation(this.images["Emerging2"], 17, 16, "forwards", `auto ${this.isMobile ? "6" : "10"}00px`);
+            yield this.counterAnimator.setAnimation(this.images["Emerging2"], 17, 16, "forwards", null, `auto ${this.isMobile ? "6" : "10"}00px`);
             document.getElementById("counterAnimation").style.backgroundPositionY = "100px";
             this.startIdleAnimation();
         });
