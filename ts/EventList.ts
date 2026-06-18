@@ -160,10 +160,22 @@ export class EventList {
     }
     public async itemEvent(itemIndex: number): Promise<void> {
         this.shop.toggleMenuVisibility("hide");
-        await this.setToTalk();
-        await this.dialogueBox1.newText({ dialogueName: "itemDialogue", index: itemIndex });
+        if (itemIndex === 15) { // This is the thornring's index.
+            this.setToTalkThornRing();
+            this.player.setBackgroundVolume({ initialVolume: 1, endVolume: 0, delay: 0 });
+            await this.dialogueBox1.newText({ dialogueName: "itemDialogue", index: itemIndex });
+            this.player.setBackgroundVolume({ initialVolume: 0, endVolume: 1, delay: 0.5 });
+        } else {
+            await this.setToTalk();
+            await this.dialogueBox1.newText({ dialogueName: "itemDialogue", index: itemIndex });
+        }
         this.startIdleAnimation();
         this.shop.toggleMenuVisibility("show");
+    }
+    public setToTalkThornRing(): void {
+        this.enableIdleAnimation = false;
+        this.counterAnimator.setAnimation(this.images["ThornRing"], 1, 3, "infinite");
+
     }
     public async setToTalk(): Promise<void> {
         await new Promise(resolve => {

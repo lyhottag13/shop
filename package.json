@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/lyhottag13/shop/issues"
   },
-  "homepage": "https://github.com/lyhottag13/shop#readme"
+  "homepage": "https://github.com/lyhottag13/shop#readme",
+  "dependencies": {
+    "typescript": "^6.0.3"
+  }
 }

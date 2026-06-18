@@ -42,6 +42,7 @@
         "It looks more like my brother than a raccoon.",
         "We humbly thank you for your patronage.",
         "Oh! How glamorous!",
+        "~",
         "Huh? What'd you click?",
         "Huh? What'd you tap?"
     ],
@@ -60,7 +61,8 @@
         "Guppy",
         "Spiffo",
         "Turron",
-        "Cloak of Billowing"
+        "Cloak of Billowing",
+        "Thorn Ring"
     ],
     "itemDescription": [
         "Big, and glowy.",

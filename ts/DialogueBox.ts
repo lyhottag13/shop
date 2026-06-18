@@ -58,6 +58,9 @@ export class DialogueBox {
                         textBox.innerHTML += charAt;
                         await this.sleep(500 * speed);
                         break;
+                    case "~": // This is used by the thornring to wait a ton.
+                        await this.sleep(5000 * speed);
+                        break;
                     default:
                         textBox.innerHTML += charAt;
                         if (playSound) {

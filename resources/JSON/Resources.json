@@ -13,7 +13,8 @@
         "Talking",
         "IdleLeft",
         "IdleRight",
-        "Dialogue Ali"
+        "Dialogue Ali",
+        "ThornRing"
     ],
     "shopImages": [
         "Undertale",
@@ -30,7 +31,8 @@
         "TBOI",
         "Zomboid",
         "ENA",
-        "D&D"
+        "D&D",
+        "ThornRing"
     ],
     "audio": [
         "wind",

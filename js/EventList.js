@@ -156,11 +156,23 @@ export class EventList {
     itemEvent(itemIndex) {
         return __awaiter(this, void 0, void 0, function* () {
             this.shop.toggleMenuVisibility("hide");
-            yield this.setToTalk();
-            yield this.dialogueBox1.newText({ dialogueName: "itemDialogue", index: itemIndex });
+            if (itemIndex === 15) { // This is the thornring's index.
+                this.setToTalkThornRing();
+                this.player.setBackgroundVolume({ initialVolume: 1, endVolume: 0, delay: 0 });
+                yield this.dialogueBox1.newText({ dialogueName: "itemDialogue", index: itemIndex });
+                this.player.setBackgroundVolume({ initialVolume: 0, endVolume: 1, delay: 0.5 });
+            }
+            else {
+                yield this.setToTalk();
+                yield this.dialogueBox1.newText({ dialogueName: "itemDialogue", index: itemIndex });
+            }
             this.startIdleAnimation();
             this.shop.toggleMenuVisibility("show");
         });
+    }
+    setToTalkThornRing() {
+        this.enableIdleAnimation = false;
+        this.counterAnimator.setAnimation(this.images["ThornRing"], 1, 3, "infinite");
     }
     setToTalk() {
         return __awaiter(this, void 0, void 0, function* () {
